@@ -11,5 +11,13 @@ clang $COMMON -DXPU_THREADS -matomics -mbulk-memory -Wl,--import-memory -Wl,--sh
 echo "built web/xpu.wasm ($(wc -c < web/xpu.wasm) B) web/xpu-mt.wasm ($(wc -c < web/xpu-mt.wasm) B)"
 mkdir -p dist
 python3 -B tools/bundle.py
-# developer smoke test (Node + Playwright): the built pages must start with no errors
-if [ "${SKIP_SMOKE:-0}" != "1" ]; then node tools/smoke.cjs; fi
+# developer checks (Node): every built page's script parses, the shaders keep clear of what breaks Direct3D's
+# compiler, and (with Playwright) the built pages start with no errors
+if [ "${SKIP_SMOKE:-0}" != "1" ]; then
+  for f in web/*.html dist/*.html; do
+    python3 -I -c 'import sys; s = open(sys.argv[1], encoding="utf-8").read(); i = s.find("<script type=\"module\">"); sys.stdout.write(s[i + 22:s.index("</script>", i)] if i >= 0 else "")' "$f" > /tmp/plume-page-check.mjs
+    node --check /tmp/plume-page-check.mjs || { echo "a script in $f does not parse"; exit 1; }
+  done
+  node tools/check_shaders.mjs
+  node tools/smoke.cjs
+fi

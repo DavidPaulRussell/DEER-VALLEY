@@ -1,4 +1,4 @@
-# Plume XPU Console 1.4.0
+# Plume XPU Console 1.4.1
 
 ByteFoundry as a virtual XPU, in the pipeline
 
@@ -13,22 +13,30 @@ single-thread Wasm, multi-threaded Wasm (all CPU cores over one shared memory) a
 ## Run it
 
 Double-click **`Start Plume.cmd`** on Windows, or run **`./start.sh`** on Linux or macOS. It opens Deer
-Valley, and every page links to the others. It needs Node.js or Python 3, whichever you have:
-- **With Node.js**, it serves `web/` on `http://127.0.0.1:8788` (already in JA21 Blank Console's
-  `local_origins`) with cross-origin isolation headers, so Wasm threads are available. It opens JA21
-  Blank Console if you have it, and your default browser otherwise.
-- **With Python only**, the Python host (`host/plume_photon.py`) serves the same pages with the same
-  isolation. It opens them in VEC1 Design Photon's verified window if Photon is found, and in your default
-  browser otherwise. If Photon is found but fails its own release check, it refuses to run.
+Valley in **VEC1 Design Photon**'s window, and every page links to the others. It needs **Python 3.10 or
+newer**, which Photon runs on; Node.js is not needed.
+- The Python host (`host/plume_photon.py`) serves `web/` on 127.0.0.1 with cross-origin isolation, so Wasm
+  threads work. It checks Photon's own release integrity and refuses to run on a modified Photon. Then it
+  opens the page in Photon's isolated Edge or Chrome window.
+- Photon is looked for in `PHOTON_HOME`, then in `Desktop\Project12k\languages\Photon-main\Photon-main`,
+  then in `C:\VEC1`.
+  - If only `VEC1_Design_Photon_v0.6.0_WindowsSafe-r1.zip` is there, the host offers to extract it to
+    `C:\VEC1\DesignPhoton`.
+  - Photon's README asks for a short path, because a copy extracted deep under the Desktop can come out
+    incomplete. The host says so when it finds one.
+- Without Photon, the pages open in your default browser, with the same host and the same isolation.
+  `"Start Plume.cmd" valley.html browser` asks for that directly.
+- `"Start Plume.cmd" valley.html node` uses Node.js instead, where Node.js works: `serve.mjs` on port
+  8788, opened in JA21 Blank Console if you have it.
 
 Other pages:
 - **The console:** `"Start Plume.cmd" index.html`, or double-click `Start Plume XPU Console.cmd`.
 - **The live presentation:** `"Start Plume.cmd" show.html`, or double-click `Start Plume XPU Live.cmd`.
   Run locally, it can use all CPU threads and your GPU; ← → or space moves between slides.
-- **Also:** `simmy.html` and `verify.html`. Add `photon` after the page to use Design Photon even when
-  Node.js is installed.
-- **Verify R files:** drag `.russ` files onto `Verify R files.cmd` (or `node tools/verify_r.mjs
-  file.russ …`), or drop them on the Verify R files page.
+- **Also:** `simmy.html`, `verify.html` and `check3d.html` (what your GPU and browser offer the 3D view).
+- **Verify R files:** drag `.russ` files onto `Verify R files.cmd`, which verifies them in Photon's window,
+  or drop them on the Verify R files page. Without Python, `node tools/verify_r.mjs file.russ …` does the
+  same checks.
 - **From disk:** opening `web/index.html`, or any page in `dist/`, works too, but only on one thread
   (browsers allow shared memory only on isolated pages). Without the shards, the 3D view falls back to
   procedural surfaces and template animals.
@@ -40,7 +48,7 @@ To put it on GitHub as one repository:
     git init
     git config core.hooksPath tools/git-hooks      # the size gatekeeper runs before every commit
     git add -A
-    git commit -m "Plume XPU Console 1.4.0"
+    git commit -m "Plume XPU Console 1.4.1"
 
 One commit packs to about 663 MiB, under GitHub's 1 GB. `docs/SHARDS.md` explains the budget.
 
@@ -55,12 +63,30 @@ In the 3D view:
 - Shift + scroll, the `[` and `]` keys, or the lens menu change the focal length (14–2300 mm).
 - The corner shows the frame time against the 60 fps budget.
 
-The baked shards (`shards/materials`, `shards/animals`) are loaded when the page is served (by
-`Start Plume.cmd`, `node serve.mjs` or the Python host). Without them the view falls back to procedural surfaces and
-template animals. See `docs/FORMS_AND_EYE.md` for the animal, plant and stone forms, their continuum
+The baked shards (`shards/materials`, `shards/animals`) are loaded when the page is served: by
+`Start Plume.cmd`, `node serve.mjs` or the Python host, or by any static server that serves the whole
+repository (the `dist/` and `web/` pages look for `../shards/` too). Opened from disk, without them, the view
+falls back to procedural surfaces and template animals. See `docs/FORMS_AND_EYE.md` for the animal, plant and stone forms, their continuum
 equations, and the camera's eye law on four rails. See `docs/SHARDS.md` for what each shard holds, the
 reference valley (six years of the default world as a sharded Zarr v3 store, checked by
 `tools/verify_reference.mjs` and `tools/verify_reference.py`), and the GitHub size budget.
+
+### If the 3D view does not start
+
+The view compiles its shaders without blocking the browser's GPU process and shows its progress over the view.
+On Windows, browsers run WebGL on Direct3D 11, so there it starts in **safe graphics** (everything except the
+close-up material detail and strand fur) and compiles the full-detail shaders behind the running view,
+switching to them when they are ready. If the graphics driver resets on them, or at any other time, the view
+restarts by itself on a fresh canvas, in safe graphics when the full shaders were the cause. The browser
+remembers what worked until the console is updated. A chip over the view (`safe graphics · try full`) tries
+the full shaders again, and `?gfx=safe`, `?gfx=full`, `?gfx=auto` or `?gfx=progressive` (safe first, then full, on any GPU) in the address chooses the mode.
+
+When it still fails, the view says why and names the GPU, with buttons to try again, switch graphics mode, or
+open **Check the 3D view** (`check3d.html`, `dist/plume-check-3d.html`). That page compiles every program on
+its own (safe ones first), reads the Direct3D HLSL of each where the browser shows it, builds every render
+target, starts the renderer, and gives a report you can copy. 1.4.0 failed here with
+`3D view unavailable: terrain link:` on an AMD Radeon under Direct3D 11. The fixes and what they cost are in
+the 1.4.1 entry of `CHANGELOG.md`.
 
 ## R files: a 20-layer .russl program plus a .russ container
 
@@ -140,13 +166,16 @@ count has not moved for 30 s. The WGSL kernel in `src/lcufa.js` runs one compute
 | `node test/russ.test.mjs` | 13 | R0/R1/R2 round-trip and rebuild reproducibly; truncated, oversized, trailing and path-escaping containers refused |
 | `node test/russl.test.mjs <corpus>` | 28 | JS lowering = Python lowering: byte-identical IR on 12 corpus sources and 3 templates, same error code on 6 invalid vectors and 7 mutations |
 | `node test/hostile.test.mjs <corpus>` | 15 | crafted containers (ids recomputed) refused by both JS and Python, including an edited IR only re-lowering can catch and four schema-only cases |
+| `node tools/check_shaders.mjs` | 20 shaders | no gradient operation (implicit-derivative `texture()`, `dFdx`, `fwidth`) inside a loop, directly or through a call, and no loop over 16 steps with texture lookups that Direct3D's compiler could unroll |
+| `node test/view3d.test.cjs` (with `node serve.mjs`) | 15 | the Deer Valley view in Chromium: starts in full graphics off Direct3D, rebuilds itself after a lost context, swaps the full shaders in when it starts safe (`?gfx=progressive`), falls back to safe graphics, remembered, when the context is lost while they compile, starts the next visit safe, and "try full" switches back |
 | `node test/page.test.cjs` (with `node serve.mjs`) | 13 | the built console in Chromium: controls locked during start-up; **WebGPU bit-identical to both CPU engines** and the hologram holds on it; Stop; recovery; tampered IR refused |
 
 Run `python3 test/ref_numpy.py` and `node test/russ.test.mjs` first: they write the reference frames
 and the R files (`test/out/`) the other suites read.
 
 WebGPU was verified on Chromium's software adapter (SwiftShader), so results are exact but its
-timings are not representative of a real GPU. `./build.sh` ends with a smoke test of the built page.
+timings are not representative of a real GPU. `./build.sh` ends with checks: every built page's script
+parses, `tools/check_shaders.mjs` passes, and a smoke test of the built console page.
 
 ## Build
 

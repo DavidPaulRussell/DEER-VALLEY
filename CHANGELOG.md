@@ -1,5 +1,81 @@
 # Changelog
 
+## 1.4.1 — 2026-11-17 (the 3D view on Windows, and a view that recovers)
+
+### Fixed
+- **`3D view unavailable: terrain link:`** with an empty log on Windows. Reproduced on an AMD Radeon
+  (Renoir) under Chrome on Direct3D 11. Linking the terrain program made the browser restart its GPU
+  process, which lost every WebGL and WebGPU context on the page.
+  - Browsers on Windows run WebGL through ANGLE, which compiles HLSL with Direct3D's FXC when a program
+    links.
+  - The shadow PCF, the bloom bright pass and the depth of field read textures with implicit derivatives
+    inside loops. ANGLE marks such loops `[loop]`/`[flatten]`, and FXC rejects them under divergent flow.
+    ANGLE then retries with other settings, each one a full, slow compile of a large shader.
+  - Those taps now use `textureLod` (the targets have no mipmaps, so the result is the same).
+  - The material library's octave and parallax loops carry `u_keepLoops` in their bound, a uniform that is
+    never set, so FXC cannot unroll them. The 2 × 2 corner taps are written out.
+  - No vector is indexed by a variable, and the detail origin no longer divides integers. The CPU computes
+    each material's quotient and remainder every frame. This is exact: checked equal to integer division
+    over 8 million cases.
+  - The terrain picks its two strongest materials without arrays.
+  - The terrain's macro hole and the fur's level-of-detail dither discard at the end of the shader, after
+    every derivative and loop.
+  - The atmosphere's integration loops get the same treatment.
+  - Translated on that machine, no shader has a gradient loop left, and no fragment shader an emulated
+    dynamic index (the grass vertex shader keeps three, which are harmless). The sky, water, grass, plant,
+    strand and post programs link there in 0.04–1.6 s. The terrain links in safe graphics (1.3 s).
+- **Shards from `dist/` and `web/`**: pages served by any static server now find `../shards/` (before,
+  only the Plume hosts served them).
+- The sky's tables fall back to 8-bit targets where the context cannot render half float. Colour targets
+  use half float with `EXT_color_buffer_half_float` alone. The shadow map is held within
+  `MAX_TEXTURE_SIZE`.
+- The view's overlays now hide: a CSS `display` rule had beaten `[hidden]`.
+- The macro and probe state are initialised; the line that set them sat inside a comment.
+
+### Added and hardened
+- **Shaders compile without blocking the GPU process**: every compile and link is queued, then
+  `KHR_parallel_shader_compile`'s completion status is polled between frames, with progress shown over
+  the view. A slow driver no longer trips the browser's GPU watchdog.
+- **A view that recovers**: a lost WebGL context (driver reset, GPU process restart) rebuilds the view on
+  a fresh canvas and waits while the browser holds WebGL back. After three losses in two minutes it stops
+  and explains why.
+- **Safe graphics and a progressive start.** Safe graphics leaves out the close-up material detail and
+  strand fur; nothing else changes.
+  - On Direct3D the view starts in safe graphics and compiles the full-detail programs behind it, then
+    swaps them in.
+  - If the driver resets on them, the view restarts in safe graphics. The browser remembers what worked
+    until the console is updated.
+  - `?gfx=safe`, `?gfx=full`, `?gfx=auto` and `?gfx=progressive` (safe first, then full, on any GPU) choose
+    the mode, and a chip over the view tries full again.
+- **Failures explained**: the reason and the GPU's name, with buttons to try again, switch graphics mode,
+  or open the new page below.
+- **Check the 3D view** (`check3d.html`, `dist/plume-check-3d.html`).
+  - It compiles every program on its own, safe variants first, timing each one and stopping at a reset.
+  - It audits the Direct3D HLSL where the browser shows it and builds every kind of render target.
+  - It starts the renderer and gives a copyable report.
+  - The Python host opens it with `--page check3d.html`.
+- `test/view3d.test.cjs`: the view's start, upgrade, recovery and fallback in Chromium (15 cases).
+- `tools/check_shaders.mjs`: a static check that no fragment shader has a gradient operation inside a
+  loop, directly or through a call, and no long loop of texture lookups that FXC could unroll. It flags all
+  22 hazards in 1.4.0 and none now.
+
+### Changed
+- **The launchers run on VEC1 Design Photon, not Node.js.**
+  - `Start Plume.cmd`, `start.sh` and `Verify R files.cmd` use the Python host and Design Photon by
+    default. They need Python 3.10 or newer, found the way Photon's own launcher finds it (`py -3`, `python`,
+    `python3`, version-checked).
+  - Node.js is used only when asked for (`"Start Plume.cmd" valley.html node`). `start.sh` also falls
+    back to it when there is no Python.
+  - `PHOTON_HOME` defaults to `Desktop\Project12k\languages\Photon-main\Photon-main`.
+  - The host also finds Photon's zip there, and names any extraction that lacks `VEC1\app.py`: one cut short
+    by Windows' path length. It then extracts Photon to `C:\VEC1\DesignPhoton`, after asking.
+  - `PLUME_NODE` and `PLUME_BLANK` name another Node.js or JA21 Blank Console for the Node.js route.
+
+### Known
+- On the AMD Radeon tested, the full-detail terrain still reset the driver in the tests made before the
+  last two changes: no integer division, and the discard moved last. Those changes are untested on that
+  GPU. Either way the view comes up there in safe graphics and stays usable.
+
 ## 1.4.0 — 2026-11-17 (Deer Valley: a living valley in the third person)
 
 ### Added

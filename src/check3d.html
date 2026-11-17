@@ -1,0 +1,49 @@
+<title>Check the 3D view · Plume XPU Console</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+%%CSS%%
+/* Check the 3D view: what this browser and GPU offer, and whether the Deer Valley renderer starts here. */
+pre.report { font: 12px/1.45 var(--f-mono); white-space: pre-wrap; overflow-wrap: anywhere; background: var(--sunk); border: 1px solid var(--line); border-radius: 8px; padding: 12px; margin: 0; max-height: 70vh; overflow: auto; }
+.verdict { font: 600 13px var(--f-mono); padding: 8px 10px; border-radius: 7px; border: 1px solid var(--line); background: var(--sunk); overflow-wrap: anywhere; }
+.verdict.ok { color: var(--good); border-color: color-mix(in srgb, var(--good) 45%, transparent); } .verdict.err { color: var(--bad); border-color: var(--bad); }
+canvas.probe { width: 320px; height: 180px; border: 1px solid var(--line); border-radius: 6px; background: #000; }
+</style>
+
+<div class="wrap">
+  <header class="bar">
+    <div class="brand"><h1>Check the 3D view <span class="pill" id="ver" style="vertical-align:middle;letter-spacing:.04em"></span></h1>
+      <div class="sub">What this browser and GPU offer, and whether the Deer Valley renderer starts here, step by step</div></div>
+    <nav class="pages" aria-label="Console pages"><a href="index.html">Console</a><a href="simmy.html">Simmy replay</a><a href="valley.html">Deer Valley</a><a href="verify.html">Verify R files</a><a href="check3d.html" aria-current="page">Check 3D</a></nav>
+  </header>
+  <section class="panel" aria-label="Result">
+    <div class="verdict" id="verdict">Checking…</div>
+    <div class="row"><button class="btn" id="b-copy" disabled>Copy the report</button><span class="note" id="copy-note">Paste it into a message if the 3D view does not start.</span>
+      <a class="btn" id="safe-link" href="?gfx=safe" hidden>Check safe graphics</a></div>
+    <canvas class="probe" id="cv"></canvas>
+    <pre class="report" id="report"></pre>
+  </section>
+</div>
+
+<script type="module">
+%%MODULES%%
+const $ = (id) => document.getElementById(id);
+$("ver").textContent = "%%VERSION%%";
+const lines = []; const say = (s = "") => { lines.push(s); $("report").textContent = lines.join("\n"); };
+const verdict = (ok, text) => { const v = $("verdict"); v.className = "verdict " + (ok ? "ok" : "err"); v.textContent = text; };
+(async () => {
+  const safe = new URLSearchParams(location.search).get("gfx") === "safe";
+  say(`Plume XPU Console %%VERSION%% · check3d${safe ? " · safe graphics" : ""} · ${new Date().toISOString()}`);
+  say(`user agent: ${navigator.userAgent}`);
+  say(`page: ${location.protocol}//${location.host || "(file)"} · cross-origin isolated: ${self.crossOriginIsolated} · device pixel ratio ${devicePixelRatio}`);
+  const env = glEnvironment();
+  for (const l of env.lines) say(l);
+  if (!env.ok) { verdict(false, "WebGL 2 is not available here: " + env.reason); $("b-copy").disabled = false; return; }
+  say(""); say(`the renderer, step by step${safe ? " (safe graphics: no material detail, no strand fur)" : ""}:`);
+  const res = await checkRenderer($("cv"), say, { safe });
+  if (res.lost && res.safeOk) verdict(true, `The 3D view starts here in safe graphics: every safe shader compiled, but ${res.reason}. The valley page falls back to safe graphics on its own; a newer graphics driver may let the full detail compile.`);
+  else verdict(res.ok, res.ok ? `The 3D view starts here (${res.mode}).` : `The 3D view cannot start here: ${res.reason}${res.lost && !safe ? ". Try the safe graphics check (link below)." : ""}`);
+  $("safe-link").hidden = safe || res.ok;
+  $("b-copy").disabled = false;
+})().catch((e) => { say("check failed: " + (e.stack || e.message)); verdict(false, "The check itself failed: " + e.message); $("b-copy").disabled = false; });
+$("b-copy").addEventListener("click", async () => { try { await navigator.clipboard.writeText(lines.join("\n")); $("copy-note").textContent = "Copied."; } catch { $("copy-note").textContent = "Copying was blocked here: select the report and copy it."; } });
+</script>

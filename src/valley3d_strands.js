@@ -19,8 +19,9 @@ const W = 4096;
 const REGION = (b) => b <= 1 ? [0.026, 0.00016] : b === 2 ? [0.032, 0.00016] : b === 3 ? [0.009, 0.00012] : b === 4 ? [0.07, 0.00014] : b <= 16 ? [0.011, 0.00013] : b <= 18 ? [0.013, 0.0001] : [0, 0];
 
 export class Strands {
+  // shaders: { program } already compiled (Valley3D compiles it with its others, without blocking), or { vs, fs }
   constructor(gl, shaders) {
-    this.gl = gl; this.cls = {}; this.P = compileProgram(gl, shaders.vs, shaders.fs, "strands"); this.empty = gl.createVertexArray();
+    this.gl = gl; this.cls = {}; this.P = shaders.program ?? compileProgram(gl, shaders.vs, shaders.fs, "strands"); this.empty = gl.createVertexArray();
     this.rest = null; this.restKey = "";
   }
   // sample roots on a class's finest mesh (vb: 13 floats per vertex, ib: triangles)

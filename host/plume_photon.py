@@ -30,7 +30,7 @@ from pathlib import Path, PurePosixPath
 sys.dont_write_bytecode = True          # Photon's release check refuses unexpected __pycache__ files
 CONSOLE_ROOT = Path(__file__).resolve().parent.parent
 WEB = CONSOLE_ROOT / "web"
-CONSOLE_VERSION = "1.4.0"
+CONSOLE_VERSION = "1.4.1"
 PHOTON_ZIP = "VEC1_Design_Photon_v0.6.0_WindowsSafe-r1.zip"
 PHOTON_PRODUCT = "VEC1 Electron Substitute"
 TYPES = {".html": "text/html; charset=utf-8", ".wasm": "application/wasm", ".js": "text/javascript; charset=utf-8",
@@ -88,11 +88,24 @@ def find_photon(explicit: str | None) -> Path | None:
     return _search(default_roots(), depth=2)
 
 
-def find_photon_zip():
-    for root in default_roots():
-        for cand in (root / PHOTON_ZIP, root / "Photon-main" / PHOTON_ZIP):
+def find_photon_zip(explicit: str | None = None):
+    roots = [Path(x) for x in (explicit, os.environ.get("PHOTON_HOME")) if x] + default_roots()
+    for root in roots:
+        for cand in (root / PHOTON_ZIP, root / "Photon-main" / PHOTON_ZIP, root.parent / PHOTON_ZIP):
             if cand.is_file(): return cand
     return None
+
+
+def incomplete_extractions(explicit: str | None = None):
+    """folders that look like an extracted Design Photon but lack VEC1/app.py (an extraction cut short by long paths)"""
+    roots = [Path(x) for x in (explicit, os.environ.get("PHOTON_HOME")) if x] + default_roots()
+    out = []
+    for root in roots:
+        for d in (root, *(root.glob("VEC1_Design_Photon_*")), *(root.glob("*/VEC1_Design_Photon_*"))):
+            try:
+                if d.is_dir() and d.name.startswith("VEC1_Design_Photon_") and not (d / "VEC1" / "app.py").is_file() and d not in out: out.append(d)
+            except OSError: pass
+    return out
 
 
 def safe_extract(zpath: Path, dest: Path):
@@ -293,7 +306,7 @@ def profile_dir():
 
 def main(argv=None):
     ap = argparse.ArgumentParser(description=f"Plume XPU Console {CONSOLE_VERSION} on VEC1 Photon (no Node.js)")
-    ap.add_argument("--page", default="index.html", choices=["index.html", "simmy.html", "valley.html", "show.html", "verify.html"])
+    ap.add_argument("--page", default="index.html", choices=["index.html", "simmy.html", "valley.html", "show.html", "verify.html", "check3d.html"])
     ap.add_argument("--port", type=int, default=0, help="fixed port; default tries 8788-8817")
     ap.add_argument("--photon", help="Design Photon root (the folder holding VEC1/app.py); default searches Photon-main and C:/VEC1")
     ap.add_argument("--extract-yes", action="store_true", help="extract Design Photon from its zip without asking")
@@ -307,7 +320,9 @@ def main(argv=None):
 
     root = find_photon(ns.photon)
     if root is None:
-        z = find_photon_zip()
+        for d in incomplete_extractions(ns.photon):
+            print(f"Note: {d} holds part of Design Photon but not VEC1\\app.py (an extraction cut short, often by Windows' path length); it is not used.")
+        z = find_photon_zip(ns.photon)
         if z is None:
             print("Design Photon was not found. Set PHOTON_HOME to the folder holding VEC1\\app.py, pass --photon,"
                   " or put VEC1_Design_Photon_v0.6.0_WindowsSafe-r1.zip in Desktop\\Project12k\\languages\\Photon-main;"

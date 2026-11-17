@@ -21,7 +21,14 @@
 .tools3d { position: absolute; right: 10px; top: 10px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }
 .tools3d .btn, .tools3d select { background: #0b0d12b8; color: #e8ecf3; border-color: #ffffff30; backdrop-filter: blur(6px); }
 .caption { position: absolute; left: 12px; bottom: 10px; right: 12px; color: #e8ecf3; font: 12px var(--f-mono); text-shadow: 0 1px 2px #000; display: flex; justify-content: space-between; gap: 10px; pointer-events: none; }
-.nogl { position: absolute; inset: 0; display: grid; place-items: center; color: #c9cfdb; text-align: center; padding: 20px; font-size: 14px; }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; align-content: center; gap: 10px; color: #c9cfdb; text-align: center; padding: 20px; font-size: 14px; background: #0b0d12e6; }
+.nogl[hidden], .prep[hidden], .gfx-safe[hidden], .nogl [hidden] { display: none; }   /* the classes set display, which would beat [hidden] */
+.nogl .why { max-width: 760px; overflow-wrap: anywhere; white-space: pre-line; }
+.nogl .gpu { font: 11.5px/1.4 var(--f-mono, ui-monospace, monospace); color: #9aa3b4; max-width: 760px; overflow-wrap: anywhere; }
+.nogl .row { justify-content: center; gap: 8px; flex-wrap: wrap; }
+.nogl .btn, .nogl a.btn { background: #ffffff14; color: #e8ecf3; border-color: #ffffff40; text-decoration: none; }
+.prep { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); color: #cfd6e2; background: #0b0d12cc; border-radius: 8px; padding: 8px 14px; font: 12.5px/1.4 var(--f-mono, ui-monospace, monospace); pointer-events: none; max-width: calc(100% - 40px); text-align: center; }
+.gfx-safe { position: absolute; left: 10px; bottom: 54px; color: #f0c674; background: #0b0d12b8; border: 1px solid #f0c67466; border-radius: 6px; padding: 2px 8px; font: 11px var(--f-mono, ui-monospace, monospace); }
 .map { position: relative; background: var(--scope); border-radius: 8px; overflow: hidden; aspect-ratio: 1; }
 .map canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; cursor: crosshair; }
 .stat { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
@@ -93,7 +100,10 @@ pre.save { margin: 0; max-height: 200px; overflow: auto; background: var(--sunk)
         </div>
         <div class="caption"><span id="cap-l"></span><span id="cap-r"></span></div>
         <div class="perfhud" id="perfhud" aria-live="off" title="GPU milliseconds per pass against the 60 fps budget; Shift+wheel or [ ] change the lens"></div>
-        <div class="nogl" id="nogl" hidden></div>
+        <div class="prep" id="prep" hidden aria-live="polite"></div>
+        <button class="gfx-safe btn" id="gfx-safe" hidden title="The 3D view runs in safe graphics (no close-up material detail or strand fur) because the graphics driver reset with the full shaders. Click to try full graphics again.">safe graphics · try full</button>
+        <div class="nogl" id="nogl" hidden role="alert"><p class="why" id="nogl-why"></p><p class="gpu" id="nogl-gpu"></p>
+          <div class="row"><button class="btn" id="b-gl-retry">Try again</button><button class="btn" id="b-gl-safe">Try safe graphics</button><a class="btn" id="b-gl-check" href="check3d.html" target="_blank" rel="noopener">Check the 3D view</a></div></div>
       </div>
     </section>
     <section class="panel" aria-label="Valley map">
@@ -539,21 +549,109 @@ function drawCharts() {
   chart("ch-genes", (h) => h.traits.slice(0, 4), ["#4c5fc2", "#e2604a", "#1f8577", "#b5600c"], { max: 15 });
 }
 
+/* ---------- the 3D view: started, restarted when the driver resets, safe graphics where the full shaders fail ---------- */
+// A lost WebGL context (the graphics driver reset, or the browser restarted its GPU process) cannot be used again:
+// the view is rebuilt on a fresh canvas. On Direct3D (Windows) the view starts in safe graphics and swaps the full
+// shaders in once they have compiled behind it ("auto"); if the driver resets on them, or while the full view is
+// starting, it restarts in safe graphics. This browser remembers what worked until the console is updated, so it
+// does not happen twice: "full" after a swap that worked, "safe" after a reset. ?gfx=safe, ?gfx=full or ?gfx=auto
+// in the address overrides it, and the chip over the view ("try full") forgets it.
+const GFX_KEY = "plume.valley.gfx";
+const gfxMemo = () => { try { const m = JSON.parse(localStorage.getItem(GFX_KEY) || "null"); return m && m.version === CONSOLE_VERSION ? m : null; } catch { return null; } };
+const setGfxMemo = (m) => { try { if (m) localStorage.setItem(GFX_KEY, JSON.stringify({ ...m, version: CONSOLE_VERSION, at: new Date().toISOString() })); else localStorage.removeItem(GFX_KEY); } catch { /* storage is off: the choice lasts this visit */ } };
+const GFX = { force: null, lost: [], retry: null, waits: 0, events: [] };   // events: what happened, for the test hook below
+function gfxChoice() {
+  if (GFX.force) return GFX.force;
+  const p = new URLSearchParams(location.search).get("gfx");
+  if (p === "safe" || p === "full" || p === "auto" || p === "progressive") return p;   // (progressive: safe, then full, on any GPU)
+  const m = gfxMemo(); return m?.mode === "safe" ? "safe" : m?.mode === "full" ? "full" : "auto";
+}
+// (view is undefined while its constructor runs: its first status line comes from inside it)
+function viewStatus(view, t) { if (view && view !== S.view) return; $("prep").hidden = !t; $("prep").textContent = t || ""; }
+function gfxChip(view, text = null) {
+  const chip = $("gfx-safe"); chip.hidden = !view?.safe; if (chip.hidden) return;
+  chip.textContent = text ?? "safe graphics · try full"; chip.disabled = !!text;
+}
+function showNoGL(why, gpu = "", actions = true) {
+  $("nogl").hidden = false; $("nogl-why").textContent = why; $("nogl-gpu").textContent = gpu ? "GPU: " + gpu : ""; $("nogl-gpu").hidden = !gpu;
+  for (const id of ["b-gl-retry", "b-gl-safe", "b-gl-check"]) $(id).hidden = !actions;
+  $("b-gl-safe").textContent = gfxChoice() === "safe" ? "Try full graphics" : "Try safe graphics";
+}
+function viewFailed(view, e) {
+  if (view && view !== S.view) return;
+  console.error(e); $("prep").hidden = true;
+  const text = String(e?.message || e).split("\n"), head = text[0], detail = text.slice(1, 4).join("\n");
+  showNoGL(`3D view unavailable: ${head}${detail ? "\n" + detail : ""}${e?.lost ? "" : "\nThe rest of the console works without it."}`, view?.gpu || "");
+}
+function viewLost(view, { preparing, upgrading }) {
+  if (view !== S.view) return;
+  GFX.events.push(`lost${upgrading ? " upgrading" : preparing ? " preparing" : ""}`);
+  const now = Date.now(); GFX.lost = GFX.lost.filter((t) => now - t < 120000); GFX.lost.push(now);
+  const gpu = view.gpu || "", full = !view.safe || upgrading;
+  clearTimeout(GFX.retry); $("prep").hidden = true;
+  if (full && (preparing || upgrading || GFX.lost.length >= 2)) {
+    const when = upgrading || preparing ? "while it compiled the full-detail shaders" : "twice while drawing with them";
+    setGfxMemo({ mode: "safe", gpu, reason: `the graphics driver reset ${when}` }); GFX.force = "safe";
+    showNoGL(`The graphics driver reset ${when}. Restarting the 3D view in safe graphics (no close-up material detail or strand fur); this browser will start it that way from now on.`, gpu, false);
+    GFX.retry = setTimeout(() => startView(), 2000);
+  } else if (GFX.lost.length < 3) {
+    showNoGL("The graphics driver reset (the WebGL context was lost). Restarting the 3D view…", gpu, false);
+    GFX.retry = setTimeout(() => startView(), 2000);
+  } else viewFailed(view, Object.assign(new Error(`the graphics driver keeps resetting: the WebGL context was lost ${GFX.lost.length} times in two minutes${view.safe ? ", in safe graphics too" : ""}. Update the graphics driver, or open the page in another browser`), { lost: true }));
+}
+function viewUpgrade(view, state, e) {
+  if (view !== S.view) return;
+  GFX.events.push(state);
+  if (state === "compiling") gfxChip(view, "safe graphics · full detail compiling…");
+  else if (state === "done") { gfxChip(view); setGfxMemo({ mode: "full", gpu: view.gpu || "" }); msg("Full graphics: the close-up material detail and strand fur are on (their shaders compiled behind the view).", "ok"); }
+  else if (state === "failed") { gfxChip(view); setGfxMemo({ mode: "safe", gpu: view.gpu || "", reason: String(e?.message || e).split("\n")[0] }); msg(`The 3D view stays in safe graphics: the full-detail shaders do not compile on this GPU (${String(e?.message || e).split("\n")[0]}).`); console.error(e); }
+}
+function startView() {
+  clearTimeout(GFX.retry);
+  let cv = $("cv3d");
+  // a rebuilt view carries on where the last one was: lens, orbit, time of day, senses
+  const prev = S.view ? { zoomZ: S.view.zoomZ, cam: S.view.cam, tod: S.view.timeOfDay, senses: S.view.senses, cone: S.view.cone } : null;
+  if (S.view) { S.view.dispose(); const fresh = cv.cloneNode(false); cv.replaceWith(fresh); cv = fresh; S.view = null; }   // a lost context stays lost: a new canvas has a new one
+  $("nogl").hidden = true; $("gfx-safe").hidden = true;
+  let view;
+  try {
+    view = new Valley3D(cv, { quality: $("quality").value, gfx: gfxChoice(), quiet: () => !S.busy, onPick: (id) => followDeer(id),
+      onStatus: (t) => viewStatus(view, t), onLost: (info) => viewLost(view, info), onError: (e) => viewFailed(view, e), onUpgrade: (state, e) => viewUpgrade(view, state, e),
+      onQuality: (name, ms, scale) => { const o = $("quality").querySelector('option[value="auto"]'); o.textContent = `auto · ${name}${scale < 1 ? " ×" + scale : ""}`; msg(`3D quality set to ${name}${scale < 1 ? ` at ${Math.round(scale * 100)}% resolution` : ""} to hold 60 fps (frames were taking ${ms.toFixed(1)} ms). Pick a level to override.`); } });
+  } catch (e) {
+    S.view = null;
+    if (e?.noContext && GFX.lost.length && GFX.waits < 5) {           // just after a reset the browser holds WebGL back for a few seconds
+      GFX.waits++; showNoGL("Waiting for the graphics driver to come back…", "", false); GFX.retry = setTimeout(() => startView(), 2000 * 2 ** (GFX.waits - 1)); return null;
+    }
+    viewFailed(null, e); return null;
+  }
+  GFX.waits = 0; S.view = view; gfxChip(view);
+  if (prev) {
+    view.setZoom(prev.zoomZ); for (const k of ["yaw", "pitch", "dist", "orbitYaw"]) view.cam[k] = prev.cam[k];
+    view.setTimeOfDay(prev.tod); view.senses = prev.senses; view.cone = prev.cone;
+  }
+  if (S.valley) { view.attach(S.valley, S.map); view.follow(S.follow ?? null); }
+  view.whenReady.then(() => { if (view !== S.view) return; gfxChip(view, view.upgradingNow ? "safe graphics · full detail compiling…" : null);
+    if (view.gfx === "safe") msg(`The 3D view runs in safe graphics${view.gpu ? ` on ${view.gpu}` : ""}${gfxMemo()?.reason ? ` (${gfxMemo().reason})` : ""}. "safe graphics · try full" over the view tries the full shaders again.`); }, () => {});
+  view.start();
+  return view;
+}
+window.__valleyGfx = { state: () => ({ force: GFX.force, lost: GFX.lost.length, waits: GFX.waits, memo: gfxMemo(), choice: gfxChoice(), events: [...GFX.events] }) };   // read-only, for tests and the curious
+$("b-gl-retry").addEventListener("click", () => { GFX.lost = []; GFX.waits = 0; startView(); });
+$("b-gl-safe").addEventListener("click", () => { const toSafe = gfxChoice() !== "safe"; GFX.force = toSafe ? "safe" : "auto"; GFX.lost = []; setGfxMemo(toSafe ? { mode: "safe", gpu: S.view?.gpu || "", reason: "chosen" } : null); startView(); });
+$("gfx-safe").addEventListener("click", () => { GFX.force = "auto"; GFX.lost = []; setGfxMemo(null); startView(); });
+
 /* ---------- start ---------- */
 (async () => {
   try {
     detectHost();
     S.boot = await bootSimmy();
     await startEngines();
-    try {
-      const q = new URLSearchParams(location.search).get("q"), quality = ["auto", "low", "medium", "high", "ultra"].includes(q) ? q : "auto"; $("quality").value = quality;
-      S.view = new Valley3D($("cv3d"), { quality, quiet: () => !S.busy, onPick: (id) => followDeer(id), onError: (e) => { $("nogl").hidden = false; $("nogl").textContent = "The 3D view stopped: " + e.message; console.error(e); },
-        onQuality: (name, ms, scale) => { const o = $("quality").querySelector('option[value="auto"]'); o.textContent = `auto · ${name}${scale < 1 ? " ×" + scale : ""}`; msg(`3D quality set to ${name}${scale < 1 ? ` at ${Math.round(scale * 100)}% resolution` : ""} to hold 60 fps (frames were taking ${ms.toFixed(1)} ms). Pick a level to override.`); } });
-      setInterval(() => { if (S.view && document.visibilityState === "visible") $("perfhud").textContent = S.view.hudText(); }, 500);
-      $("lens").addEventListener("change", (e) => S.view?.setZoom(Number(e.target.value)));
-    } catch (e) { $("nogl").hidden = false; $("nogl").textContent = "3D view unavailable: " + e.message; }
+    const q = new URLSearchParams(location.search).get("q"); $("quality").value = ["auto", "low", "medium", "high", "ultra"].includes(q) ? q : "auto";
+    setInterval(() => { if (S.view && document.visibilityState === "visible") $("perfhud").textContent = S.view.hudText(); }, 500);
+    $("lens").addEventListener("change", (e) => S.view?.setZoom(Number(e.target.value)));
+    startView();
     newWorld(config());
-    S.view?.start();
     ["b-play", "b-step", "b-new"].forEach((id) => { $(id).disabled = false; });
     msg(`Ready. Seed ${S.valley.cfg.seed}: ${S.valley.cfg.deer} deer will enter when SIM-05 is ready (epoch ${S.valley.gateAt.herds}). Press Play.`, "ok");
     window.__valley = S;

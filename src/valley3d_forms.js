@@ -13,6 +13,7 @@
 // Plants and stones are generated in their vertex shaders; their dimensions' extremes are uniforms here
 // (see PLANT_FORMS, ROCK_FORM) and the continuum is evaluated per instance on the GPU.
 
+import { findShards } from "./valley3d_detail.js";
 export const ANIMAL_DIMS = ["barrel", "brisket", "shoulder", "haunch", "tuck", "neckBase", "throat", "neckLen",
   "legs", "body", "head", "skull", "ears", "tail", "withers", "croup"];
 
@@ -124,11 +125,12 @@ export const plantMaturity = (kind, ageEpochs) => growth(ageEpochs / (PLANT_FORM
 // ---- the baked animal forms (shards/animals)
 export class AnimalForms {
   constructor(gl) { this.gl = gl; this.cls = {}; }
-  load(name, base = "shards/animals/") {
+  load(name, base = null) {
     if (this.cls[name]?.loading) return this.cls[name].loading;
     const rec = (this.cls[name] = { ready: false });
     rec.loading = (async () => {
       try {
+        base ??= (await findShards("animals/" + name + ".json")) + "animals/";
         const j = await (await fetch(base + name + ".json", { cache: "force-cache" })).json();
         const gl = this.gl, one = async (fn) => { const r = await fetch(base + fn, { cache: "force-cache" }); if (!r.ok) throw new Error(fn); return new Uint8Array(await r.arrayBuffer()); };
         const bin = async (f) => { const ps = await Promise.all((f.parts ?? [f.file]).map(one)); if (ps.length === 1) return ps[0]; const o = new Uint8Array(f.bytes); let k = 0; for (const p of ps) { o.set(p, k); k += p.length; } return o; };

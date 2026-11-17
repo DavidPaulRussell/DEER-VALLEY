@@ -60,8 +60,10 @@ const SHADOW = `
 uniform sampler2D u_shadowMap;
 uniform mat4 u_lightVP0; uniform mat4 u_lightVP1;
 uniform float u_shadowOn;
+// nine taps at the base level (the map has no mipmaps): textureLod, because a gradient operation inside a loop
+// under divergent flow is an error for D3D's compiler, and ANGLE's retries after it are what hung 1.4.0 on D3D11
 float pcf(vec2 uv, float z, vec2 ts) { float s = 0.0;
-  for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) s += z > texture(u_shadowMap, uv + vec2(x, y) * ts).r ? 0.0 : 1.0;
+  for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) s += z > textureLod(u_shadowMap, uv + vec2(x, y) * ts, 0.0).r ? 0.0 : 1.0;
   return s / 9.0; }
 float shadowAt(vec3 wpos, vec3 n) {
   if (u_shadowOn < 0.5) return 1.0;
@@ -178,8 +180,11 @@ uniform vec4 u_hole;   // centre x, z, half-size, active
 uniform float u_waterLevel; uniform float u_plantsR;
 uniform sampler2D u_sward; uniform float u_world;   // the XPU's live meadow: rgb = mean species colour, a = cover
 uniform sampler2D u_wear;                             // r = trampling by the herd, g = grazed lately, b = shrub canopy
+// keeps the two strongest weights and their materials (no arrays indexed by variables: slow to compile on D3D)
+void top2(float w, int i, inout float w1, inout int i1, inout float w2, inout int i2) { if (w > w1) { w2 = w1; i2 = i1; w1 = w; i1 = i; } else if (w > w2) { w2 = w; i2 = i; } }
+// (the hole for the macro view is cut at the end of main: derivatives and loops after a discard are a pattern
+// some Direct3D drivers handle badly, and here nothing is gained by leaving early)
 void main() {
-  if (u_hole.w > 0.5 && abs(v_wpos.x - u_hole.x) < u_hole.z && abs(v_wpos.z - u_hole.y) < u_hole.z) discard;
   vec3 n = normalize(v_nrm);
   vec2 p = v_wpos.xz;
   vec3 vrel = v_rel - u_camRel; float d = length(vrel), dEye = d * u_pxScale;
@@ -228,15 +233,15 @@ void main() {
   float rough = 0.85, cav = 1.0;
   if (u_detail > 0.5 && dEye < 36.0) {
     float wNo = (1.0 - wRock) * (1.0 - snow);
-    float W[8]; W[0] = wNo * (1.0 - wDry) * (1.0 - wSand) * (1.0 - wMud) * (1.0 - wr.b * 0.6); W[1] = wNo * wDry; W[2] = wNo * wSand; W[3] = wNo * wMud;
-    W[4] = wRock; W[5] = snow; W[6] = wNo * wr.b * 0.6; W[7] = wNo * smoothstep(0.55, 0.85, wear);
-    int I[8]; I[0] = 0; I[1] = 1; I[2] = 2; I[3] = 3; I[4] = 4; I[5] = 10; I[6] = 11; I[7] = 6;
-    int a1 = 0, a2 = 1; if (W[1] > W[0]) { a1 = 1; a2 = 0; }
-    for (int k = 2; k < 8; k++) { if (W[k] > W[a1]) { a2 = a1; a1 = k; } else if (W[k] > W[a2]) a2 = k; }
-    float t = W[a2] / max(W[a1] + W[a2], 1e-4), fade = 1.0 - smoothstep(20.0, 36.0, dEye);
+    // meadow, dry, sand, mud, rock, snow, duff (under the shrubs), gravel (the trails): the library's layers 0 1 2 3 4 10 11 6
+    float w1 = -1.0, w2 = -1.0; int i1 = 0, i2 = 1;
+    top2(wNo * (1.0 - wDry) * (1.0 - wSand) * (1.0 - wMud) * (1.0 - wr.b * 0.6), 0, w1, i1, w2, i2); top2(wNo * wDry, 1, w1, i1, w2, i2);
+    top2(wNo * wSand, 2, w1, i1, w2, i2); top2(wNo * wMud, 3, w1, i1, w2, i2); top2(wRock, 4, w1, i1, w2, i2); top2(snow, 10, w1, i1, w2, i2);
+    top2(wNo * wr.b * 0.6, 11, w1, i1, w2, i2); top2(wNo * smoothstep(0.55, 0.85, wear), 6, w1, i1, w2, i2);
+    float t = w2 / max(w1 + w2, 1e-4), fade = 1.0 - smoothstep(20.0, 36.0, dEye);
     vec2 m = mT; vec3 vdw = vrel / max(d, 1e-9);
-    if (dEye < 4.0) m = parallax(I[a1], m, vdw, mgx, mgy, 5);
-    Det A = matDetail(I[a1], m, mgx, mgy, 5, ivec2(0, 2)), B = matDetail(I[a2], m, mgx, mgy, 5, ivec2(0, 2));
+    if (dEye < 4.0) m = parallax(i1, m, vdw, mgx, mgy, 5);
+    Det A = matDetail(i1, m, mgx, mgy, 5, ivec2(0, 2)), B = matDetail(i2, m, mgx, mgy, 5, ivec2(0, 2));
     vec3 tint = mix(A.tint, B.tint, t); vec2 nxz = mix(A.nxz, B.nxz, t);
     base *= mix(vec3(1.0), clamp(tint, 0.0, 3.0), fade);
     n = normalize(n + vec3(nxz.x, 0.0, nxz.y) * fade);
@@ -251,6 +256,7 @@ void main() {
   col += u_sunCol * sh * pow(max(dot(n, hlf), 0.0), mix(12.0, 160.0, gloss)) * mix(0.015, 0.3, gloss);
   o = vec4(applyFog(col, v_wpos, vrel), 1.0);
   gbuf(base, 0.62 * cav, n, rough, 1u << 24);
+  if (u_hole.w > 0.5 && abs(v_wpos.x - u_hole.x) < u_hole.z && abs(v_wpos.z - u_hole.y) < u_hole.z) discard;
 }`;
 
 /* ------------------------------------------------------------------ water */
@@ -740,10 +746,10 @@ flat in int v_bone; flat in int v_row; flat in vec4 v_c1; flat in vec4 v_c2; fla
 uniform int u_kind;   // 0 deer, 1 wolf, 2 warden, 3 antler
 uniform int u_lod;    // which of the class's meshes this draw is (-1: no cross-fade)
 void main() {
-  if (u_lod >= 0) {                                                              // EYE-2: each pixel keeps one of two neighbouring meshes
+  bool keep = true;
+  if (u_lod >= 0) {                                                              // EYE-2: each pixel keeps one of two neighbouring meshes (applied at the end)
     float hd = hash12(floor(gl_FragCoord.xy));
-    bool keep = u_lod == 0 ? hd >= v_fade.x : u_lod == 1 ? (hd < v_fade.x && hd >= v_fade.y) : hd < v_fade.y;
-    if (!keep) discard;
+    keep = u_lod == 0 ? hd >= v_fade.x : u_lod == 1 ? (hd < v_fade.x && hd >= v_fade.y) : hd < v_fade.y;
   }
   vec3 n = normalize(v_nrm), L = v_lpos, lx = dFdx(L), ly = dFdy(L);              // the template frame's footprint (uniform control flow)
   vec3 vrel = v_rel - u_camRel; float dist = length(vrel); vec3 V = -vrel / max(dist, 1e-9);
@@ -788,6 +794,7 @@ void main() {
   if (nose) col += u_sunCol * sh * pow(max(dot(n, H), 0.0), 120.0) * 0.6 * cav;                         // a wet nose
   o = vec4(applyFog(col, v_wpos, vrel), 1.0);
   gbuf(base, 0.6 * ao, n, rough, (uint(5 + u_kind) << 24) | (uint(v_row & 65535) << 8) | uint(v_bone & 255));
+  if (!keep) discard;
 }`;
 
 /* ------------------------------------------------------------------ strand fur on the animal nearest the lens (valley3d_strands.js) */
@@ -905,7 +912,7 @@ void main() {
 export const FULL_VS = HEADER + `out vec2 v_uv; void main() { vec2 p = vec2((gl_VertexID << 1) & 2, gl_VertexID & 2); v_uv = p; gl_Position = vec4(p * 2.0 - 1.0, 0.0, 1.0); }`;
 export const BRIGHT_FS = HEADER + `in vec2 v_uv; out vec4 o; uniform sampler2D u_tex; uniform float u_thresh;
 void main() { vec2 t = 1.0 / vec2(textureSize(u_tex, 0)); vec3 c = vec3(0);
-  for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) c += texture(u_tex, v_uv + vec2(x, y) * t * 1.5).rgb;
+  for (int y = -1; y <= 1; y++) for (int x = -1; x <= 1; x++) c += textureLod(u_tex, v_uv + vec2(x, y) * t * 1.5, 0.0).rgb;
   c /= 9.0; if (any(isnan(c)) || any(isinf(c))) c = vec3(0.0); c = min(c, vec3(64.0)); float l = max(max(c.r, c.g), c.b); o = vec4(c * smoothstep(u_thresh, u_thresh * 2.0, l), 1.0); }`;
 export const BLUR_FS = HEADER + `in vec2 v_uv; out vec4 o; uniform sampler2D u_tex; uniform vec2 u_dir;
 void main() { vec2 t = u_dir / vec2(textureSize(u_tex, 0)); vec3 c = texture(u_tex, v_uv).rgb * 0.227;
@@ -923,7 +930,7 @@ void main() {
     float z = lin(texture(u_depth, v_uv).r), coc = clamp(u_lens.x * abs(z - u_lens.y) / max(z, 1e-6), 0.0, u_lens.z);   // circle of confusion, pixels
     if (u_macro > 0.5) coc = clamp(abs(z - u_focus) / max(z, 1e-6) * 2.5 - 0.04, 0.0, 1.0) * 7.0;   // a macro lens: a few millimetres in focus
     if (coc > 0.2) { vec2 t = coc / vec2(textureSize(u_scene, 0)); vec3 s = vec3(0);
-      for (int i = 0; i < 16; i++) { float a = float(i) * 2.39996; float r = sqrt((float(i) + 0.5) / 16.0); s += texture(u_scene, v_uv + vec2(cos(a), sin(a)) * r * t).rgb; }
+      for (int i = 0; i < 16; i++) { float a = float(i) * 2.39996; float r = sqrt((float(i) + 0.5) / 16.0); s += textureLod(u_scene, v_uv + vec2(cos(a), sin(a)) * r * t, 0.0).rgb; }
       c = mix(c, s / 16.0, clamp(coc / 1.5, 0.0, 1.0)); }
   }
   c += texture(u_bloom, v_uv).rgb * u_bloomAmt;

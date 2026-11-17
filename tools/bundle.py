@@ -9,7 +9,7 @@ SPDX-License-Identifier: GPL-3.0-only
 import base64, json, pathlib, re, sys
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-VERSION = "1.4.0"
+VERSION = "1.4.1"
 
 
 def _declarators(src: str, i: int) -> list:
@@ -105,6 +105,8 @@ def main():
     cells = (ROOT / 'data/simmy/cells.json').read_text(encoding='ascii')
     workload = (ROOT / 'data/simmy/authority_workload_rails.json').read_text(encoding='ascii')
     console_mods = ['src/lcufa.js', 'src/russl.js', 'src/schemas.js', 'src/schema.js', 'src/engines.js', 'src/russ.js']
+    VIEW3D = ['src/gl.js', 'src/valley3d_detail.js', 'src/valley3d_atmos.js', 'src/valley3d_shaders.js', 'src/valley3d_meshes.js', 'src/valley3d_forms.js', 'src/valley3d_flora.js',
+              'src/valley3d_morph.js', 'src/valley3d_birds.js', 'src/valley3d_eye.js', 'src/valley3d_strands.js', 'src/valley3d_perf.js', 'src/valley3d.js']
     common = {'%%VERSION%%': VERSION, '%%CSS%%': css, '%%TEMPLATES%%': templates, '%%VALLEY_TEMPLATES%%': valley_templates,
               '%%XPU_B64%%': xpu, '%%XPU_MT_B64%%': xpu_mt, '%%SIMMY_CELLS%%': js_string(cells), '%%SIMMY_WORKLOAD%%': js_string(workload)}
     pages = [
@@ -112,9 +114,10 @@ def main():
         ('src/show.html', 'show.html', 'plume-xpu-live.html', console_mods, ('lcufa', 'engines', 'russ')),
         ('src/simmy.html', 'simmy.html', 'plume-simmy-replay.html', ['src/simmy.js'], ('simmy',)),
         ('src/valley.html', 'valley.html', 'plume-deer-valley.html',
-         console_mods + ['src/simmy.js', 'src/valley.js', 'src/valleymap.js', 'src/byte20.js', 'src/gl.js', 'src/valley3d_detail.js', 'src/valley3d_atmos.js', 'src/valley3d_shaders.js', 'src/valley3d_meshes.js', 'src/valley3d_forms.js', 'src/valley3d_flora.js', 'src/valley3d_morph.js', 'src/valley3d_birds.js', 'src/valley3d_eye.js', 'src/valley3d_strands.js', 'src/valley3d_perf.js', 'src/valley3d.js'],
-         ('lcufa', 'engines', 'russ', 'simmy', 'valley', 'valleymap', 'byte20', 'valley3d')),
+         console_mods + ['src/simmy.js', 'src/valley.js', 'src/valleymap.js', 'src/byte20.js'] + VIEW3D + ['src/valley3d_check.js'],
+         ('lcufa', 'engines', 'russ', 'simmy', 'valley', 'valleymap', 'byte20', 'valley3d', 'valley3d_check')),
         ('src/verify.html', 'verify.html', 'plume-verify-r.html', ['src/lcufa.js', 'src/russl.js', 'src/schemas.js', 'src/schema.js', 'src/russ.js'], ('russ',)),
+        ('src/check3d.html', 'check3d.html', 'plume-check-3d.html', ['src/lcufa.js', 'src/simmy.js', 'src/valley.js', 'src/valleymap.js'] + VIEW3D + ['src/valley3d_check.js'], ('valley3d_check',)),
     ]
     for src, web, dist, mods, expose in pages:
         if not (ROOT / src).exists():

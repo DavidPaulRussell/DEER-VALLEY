@@ -13,10 +13,10 @@
 // relative to a render origin by the eye, depth is reversed and floating (EXT_clip_control), the baked
 // material library adds octaves of detail to every surface, and the sky is a spectral atmosphere.
 // Nothing here changes the simulation or its digests.
-import { compileProgram, buffer, vao, texture, target, freeTarget, M4, Q as QT, V3 } from "./gl.js";
+import { compilePrograms, ContextLost, noWebGL2Reason, gpuName, buffer, vao, texture, target, freeTarget, M4, Q as QT, V3 } from "./gl.js";
 import { STRAND_VS, STRAND_FS, STRAND_SEG, SKY_VS, SKY_FS, TERRAIN_VS, TERRAIN_FS, WATER_VS, WATER_FS, GRASS_VS, GRASS_FS, GRASS_BLADES, GRASS_VPB, PLANT_VS, PLANT_FS, PLANT_DEPTH_FS, ROCK_VS, ROCK_FS, SKIN_VS, ANTLER_VS, FUR_FS, BIRD_VS, BIRD_FS, DEPTH_FS, MARK_VS, MARK_FS, FULL_VS, BRIGHT_FS, BLUR_FS, FINAL_FS, PROBE_FS } from "./valley3d_shaders.js";
 import { MaterialLibrary } from "./valley3d_detail.js";
-import { Atmosphere, sunColor, hazeExtinction, PLANET } from "./valley3d_atmos.js";
+import { Atmosphere, ATMOS_PROGRAMS, sunColor, hazeExtinction, PLANET } from "./valley3d_atmos.js";
 import { AnimalForms, deerContinuum, wolfContinuum, wardenContinuum, PLANT_FORMS, PLANT_DIM_ORDER, ROCK_FORM, ROCK_DIM_ORDER, formUniforms } from "./valley3d_forms.js";
 const PLANT_U = ["juniper", "willow", "blueberry"].map((k) => formUniforms(PLANT_FORMS[k], PLANT_DIM_ORDER)), ROCK_U = formUniforms(ROCK_FORM, ROCK_DIM_ORDER);
 import { fovAt, zoomOf, lodLevel, lensUniforms, radPerPixel } from "./valley3d_eye.js";
@@ -47,22 +47,52 @@ const wrapD = (d) => ((d % WORLD) + WORLD * 1.5) % WORLD - WORLD / 2;  // shorte
 const angDiff = (a, b) => { let d = (b - a) % (Math.PI * 2); if (d > Math.PI) d -= Math.PI * 2; if (d < -Math.PI) d += Math.PI * 2; return d; };
 const smoothstep = (a, b, x) => { const t = Math.max(0, Math.min(1, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
 
+// every program the renderer draws with: [vertex shader, fragment shader, label] (also compiled one by one by check3d)
+export const PROGRAMS = {
+  sky: [SKY_VS, SKY_FS, "sky"], terrain: [TERRAIN_VS, TERRAIN_FS, "terrain"], water: [WATER_VS, WATER_FS, "water"],
+  grass: [GRASS_VS, GRASS_FS, "grass"], plant: [PLANT_VS, PLANT_FS, "plant"], skin: [SKIN_VS, FUR_FS, "skin"], rock: [ROCK_VS, ROCK_FS, "rock"],
+  antler: [ANTLER_VS, FUR_FS, "antler"], antlerDepth: [ANTLER_VS, DEPTH_FS, "antler depth"], bird: [BIRD_VS, BIRD_FS, "bird"],
+  terrainDepth: [TERRAIN_VS, DEPTH_FS, "terrain depth"], plantDepth: [PLANT_VS, PLANT_DEPTH_FS, "plant depth"], skinDepth: [SKIN_VS, DEPTH_FS, "skin depth"], rockDepth: [ROCK_VS, DEPTH_FS, "rock depth"],
+  mark: [MARK_VS, MARK_FS, "markers"], bright: [FULL_VS, BRIGHT_FS, "bright"], blur: [FULL_VS, BLUR_FS, "blur"], final: [FULL_VS, FINAL_FS, "final"], probe: [FULL_VS, PROBE_FS, "probe"],
+};
+
+// the programs whose shaders use the material library (matDetail, triDetail): safe graphics compiles them without
+export const DETAIL_PROGRAMS = Object.keys(PROGRAMS).filter((k) => /\b(matDetail|triDetail)\(/.test(PROGRAMS[k][1].replace(/\/\/[^\n]*/g, "").split("void main()")[1] ?? ""));
+
 export class Valley3D {
-  constructor(canvas, { quality = "auto", onPick = null, onError = null, onQuality = null, quiet = null } = {}) {
-    this.canvas = canvas; this.onPick = onPick; this.onError = onError; this.onQuality = onQuality; this.quiet = quiet;
-    this.autoQuality = quality === "auto"; if (this.autoQuality) quality = "high";
+  // The view is usable at once (attach, follow, setQuality...); it draws once its shaders are compiled, which
+  // happens without blocking the GPU process (compilePrograms). whenReady settles when they are, or with why not.
+  // gfx: "full"; "safe" ("safe graphics" for drivers that reset on the full shaders: no close-up material detail,
+  // no strand fur, everything else alike); or "auto": full, except on Direct3D (Windows), where the view starts
+  // safe and compiles the full shaders behind it, swapping them in when they are ready (upgrade). A driver that
+  // resets on them takes the context with it, and the page restarts the view in safe graphics.
+  // onStatus(text | null) reports the preparation; onUpgrade(state, error) the swap ("compiling", "done",
+  // "failed"); onLost({ preparing, upgrading }) a lost WebGL context (the driver reset, or the browser restarted
+  // its GPU process): the view stops, and the page decides whether to start a new one. (safe: true = gfx "safe".)
+  constructor(canvas, { quality = "auto", onPick = null, onError = null, onQuality = null, quiet = null, onStatus = null, onLost = null, onUpgrade = null, gfx = null, safe = false } = {}) {
+    this.canvas = canvas; this.onPick = onPick; this.onError = onError; this.onQuality = onQuality; this.quiet = quiet; this.onStatus = onStatus; this.onLost = onLost; this.onUpgrade = onUpgrade;
+    this.autoQuality = quality === "auto"; if (quality === "auto") quality = "high";
     const gl = canvas.getContext("webgl2", { antialias: false, alpha: false, depth: true, powerPreference: "high-performance", preserveDrawingBuffer: false });
-    if (!gl) throw new Error("WebGL2 is not available in this browser");
-    this.gl = gl; this.hdr = !!gl.getExtension("EXT_color_buffer_float");
+    if (!gl) throw Object.assign(new Error(noWebGL2Reason()), { noContext: true });
+    if (gl.isContextLost()) throw new ContextLost("starting the 3D view (this canvas's context is already lost)");
+    this.gl = gl; this.lost = false; this.ready = false; this.failed = null; this.gpu = gpuName(gl); this.d3d = /Direct3D|D3D1\d|D3D9/i.test(this.gpu);
+    gfx = gfx ?? (safe ? "safe" : "full"); if (gfx === "auto") gfx = this.d3d ? "progressive" : "full";
+    this.gfx = gfx; this.safe = gfx !== "full"; this.upgradingNow = false;   // safe shaders until an upgrade has swapped the full ones in
+    this.onContextLost = (e) => { e.preventDefault(); if (this.lost) return; this.lost = true; this.running = false; this.onLost?.({ preparing: !this.ready, upgrading: this.upgradingNow }); };
+    canvas.addEventListener("webglcontextlost", this.onContextLost, false);
+    this.hdr = !!gl.getExtension("EXT_color_buffer_float");
+    this.half = this.hdr || !!gl.getExtension("EXT_color_buffer_half_float");    // RGBA16F renders (the colour targets)
     this.clip = gl.getExtension("EXT_clip_control"); this.rev = !!(this.clip && this.hdr);   // reversed floating depth: sub-millimetre near planes
-    this.mat = new MaterialLibrary(gl); this.atmos = new Atmosphere(gl);
+    this.maxTex = gl.getParameter(gl.MAX_TEXTURE_SIZE) || 4096;
+    this.mat = new MaterialLibrary(gl); this.atmos = null;   // the sky's tables are made with its programs (prepare)
     this.perf = new Perf(gl); this.scaleMul = 1;              // GPU time per pass and the 60 fps governor (valley3d_perf.js)
-    this.ro = [0, 0, 0]; this.near = NEAR; this.zoomZ = zoomOf(0.9); this.fov = 0.9;   // the focal length's continuum (EYE-3): z in [0, 1], wide to telephoto this.macro = null; this.probeQ = null; this.probeWant = null; this.probeLast = null;
-    this.q = QUALITY[quality] ?? QUALITY.high; this.qualityName = quality;
+    this.ro = [0, 0, 0]; this.near = NEAR; this.zoomZ = zoomOf(0.9); this.fov = 0.9;   // the focal length's continuum (EYE-3): z in [0, 1], wide to telephoto
+    this.macro = null; this.probeQ = null; this.probeWant = null; this.probeLast = null;
+    this.q = QUALITY[quality] ?? QUALITY.high; this.qualityName = QUALITY[quality] ? quality : "high";
     this.cam = { yaw: 0, pitch: 0.28, dist: 6.5, orbitYaw: 0, pos: [256, 30, 256], target: [256, 20, 256], mode: "follow" };
     this.followId = null; this.anim = new Map(); this.timeOfDay = null; this.tod = 0.38; this.senses = false; this.cone = false;
     this.epochT0 = performance.now(); this.periodMs = 2000; this.frameNo = 0; this.lastT = performance.now(); this.running = false;
-    this.programs(); this.staticGeometry(); this.inputs();
+    this.emptyVao = gl.createVertexArray(); this.staticGeometry(); this.inputs();
     this.vegTex = texture(gl, 128, 128, { internal: gl.RGBA32UI, format: gl.RGBA_INTEGER, type: gl.UNSIGNED_INT, filter: gl.NEAREST, wrap: gl.REPEAT });
     this.swardTex = texture(gl, 128, 128, { filter: gl.LINEAR, wrap: gl.REPEAT });
     this.wearTex = texture(gl, 128, 128, { filter: gl.LINEAR, wrap: gl.REPEAT });
@@ -73,9 +103,9 @@ export class Valley3D {
     this.boneData = { deer: new Float32Array(ROWF * 512), wolf: new Float32Array(ROWF * 512), human: new Float32Array(ROWF * 512) };
     // the classes' baked extreme forms (shards/animals); until they arrive (or without them) the procedural template is drawn
     this.forms = new AnimalForms(gl); this.formGL = {};
-    for (const k of ["deer", "wolf", "human"]) this.forms.load(FORM_CLASS[k]).then((c) => { if (c) this.formGL[k] = c.lods.map((L) => ({ ...this.meshVao({ vertices: L.vb, indices: L.ib }, this.instBuf[k], [[5, 4, 48, 0], [6, 4, 48, 16], [7, 4, 48, 32]]), dpos: L.dpos, dnrm: L.dnrm })); });
+    for (const k of ["deer", "wolf", "human"]) this.forms.load(FORM_CLASS[k]).then((c) => { if (c && !this.lost) this.formGL[k] = c.lods.map((L) => ({ ...this.meshVao({ vertices: L.vb, indices: L.ib }, this.instBuf[k], [[5, 4, 48, 0], [6, 4, 48, 16], [7, 4, 48, 32]]), dpos: L.dpos, dnrm: L.dnrm })); });
     this.lodCounts = { deer: [0, 0, 0, 0, 0], wolf: [0, 0, 0, 0, 0], human: [0, 0, 0, 0, 0] };   // rows per band: mesh 0, fade 0/1, mesh 1, fade 1/2, mesh 2
-    this.strands = new Strands(gl, { vs: STRAND_VS, fs: STRAND_FS }); this.strandBudget = STRAND_MAX;   // rows per band: mesh 0, fade 0/1, mesh 1, fade 1/2, mesh 2
+    this.strands = null; this.strandBudget = this.safe ? 0 : STRAND_MAX;   // strand fur's program arrives with the others (prepare)
     this.rings = RINGS.map((r) => ({ ...r, center: null, vao: null, buf: null, heights: null }));
     this.hgtTex = texture(gl, 129, 129, { internal: gl.R32F, format: gl.RED, type: gl.FLOAT, filter: gl.NEAREST });
     this.hgtTex2 = texture(gl, 129, 129, { internal: gl.R32F, format: gl.RED, type: gl.FLOAT, filter: gl.NEAREST });
@@ -84,19 +114,63 @@ export class Valley3D {
       this.probeT = target(gl, 1, 1, { color: [{ internal: gl.RGBA32F, format: gl.RGBA, type: gl.FLOAT, filter: gl.NEAREST }], depth: false });
       this.probeBuf = gl.createBuffer(); gl.bindBuffer(gl.PIXEL_PACK_BUFFER, this.probeBuf); gl.bufferData(gl.PIXEL_PACK_BUFFER, 16, gl.STREAM_READ); gl.bindBuffer(gl.PIXEL_PACK_BUFFER, null);
     }
-    this.resize(); this.mat.load(this.q.detail ?? 0);
+    this.resize();
+    this.whenReady = this.prepare().then(() => {
+      this.ready = true; this.onStatus?.(null); this.mat.load(this.detailSize());
+      if (this.gfx === "progressive") this.upgrade().catch(() => {});   // a lost context is reported by onLost
+      return this;
+    }, (e) => {
+      this.failed = e; this.running = false; this.onStatus?.(null);
+      if (!(e?.lost && this.onLost)) this.onError?.(e);           // a lost context is reported once, by onLost
+      throw e;
+    });
+    this.whenReady.catch(() => {});                                // the page listens; no unhandled rejection either way
   }
   /* ---------------- setup */
-  programs() {
-    const gl = this.gl, P = (vs, fs, l) => compileProgram(gl, vs, fs, l);
-    this.P = {
-      sky: P(SKY_VS, SKY_FS, "sky"), terrain: P(TERRAIN_VS, TERRAIN_FS, "terrain"), water: P(WATER_VS, WATER_FS, "water"),
-      grass: P(GRASS_VS, GRASS_FS, "grass"), plant: P(PLANT_VS, PLANT_FS, "plant"), skin: P(SKIN_VS, FUR_FS, "skin"), rock: P(ROCK_VS, ROCK_FS, "rock"), antler: P(ANTLER_VS, FUR_FS, "antler"), antlerDepth: P(ANTLER_VS, DEPTH_FS, "antler depth"), bird: P(BIRD_VS, BIRD_FS, "bird"),
-      terrainDepth: P(TERRAIN_VS, DEPTH_FS, "terrain depth"), plantDepth: P(PLANT_VS, PLANT_DEPTH_FS, "plant depth"), skinDepth: P(SKIN_VS, DEPTH_FS, "skin depth"), rockDepth: P(ROCK_VS, DEPTH_FS, "rock depth"),
-      mark: P(MARK_VS, MARK_FS, "markers"), bright: P(FULL_VS, BRIGHT_FS, "bright"), blur: P(FULL_VS, BLUR_FS, "blur"), final: P(FULL_VS, FINAL_FS, "final"), probe: P(FULL_VS, PROBE_FS, "probe"),
-    };
-    this.emptyVao = gl.createVertexArray();
+  // every program of the view, the sky's and strand fur's, compiled together and without blocking
+  async prepare() {
+    const gl = this.gl, specs = { ...PROGRAMS };
+    for (const [k, v] of Object.entries(ATMOS_PROGRAMS)) specs["atmos." + k] = v;
+    if (!this.safe) specs.strands = [STRAND_VS, STRAND_FS, "strands"];
+    const n = Object.keys(specs).length, t0 = performance.now();
+    this.onStatus?.(`Preparing the 3D view: compiling ${n} shader programs${this.safe ? " (safe graphics)" : ""}…`);
+    const P = await compilePrograms(gl, specs, { defines: this.safe ? "#define PLUME_SAFE 1\n" : "",
+      onProgress: (done, total) => this.onStatus?.(`Preparing the 3D view: ${done} of ${total} shader programs compiled${this.safe ? " (safe graphics)" : ""}…`) });
+    if (this.lost || gl.isContextLost()) throw new ContextLost("preparing the 3D view");
+    this.compileMs = performance.now() - t0;
+    const A = {}; this.P = {};
+    for (const [k, v] of Object.entries(P)) { if (k.startsWith("atmos.")) A[k.slice(6)] = v; else if (k !== "strands") this.P[k] = v; }
+    this.atmos = new Atmosphere(gl, A);
+    if (P.strands) this.strands = new Strands(gl, { program: P.strands });
   }
+  // safe graphics now, the full shaders behind them: the programs that use the material library (and strand fur)
+  // compiled in this context while the view draws, then swapped in. A compile error leaves the view safe; a driver
+  // that resets on them loses the context (onLost with upgrading set).
+  async upgrade() {
+    if (!this.safe || this.upgradingNow || this.lost) return false;
+    const gl = this.gl, specs = { strands: [STRAND_VS, STRAND_FS, "strands"] };
+    for (const k of DETAIL_PROGRAMS) specs[k] = PROGRAMS[k];
+    this.upgradingNow = true; this.onUpgrade?.("compiling");
+    try {
+      const P = await compilePrograms(gl, specs);
+      if (this.disposed) return false;
+      if (this.lost || gl.isContextLost()) throw new ContextLost("swapping in the full-detail shaders");
+      for (const k of DETAIL_PROGRAMS) { gl.deleteProgram(this.P[k].p); this.P[k] = P[k]; }
+      this.strands = new Strands(gl, { program: P.strands }); this.strandBudget = STRAND_MAX;
+      this.safe = false; this.gfx = "full"; this.upgradingNow = false; this.mat.load(this.detailSize());
+      this.onUpgrade?.("done");
+      return true;
+    } catch (e) {
+      // a lost context: upgradingNow stays set, so the webglcontextlost event (which may come after this, as its
+      // own task) is reported with upgrading set, and the page falls back to safe graphics at the first reset
+      const lost = !!(e?.lost || this.lost || gl.isContextLost());
+      this.upgradingNow = lost;
+      if (!lost) this.onUpgrade?.("failed", e);
+      throw e;
+    }
+  }
+  // the material library's size for the quality level (none in safe graphics: its shaders are left out)
+  detailSize() { return this.safe ? 0 : (this.q.detail ?? 0); }
   meshVao(mesh, instanceBuf, instanceLayout) {
     const gl = this.gl, vb = buffer(gl, mesh.vertices), ib = buffer(gl, mesh.indices, gl.ELEMENT_ARRAY_BUFFER), s = STRIDE * 4;
     const at = [[0, vb, 3, gl.FLOAT, false, s, 0], [1, vb, 3, gl.FLOAT, false, s, 12], [2, vb, 3, gl.FLOAT, false, s, 24], [3, vb, 2, gl.FLOAT, false, s, 36], [4, vb, 2, gl.FLOAT, false, s, 44]];
@@ -149,7 +223,8 @@ export class Valley3D {
       drag = null;
     });
     c.addEventListener("wheel", (e) => { e.preventDefault(); if (e.shiftKey || e.altKey) this.setZoom(this.zoomZ - e.deltaY * 0.0006); else this.zoom(Math.exp(e.deltaY * 0.001)); }, { passive: false });
-    window.addEventListener("keydown", (e) => { if (e.target?.tagName === "INPUT" || e.target?.tagName === "SELECT") return; if (e.key === "]") this.setZoom(this.zoomZ + 0.04); if (e.key === "[") this.setZoom(this.zoomZ - 0.04); });
+    this.onKey = (e) => { if (e.target?.tagName === "INPUT" || e.target?.tagName === "SELECT") return; if (e.key === "]") this.setZoom(this.zoomZ + 0.04); if (e.key === "[") this.setZoom(this.zoomZ - 0.04); };
+    window.addEventListener("keydown", this.onKey);
   }
   // the lens: z in [0, 1] from 14 mm to 2300 mm (full-frame equivalent), geometric
   setZoom(z) { this.zoomZ = Math.max(0, Math.min(1, z)); this.fov = fovAt(this.zoomZ); }
@@ -189,7 +264,7 @@ export class Valley3D {
   probeAt(x, y, cb) { if (!this.probeT) { cb(null); return; } this.probeWant = { x: x * this.W / this.canvas.clientWidth, y: this.H - 1 - y * this.H / this.canvas.clientHeight, cb }; }
   // "auto" starts at high and steps down while quiet frames (no epoch being computed) run slower than ~22 fps
   setQuality(q) { if (q === "auto") { this.autoQuality = true; this.samples = []; return; } if (!QUALITY[q]) return; this.autoQuality = false; this.useQuality(q); }
-  useQuality(q) { this.q = QUALITY[q]; this.qualityName = q; this.resize(true); this.mat.load(this.q.detail ?? 0); }
+  useQuality(q) { this.q = QUALITY[q]; this.qualityName = q; this.resize(true); if (this.ready) this.mat.load(this.detailSize()); }
   // "auto": the governor holds 60 fps (16.7 ms) by render scale, then quality level; GPU time when the timer extension is there
   govern(ms, quiet) {
     if (!this.autoQuality || !quiet) return;
@@ -199,20 +274,22 @@ export class Valley3D {
     this.onQuality?.(this.qualityName, this.perf.gpuTotal || ms, this.scaleMul);
   }
   // a line of frame timing over the view (per-pass GPU milliseconds against the 16.7 ms budget)
-  hudText() { return this.perf.text(` · ${this.W}x${this.H} ${this.qualityName}${this.scaleMul < 1 ? " x" + this.scaleMul : ""} · target ${TARGET_MS.toFixed(1)} ms`); }
+  hudText() { return this.perf.text(` · ${this.W}x${this.H} ${this.qualityName}${this.safe ? " · safe graphics" : ""}${this.scaleMul < 1 ? " x" + this.scaleMul : ""} · target ${TARGET_MS.toFixed(1)} ms`); }
   resize(force = false) {
+    if (this.lost) return;
     const gl = this.gl, dpr = Math.min(window.devicePixelRatio || 1, 2), w = Math.max(64, Math.round(this.canvas.clientWidth * dpr * this.q.scale * this.scaleMul)), h = Math.max(64, Math.round(this.canvas.clientHeight * dpr * this.q.scale * this.scaleMul));
     if (!force && this.W === w && this.H === h) return;
     this.W = w; this.H = h; this.canvas.width = w; this.canvas.height = h;
     [this.sceneT, this.waterT, this.brightT, this.blurT].forEach((t) => freeTarget(gl, t));
-    const col = this.hdr ? { internal: gl.RGBA16F, format: gl.RGBA, type: gl.HALF_FLOAT } : { internal: gl.RGBA8, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
-    const nrm = this.hdr ? { internal: gl.RGBA16F, format: gl.RGBA, type: gl.HALF_FLOAT, filter: gl.NEAREST } : { internal: gl.RGBA8, format: gl.RGBA, type: gl.UNSIGNED_BYTE, filter: gl.NEAREST };
+    const col = this.half ? { internal: gl.RGBA16F, format: gl.RGBA, type: gl.HALF_FLOAT } : { internal: gl.RGBA8, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
+    const nrm = this.half ? { internal: gl.RGBA16F, format: gl.RGBA, type: gl.HALF_FLOAT, filter: gl.NEAREST } : { internal: gl.RGBA8, format: gl.RGBA, type: gl.UNSIGNED_BYTE, filter: gl.NEAREST };
     this.sceneT = target(gl, w, h, { color: [col, { internal: gl.RGBA8, format: gl.RGBA, type: gl.UNSIGNED_BYTE, filter: gl.NEAREST }, nrm, { internal: gl.R32UI, format: gl.RED_INTEGER, type: gl.UNSIGNED_INT, filter: gl.NEAREST }], depthTexture: true });
     this.waterT = target(gl, w, h, { color: [col], depth: false });
     const bw = Math.max(16, w >> 2), bh = Math.max(16, h >> 2);
     this.brightT = target(gl, bw, bh, { color: [col], depth: false }); this.blurT = target(gl, bw, bh, { color: [col], depth: false });
     if (this.shadowT) freeTarget(gl, this.shadowT); this.shadowT = null;
-    if (this.q.shadow) this.shadowT = target(gl, this.q.shadow * 2, this.q.shadow, { color: [{ internal: gl.R8, format: gl.RED, type: gl.UNSIGNED_BYTE }], depthTexture: true });
+    const sh = Math.min(this.q.shadow, this.maxTex >> 1);               // two cascades side by side: twice as wide as tall
+    if (sh) this.shadowT = target(gl, sh * 2, sh, { color: [{ internal: gl.R8, format: gl.RED, type: gl.UNSIGNED_BYTE }], depthTexture: true });
   }
   /* ---------------- the world */
   attach(valley, map) { this.valley = valley; this.map = map; this.mapVersion = -1; this.space = null; this.spaceEpoch = -1; this.waterLevel = map.waterLevelMm / 1000 + 0.15; this.rings.forEach((r) => { r.center = null; }); this.anim.clear(); this.epochChanged(); }
@@ -527,8 +604,9 @@ export class Valley3D {
     if (this.running) return; this.running = true; let prev = null, wasQuiet = false;
     const loop = (t) => {
       if (!this.running) return;
+      if (!this.ready) { if (this.failed || this.lost) { this.running = false; return; } requestAnimationFrame(loop); return; }
       const quiet = this.quiet ? !!this.quiet() : true; if (prev != null && document.visibilityState === "visible") this.govern(t - prev, quiet && wasQuiet); prev = t; wasQuiet = quiet;
-      try { this.frame(t); } catch (e) { this.running = false; this.onError?.(e); return; }
+      try { this.frame(t); } catch (e) { this.running = false; if (this.lost || this.gl.isContextLost()) { if (!this.lost) this.onContextLost({ preventDefault() {} }); return; } this.onError?.(e); return; }
       requestAnimationFrame(loop);
     };
     requestAnimationFrame(loop);
@@ -950,7 +1028,13 @@ export class Valley3D {
       gl.uniform1f(u.u_dof, this.macro || this.q.dof ? 1 : 0); gl.uniform1f(u.u_macro, this.macro ? 1 : 0); gl.uniform4fv(u.u_lens, lensUniforms(this.fov, this.H, zf, !!this.macro));
     });
   }
-  dispose() { this.stop(); const ext = this.gl.getExtension("WEBGL_lose_context"); ext?.loseContext(); }
+  // stop, and let the GPU memory go now (a new view gets a new canvas and context)
+  dispose() {
+    this.stop(); this.disposed = true; this.onLost = null; this.onError = null; this.onStatus = null; this.onUpgrade = null;
+    this.canvas.removeEventListener("webglcontextlost", this.onContextLost, false);
+    if (this.onKey) window.removeEventListener("keydown", this.onKey);
+    if (!this.lost) { this.lost = true; this.gl.getExtension("WEBGL_lose_context")?.loseContext(); }
+  }
 }
 
 const tmpM = new Float32Array(16);

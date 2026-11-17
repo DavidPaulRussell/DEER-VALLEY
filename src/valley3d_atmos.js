@@ -78,9 +78,14 @@ export function hazeExtinction(h = PLANET.valleyAlt, visibilityKm = 40) {
 const HEAD = `#version 300 es
 precision highp float; precision highp int; precision highp sampler2D;
 `;
+// The loops below integrate along rays. Their bounds carry u_keepLoops (never set: 0), so that Direct3D's compiler
+// (FXC, under ANGLE on Windows) keeps them loops rather than unrolling 1280 steps, and every lookup inside them
+// is textureLod (the tables have no mipmaps): a gradient operation in a loop with a continue is an error for FXC,
+// and ANGLE's retries after such an error are slow. See valley3d_detail.js for what that cost in 1.4.0.
 const ATMOS = `
 const float Rg = 6360e3, Rt = 6460e3, PI = 3.14159265;
 uniform vec4 u_rayA, u_rayB, u_ozA, u_ozB; uniform vec3 u_mie;   // Mie scatter, absorb, g
+uniform int u_keepLoops;
 void ext(float h, out vec4 a, out vec4 b, out float mS) {
   float r = exp(-h / 8000.0), m = exp(-h / 1200.0), o = max(0.0, 1.0 - abs(h - 25000.0) / 15000.0);
   mS = u_mie.x * m; a = u_rayA * r + (u_mie.x + u_mie.y) * m + u_ozA * o; b = u_rayB * r + (u_mie.x + u_mie.y) * m + u_ozB * o;
@@ -104,25 +109,25 @@ void main() {
   float dmin = Rt - r, dmax = rho + H, d = dmin + v_uv.x * (dmax - dmin);
   float mu = d == 0.0 ? 1.0 : clamp((H * H - rho * rho - d * d) / (2.0 * r * d), -1.0, 1.0);
   vec4 tA = vec4(0.0), tB = vec4(0.0); float dt = d / 40.0;
-  for (int i = 0; i < 40; i++) { float t = (float(i) + 0.5) * dt, h = sqrt(r * r + t * t + 2.0 * r * t * mu) - Rg; vec4 a, b; float m; ext(h, a, b, m); tA += a * dt; tB += b * dt; }
+  for (int i = 0; i < 40 + u_keepLoops; i++) { float t = (float(i) + 0.5) * dt, h = sqrt(r * r + t * t + 2.0 * r * t * mu) - Rg; vec4 a, b; float m; ext(h, a, b, m); tA += a * dt; tB += b * dt; }
   oA = exp(-tA); oB = exp(-tB);
 }`;
 // Hillaire's multiple scattering: the second-order light from a uniform sphere of directions, summed as a geometric series
 const MS_FS = HEAD + ATMOS + `
 in vec2 v_uv; layout(location=0) out vec4 oA; layout(location=1) out vec4 oB;
 uniform sampler2D u_tA, u_tB;
-void trans(float r, float mu, out vec4 a, out vec4 b) { vec2 uv = rMuToUV(r, mu); a = texture(u_tA, uv); b = texture(u_tB, uv); }
+void trans(float r, float mu, out vec4 a, out vec4 b) { vec2 uv = rMuToUV(r, mu); a = textureLod(u_tA, uv, 0.0); b = textureLod(u_tB, uv, 0.0); }
 void main() {
   float muS = v_uv.x * 2.0 - 1.0, r = Rg + 1.0 + v_uv.y * (Rt - Rg - 2.0);
   vec4 LA = vec4(0.0), LB = vec4(0.0), fA = vec4(0.0), fB = vec4(0.0);
   const float ALB = 0.3;
-  for (int j = 0; j < 8; j++) for (int i = 0; i < 8; i++) {
+  for (int j = 0; j < 8 + u_keepLoops; j++) for (int i = 0; i < 8 + u_keepLoops; i++) {
     float th = acos(1.0 - 2.0 * (float(j) + 0.5) / 8.0), ph = (float(i) + 0.5) / 8.0 * 2.0 * PI;
     vec3 dir = vec3(sin(th) * cos(ph), cos(th), sin(th) * sin(ph)); float mu = dir.y;
     vec3 sun = vec3(sqrt(1.0 - muS * muS), muS, 0.0);
     float tG = sphere(r, mu, Rg), tT = sphere(r, mu, Rt), len = tG > 0.0 ? tG : tT; if (len <= 0.0) continue;
     float dt = len / 20.0; vec4 TA = vec4(1.0), TB = vec4(1.0), sA = vec4(0.0), sB = vec4(0.0), mA = vec4(0.0), mB = vec4(0.0);
-    for (int s = 0; s < 20; s++) {
+    for (int s = 0; s < 20 + u_keepLoops; s++) {
       float t = (float(s) + 0.5) * dt; vec3 p = vec3(0.0, r, 0.0) + dir * t; float rr = length(p), h = rr - Rg;
       vec4 eA, eB; float mS; ext(h, eA, eB, mS);
       float rS = exp(-h / 8000.0); vec4 scA = u_rayA * rS + mS, scB = u_rayB * rS + mS;
@@ -143,7 +148,7 @@ void main() {
 const VIEW_FS = HEAD + ATMOS + `
 in vec2 v_uv; layout(location=0) out vec4 oA; layout(location=1) out vec4 oB;
 uniform sampler2D u_tA, u_tB, u_mA, u_mB; uniform float u_alt; uniform float u_sunMu; uniform float u_horizon; uniform float u_haze;
-void trans(float r, float mu, out vec4 a, out vec4 b) { vec2 uv = rMuToUV(r, mu); a = texture(u_tA, uv); b = texture(u_tB, uv); }
+void trans(float r, float mu, out vec4 a, out vec4 b) { vec2 uv = rMuToUV(r, mu); a = textureLod(u_tA, uv, 0.0); b = textureLod(u_tB, uv, 0.0); }
 void main() {
   float v = v_uv.y, hz = u_horizon, lat = v >= 0.5 ? hz + (1.5708 - hz) * pow((v - 0.5) * 2.0, 2.0) : hz - (1.5708 + hz) * pow((0.5 - v) * 2.0, 2.0);
   float az = v_uv.x * 2.0 * PI;
@@ -151,13 +156,13 @@ void main() {
   float r = Rg + u_alt, mu = dir.y, tG = sphere(r, mu, Rg), tT = sphere(r, mu, Rt), len = tG > 0.0 ? tG : tT;
   float c = dot(dir, sun), pR = rayleighPhase(c), pM = miePhase(c, u_mie.z);
   vec4 TA = vec4(1.0), TB = vec4(1.0), LA = vec4(0.0), LB = vec4(0.0); float t0 = 0.0;
-  for (int s = 0; s < 32; s++) {
+  for (int s = 0; s < 32 + u_keepLoops; s++) {
     float t1 = len * pow((float(s) + 1.0) / 32.0, 2.0), dt = t1 - t0, t = (t0 + t1) * 0.5; t0 = t1;
     vec3 p = vec3(0.0, r, 0.0) + dir * t; float rr = length(p), h = rr - Rg;
     vec4 eA, eB; float mS; ext(h, eA, eB, mS); mS *= u_haze; eA += (u_haze - 1.0) * (u_mie.x + u_mie.y) * exp(-h / 1200.0); eB += (u_haze - 1.0) * (u_mie.x + u_mie.y) * exp(-h / 1200.0);
     float rS = exp(-h / 8000.0); vec4 rsA = u_rayA * rS, rsB = u_rayB * rS;
     float muSp = dot(p / rr, sun); vec4 stA, stB; trans(rr, muSp, stA, stB); float earth = sphere(rr, muSp, Rg) > 0.0 ? 0.0 : 1.0;
-    vec2 muv = vec2(muSp * 0.5 + 0.5, clamp(h / (Rt - Rg), 0.0, 1.0)); vec4 msA = texture(u_mA, muv), msB = texture(u_mB, muv);
+    vec2 muv = vec2(muSp * 0.5 + 0.5, clamp(h / (Rt - Rg), 0.0, 1.0)); vec4 msA = textureLod(u_mA, muv, 0.0), msB = textureLod(u_mB, muv, 0.0);
     vec4 sA = (rsA * pR + mS * pM) * stA * earth + (rsA + mS) * msA, sB = (rsB * pR + mS * pM) * stB * earth + (rsB + mS) * msB;
     vec4 dA = exp(-eA * dt), dB = exp(-eB * dt);
     LA += TA * (sA - sA * dA) / max(eA, vec4(1e-12)); LB += TB * (sB - sB * dB) / max(eB, vec4(1e-12));
@@ -186,11 +191,18 @@ vec2 skyUV(vec3 d) {
 vec3 skyRadiance(vec3 d, float lod) { return textureLod(u_skyPano, skyUV(normalize(d)), lod).rgb; }
 `;
 
+// the sky's programs: [vertex shader, fragment shader, label]
+export const ATMOS_PROGRAMS = { trans: [FULL_VS, TRANS_FS, "transmittance"], ms: [FULL_VS, MS_FS, "multiple scattering"], view: [FULL_VS, VIEW_FS, "sky view"], rgb: [FULL_VS, RGB_FS, "sky rgb"] };
+
 export class Atmosphere {
-  constructor(gl) {
-    this.gl = gl; const P = (fs, l) => compileProgram(gl, FULL_VS, fs, l);
-    this.P = { trans: P(TRANS_FS, "transmittance"), ms: P(MS_FS, "multiple scattering"), view: P(VIEW_FS, "sky view"), rgb: P(RGB_FS, "sky rgb") };
-    const f16 = { internal: gl.RGBA16F, format: gl.RGBA, type: gl.HALF_FLOAT };
+  // programs: the ATMOS_PROGRAMS already compiled (Valley3D compiles them with its own, without blocking); without
+  // them they are compiled here, at once. The tables are half float where this context can render to it, else
+  // 8-bit (the sky then clips its brightest light, but it renders).
+  constructor(gl, programs = null) {
+    this.gl = gl; this.P = programs ?? {};
+    if (!programs) for (const [k, [vs, fs, label]] of Object.entries(ATMOS_PROGRAMS)) this.P[k] = compileProgram(gl, vs, fs, label);
+    this.halfFloat = !!(gl.getExtension("EXT_color_buffer_float") || gl.getExtension("EXT_color_buffer_half_float"));
+    const f16 = this.halfFloat ? { internal: gl.RGBA16F, format: gl.RGBA, type: gl.HALF_FLOAT } : { internal: gl.RGBA8, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
     this.transT = target(gl, 256, 64, { color: [f16, f16], depth: false });
     this.msT = target(gl, 32, 32, { color: [f16, f16], depth: false });
     this.viewT = target(gl, 192, 108, { color: [f16, f16], depth: false });

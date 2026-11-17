@@ -1,21 +1,87 @@
 // Small WebGL2 toolkit for the Deer Valley renderer: shaders, buffers, render targets, matrices.
 // SPDX-License-Identifier: GPL-3.0-only
 
-export function compileProgram(gl, vs, fs, label = "program") {
-  const sh = (type, src) => {
-    const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s);
-    if (!gl.getShaderParameter(s, gl.COMPILE_STATUS)) {
-      const log = gl.getShaderInfoLog(s), lines = src.split("\n").map((l, i) => `${String(i + 1).padStart(4)} ${l}`);
-      const m = /ERROR: \d+:(\d+)/.exec(log || ""), at = m ? Number(m[1]) : 0;
-      throw new Error(`${label} ${type === gl.VERTEX_SHADER ? "vertex" : "fragment"} shader: ${log}\n${lines.slice(Math.max(0, at - 4), at + 2).join("\n")}`);
+// The WebGL context went away (the browser restarted its GPU process, or the driver reset). Every object made
+// on it is gone; a new context, on a new canvas, is the way back.
+export class ContextLost extends Error {
+  constructor(while_) { super(`the graphics driver was reset while ${while_} (the WebGL context was lost)`); this.name = "ContextLost"; this.lost = true; }
+}
+// why a page has no WebGL 2, in words a user can act on
+export function noWebGL2Reason() {
+  let gl1 = null; try { gl1 = document.createElement("canvas").getContext("webgl"); } catch { /* no WebGL at all */ }
+  return gl1 ? "this browser offers WebGL 1 but not WebGL 2; open the page in a current Edge, Chrome or Firefox"
+    : "this browser window has no WebGL: GPU acceleration is off or blocked here (some kiosk shells and remote-desktop sessions turn it off, and a browser turns it off for a while after its GPU process has crashed repeatedly). Open the page in Edge, Chrome or Firefox with hardware acceleration on";
+}
+// the GPU behind a context, as the browser names it (with ANGLE: the backend too, e.g. "Direct3D11")
+export function gpuName(gl) {
+  try { const d = gl.getExtension("WEBGL_debug_renderer_info"); return d ? `${gl.getParameter(d.UNMASKED_RENDERER_WEBGL)} (${gl.getParameter(d.UNMASKED_VENDOR_WEBGL)})` : String(gl.getParameter(gl.RENDERER)); } catch { return "unknown"; }
+}
+// a shader's source with preprocessor lines after its #version line (PLUME_SAFE and the like)
+export function withDefines(src, defines = "") { return defines ? src.replace(/^(#version[^\n]*\n)/, `$1${defines}`) : src; }
+function shaderError(gl, s, type, src, label) {
+  const log = gl.getShaderInfoLog(s) || "", lines = src.split("\n").map((l, i) => `${String(i + 1).padStart(4)} ${l}`);
+  const m = /ERROR: \d+:(\d+)/.exec(log), at = m ? Number(m[1]) : 0;
+  return new Error(`${label} ${type === gl.VERTEX_SHADER ? "vertex" : "fragment"} shader: ${log || "no log"}\n${lines.slice(Math.max(0, at - 4), at + 2).join("\n")}`);
+}
+// queue one program: compile both shaders and link, without asking how it went (that would wait for the driver)
+function submit(gl, vs, fs, label, defines) {
+  const job = { label, vsrc: withDefines(vs, defines), fsrc: withDefines(fs, defines), t0: performance.now(), ms: 0 };
+  const mk = (type, src) => { const s = gl.createShader(type); gl.shaderSource(s, src); gl.compileShader(s); return s; };
+  job.vs = mk(gl.VERTEX_SHADER, job.vsrc); job.fs = mk(gl.FRAGMENT_SHADER, job.fsrc);
+  job.p = gl.createProgram(); gl.attachShader(job.p, job.vs); gl.attachShader(job.p, job.fs); gl.linkProgram(job.p);
+  return job;
+}
+// a finished job: its status, then its uniforms
+function collect(gl, job) {
+  if (gl.isContextLost()) throw new ContextLost(`preparing the ${job.label} shaders`);
+  if (!gl.getProgramParameter(job.p, gl.LINK_STATUS)) {
+    if (gl.isContextLost()) throw new ContextLost(`linking the ${job.label} shaders`);
+    if (!gl.getShaderParameter(job.vs, gl.COMPILE_STATUS)) throw shaderError(gl, job.vs, gl.VERTEX_SHADER, job.vsrc, job.label);
+    if (!gl.getShaderParameter(job.fs, gl.COMPILE_STATUS)) throw shaderError(gl, job.fs, gl.FRAGMENT_SHADER, job.fsrc, job.label);
+    throw new Error(`${job.label} link: ${gl.getProgramInfoLog(job.p) || "the driver gave no reason"}`);
+  }
+  const uniforms = {}, n = gl.getProgramParameter(job.p, gl.ACTIVE_UNIFORMS);
+  for (let i = 0; i < n; i++) { const info = gl.getActiveUniform(job.p, i); uniforms[info.name.replace(/\[0\]$/, "")] = gl.getUniformLocation(job.p, info.name); }
+  gl.detachShader(job.p, job.vs); gl.detachShader(job.p, job.fs); gl.deleteShader(job.vs); gl.deleteShader(job.fs);
+  return { p: job.p, u: uniforms, label: job.label, ms: job.ms };
+}
+// one program, at once (blocks until the driver has compiled it: fine for small programs and tests)
+export function compileProgram(gl, vs, fs, label = "program", defines = "") {
+  const job = submit(gl, vs, fs, label, defines); const r = collect(gl, job); r.ms = performance.now() - job.t0; return r;
+}
+// Many programs without stalling the browser's GPU process. Every compile and link is queued first; with
+// KHR_parallel_shader_compile the driver works on them on its own threads while this polls COMPLETION_STATUS_KHR
+// between frames, and only then reads the results. Asking for LINK_STATUS straight away makes the GPU process
+// wait on each compile in turn, and a slow one (Direct3D's FXC on Windows) can outlast its watchdog: the GPU
+// process restarts and every WebGL and WebGPU context on the page is lost. specs: { key: [vs, fs, label] }.
+// onProgress(done, total, label) after each program finishes; timeoutMs bounds the whole batch.
+export async function compilePrograms(gl, specs, { defines = "", onProgress = null, timeoutMs = 180000, one = false } = {}) {
+  const par = gl.getExtension("KHR_parallel_shader_compile"), keys = Object.keys(specs), out = {}, t0 = performance.now();
+  const wait = (ms) => new Promise((r) => setTimeout(r, ms));
+  const run = async (list) => {
+    const jobs = list.map((k) => [k, submit(gl, ...specs[k], defines)]);
+    let left = jobs.length;
+    while (left) {
+      if (gl.isContextLost()) {
+        const pending = jobs.filter(([k]) => !(k in out)).map(([, j]) => j.label);
+        throw new ContextLost(pending.length === 1 ? `compiling the ${pending[0]} shaders` : `compiling the shaders (${pending.length} programs were still compiling: ${pending.slice(0, 6).join(", ")}${pending.length > 6 ? ", …" : ""})`);
+      }
+      left = 0;
+      for (const [k, job] of jobs) {
+        if (k in out || job.done) continue;
+        job.done = par ? gl.getProgramParameter(job.p, par.COMPLETION_STATUS_KHR) === true : true;
+        if (!job.done) { left++; continue; }
+        job.ms = performance.now() - job.t0; out[k] = collect(gl, job); onProgress?.(Object.keys(out).length, keys.length, job.label, job.ms);
+      }
+      if (left) {
+        if (performance.now() - t0 > timeoutMs) throw new Error(`compiling the ${jobs.filter(([k]) => !(k in out)).map(([, j]) => j.label).join(", ")} shaders took longer than ${Math.round(timeoutMs / 1000)} s`);
+        await wait(par ? 12 : 0);
+      }
     }
-    return s;
   };
-  const p = gl.createProgram(); gl.attachShader(p, sh(gl.VERTEX_SHADER, vs)); gl.attachShader(p, sh(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(p);
-  if (!gl.getProgramParameter(p, gl.LINK_STATUS)) throw new Error(`${label} link: ${gl.getProgramInfoLog(p)}`);
-  const uniforms = {}, n = gl.getProgramParameter(p, gl.ACTIVE_UNIFORMS);
-  for (let i = 0; i < n; i++) { const info = gl.getActiveUniform(p, i); uniforms[info.name.replace(/\[0\]$/, "")] = gl.getUniformLocation(p, info.name); }
-  return { p, u: uniforms, label };
+  if (one) for (const k of keys) await run([k]);       // one at a time: slower, but says which program a driver stalls on
+  else await run(keys);
+  return out;
 }
 export function buffer(gl, data, target = gl.ARRAY_BUFFER, usage = gl.STATIC_DRAW) {
   const b = gl.createBuffer(); gl.bindBuffer(target, b); gl.bufferData(target, data, usage); return b;
