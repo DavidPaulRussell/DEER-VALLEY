@@ -1,0 +1,414 @@
+{
+ "law": "deer.valley.materials/1",
+ "size": 2048,
+ "sets": [
+  {
+   "index": 0,
+   "name": "meadow_soil",
+   "files": [
+    "00_meadow_soil_ah.png",
+    "00_meadow_soil_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.014,
+   "neutral": false,
+   "mean_albedo": [
+    0.21292,
+    0.17102,
+    0.10625
+   ],
+   "seconds": 6.2
+  },
+  {
+   "index": 1,
+   "name": "dry_soil",
+   "files": [
+    "01_dry_soil_ah.png",
+    "01_dry_soil_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.01,
+   "neutral": false,
+   "mean_albedo": [
+    0.33356,
+    0.28082,
+    0.19872
+   ],
+   "seconds": 4.1
+  },
+  {
+   "index": 2,
+   "name": "sand",
+   "files": [
+    "02_sand_ah.png",
+    "02_sand_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.008,
+   "neutral": false,
+   "mean_albedo": [
+    0.5088,
+    0.45572,
+    0.34288
+   ],
+   "seconds": 3.1
+  },
+  {
+   "index": 3,
+   "name": "mud",
+   "files": [
+    "03_mud_ah.png",
+    "03_mud_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.012,
+   "neutral": false,
+   "mean_albedo": [
+    0.1369,
+    0.11201,
+    0.07956
+   ],
+   "seconds": 3.1
+  },
+  {
+   "index": 4,
+   "name": "rock",
+   "files": [
+    "04_rock_ah.png",
+    "04_rock_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.025,
+   "neutral": false,
+   "mean_albedo": [
+    0.52858,
+    0.50256,
+    0.45241
+   ],
+   "seconds": 5.7
+  },
+  {
+   "index": 5,
+   "name": "scree",
+   "files": [
+    "05_scree_ah.png",
+    "05_scree_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.07,
+   "neutral": false,
+   "mean_albedo": [
+    0.35689,
+    0.34252,
+    0.32532
+   ],
+   "seconds": 4.6
+  },
+  {
+   "index": 6,
+   "name": "gravel",
+   "files": [
+    "06_gravel_ah.png",
+    "06_gravel_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.045,
+   "neutral": false,
+   "mean_albedo": [
+    0.40435,
+    0.35746,
+    0.3005
+   ],
+   "seconds": 3.9
+  },
+  {
+   "index": 7,
+   "name": "stream_bed",
+   "files": [
+    "07_stream_bed_ah.png",
+    "07_stream_bed_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.04,
+   "neutral": false,
+   "mean_albedo": [
+    0.18873,
+    0.18243,
+    0.13553
+   ],
+   "seconds": 3.8
+  },
+  {
+   "index": 8,
+   "name": "moss",
+   "files": [
+    "08_moss_ah.png",
+    "08_moss_nr.png"
+   ],
+   "tile_m": 0.5,
+   "height_m": 0.02,
+   "neutral": false,
+   "mean_albedo": [
+    0.18625,
+    0.27473,
+    0.05873
+   ],
+   "seconds": 4.9
+  },
+  {
+   "index": 9,
+   "name": "leaf_litter",
+   "files": [
+    "09_leaf_litter_ah.png",
+    "09_leaf_litter_nr.png"
+   ],
+   "tile_m": 0.5,
+   "height_m": 0.012,
+   "neutral": false,
+   "mean_albedo": [
+    0.2639,
+    0.18424,
+    0.09627
+   ],
+   "seconds": 2.9
+  },
+  {
+   "index": 10,
+   "name": "snow",
+   "files": [
+    "10_snow_ah.png",
+    "10_snow_nr.png"
+   ],
+   "tile_m": 1.0,
+   "height_m": 0.012,
+   "neutral": false,
+   "mean_albedo": [
+    0.78262,
+    0.81154,
+    0.89869
+   ],
+   "seconds": 2.4
+  },
+  {
+   "index": 11,
+   "name": "forest_duff",
+   "files": [
+    "11_forest_duff_ah.png",
+    "11_forest_duff_nr.png"
+   ],
+   "tile_m": 0.5,
+   "height_m": 0.01,
+   "neutral": false,
+   "mean_albedo": [
+    0.13675,
+    0.09932,
+    0.05801
+   ],
+   "seconds": 2.5
+  },
+  {
+   "index": 12,
+   "name": "juniper_bark",
+   "files": [
+    "12_juniper_bark_ah.png",
+    "12_juniper_bark_nr.png"
+   ],
+   "tile_m": 0.5,
+   "height_m": 0.02,
+   "neutral": false,
+   "mean_albedo": [
+    0.2953,
+    0.23058,
+    0.19047
+   ],
+   "seconds": 3.5
+  },
+  {
+   "index": 13,
+   "name": "willow_bark",
+   "files": [
+    "13_willow_bark_ah.png",
+    "13_willow_bark_nr.png"
+   ],
+   "tile_m": 0.5,
+   "height_m": 0.008,
+   "neutral": false,
+   "mean_albedo": [
+    0.34319,
+    0.33238,
+    0.23675
+   ],
+   "seconds": 4.0
+  },
+  {
+   "index": 14,
+   "name": "dead_wood",
+   "files": [
+    "14_dead_wood_ah.png",
+    "14_dead_wood_nr.png"
+   ],
+   "tile_m": 0.5,
+   "height_m": 0.012,
+   "neutral": false,
+   "mean_albedo": [
+    0.41383,
+    0.39655,
+    0.36647
+   ],
+   "seconds": 2.8
+  },
+  {
+   "index": 15,
+   "name": "leaf_blade",
+   "files": [
+    "15_leaf_blade_ah.png",
+    "15_leaf_blade_nr.png"
+   ],
+   "tile_m": 0.1,
+   "height_m": 0.0004,
+   "neutral": false,
+   "mean_albedo": [
+    0.19103,
+    0.34091,
+    0.08594
+   ],
+   "seconds": 5.2
+  },
+  {
+   "index": 16,
+   "name": "deer_fur_summer",
+   "files": [
+    "16_deer_fur_summer_ah.png",
+    "16_deer_fur_summer_nr.png"
+   ],
+   "tile_m": 0.2,
+   "height_m": 0.004,
+   "neutral": true,
+   "mean_albedo": [
+    0.36191,
+    0.23253,
+    0.1382
+   ],
+   "seconds": 4.3
+  },
+  {
+   "index": 17,
+   "name": "deer_fur_winter",
+   "files": [
+    "17_deer_fur_winter_ah.png",
+    "17_deer_fur_winter_nr.png"
+   ],
+   "tile_m": 0.2,
+   "height_m": 0.006,
+   "neutral": true,
+   "mean_albedo": [
+    0.27085,
+    0.22829,
+    0.19278
+   ],
+   "seconds": 4.1
+  },
+  {
+   "index": 18,
+   "name": "wolf_fur",
+   "files": [
+    "18_wolf_fur_ah.png",
+    "18_wolf_fur_nr.png"
+   ],
+   "tile_m": 0.25,
+   "height_m": 0.008,
+   "neutral": true,
+   "mean_albedo": [
+    0.24765,
+    0.23189,
+    0.2148
+   ],
+   "seconds": 4.0
+  },
+  {
+   "index": 19,
+   "name": "antler",
+   "files": [
+    "19_antler_ah.png",
+    "19_antler_nr.png"
+   ],
+   "tile_m": 0.1,
+   "height_m": 0.002,
+   "neutral": false,
+   "mean_albedo": [
+    0.5786,
+    0.50707,
+    0.40588
+   ],
+   "seconds": 3.8
+  },
+  {
+   "index": 20,
+   "name": "nose_leather",
+   "files": [
+    "20_nose_leather_ah.png",
+    "20_nose_leather_nr.png"
+   ],
+   "tile_m": 0.05,
+   "height_m": 0.0006,
+   "neutral": false,
+   "mean_albedo": [
+    0.02994,
+    0.02601,
+    0.02601
+   ],
+   "seconds": 4.7
+  },
+  {
+   "index": 21,
+   "name": "canvas",
+   "files": [
+    "21_canvas_ah.png",
+    "21_canvas_nr.png"
+   ],
+   "tile_m": 0.05,
+   "height_m": 0.0005,
+   "neutral": true,
+   "mean_albedo": [
+    0.42783,
+    0.42783,
+    0.42783
+   ],
+   "seconds": 2.4
+  },
+  {
+   "index": 22,
+   "name": "leather",
+   "files": [
+    "22_leather_ah.png",
+    "22_leather_nr.png"
+   ],
+   "tile_m": 0.1,
+   "height_m": 0.0008,
+   "neutral": true,
+   "mean_albedo": [
+    0.41999,
+    0.41999,
+    0.41999
+   ],
+   "seconds": 3.5
+  },
+  {
+   "index": 23,
+   "name": "iris",
+   "files": [
+    "23_iris_ah.png",
+    "23_iris_nr.png"
+   ],
+   "tile_m": 0.02,
+   "height_m": 0.0002,
+   "neutral": true,
+   "mean_albedo": [
+    0.28985,
+    0.28985,
+    0.28985
+   ],
+   "seconds": 2.8
+  }
+ ]
+}

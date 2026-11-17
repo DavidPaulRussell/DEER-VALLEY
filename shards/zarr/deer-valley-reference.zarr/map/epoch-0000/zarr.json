@@ -1,0 +1,397 @@
+{
+ "zarr_format": 3,
+ "node_type": "group",
+ "attributes": {
+  "russl": {
+   "schema": "RUSSL.ValleyMapField/1.1",
+   "profile": "RUSSL-OME-ZARR/2.0.0",
+   "law": "deer.valley.living/1",
+   "seed": 20261117,
+   "version": 1,
+   "generation": {
+    "epoch": 0,
+    "compacted_mm": 0,
+    "rains": 0
+   },
+   "field": {
+    "shape": [
+     1,
+     1,
+     6,
+     2048,
+     2048
+    ],
+    "axes": [
+     "c4",
+     "c5",
+     "c6",
+     "c7",
+     "c8"
+    ],
+    "ome_axes": [
+     "t",
+     "z",
+     "c",
+     "y",
+     "x"
+    ],
+    "channels": [
+     {
+      "name": "height",
+      "dtype": "int32",
+      "unit": "millimetre"
+     },
+     {
+      "name": "rock",
+      "dtype": "uint8",
+      "unit": "1/255"
+     },
+     {
+      "name": "moisture",
+      "dtype": "uint8",
+      "unit": "1/255"
+     },
+     {
+      "name": "material",
+      "dtype": "uint8",
+      "unit": "class"
+     },
+     {
+      "name": "drainage",
+      "dtype": "uint8",
+      "unit": "16 log2 samples"
+     },
+     {
+      "name": "terrain",
+      "dtype": "int32",
+      "unit": "millimetre"
+     }
+    ],
+    "materials": [
+     "meadow soil",
+     "dry soil",
+     "sand",
+     "mud",
+     "rock",
+     "scree",
+     "gravel",
+     "stream bed"
+    ]
+   },
+   "extent_m": 512,
+   "chunk_shape": [
+    128,
+    128
+   ],
+   "water_level_mm": -16680,
+   "levels": [
+    {
+     "level": 0,
+     "spacing_m": 0.25,
+     "shape": [
+      2048,
+      2048
+     ],
+     "chunks": 256,
+     "transform": "refine/2 of level 1",
+     "roots": {
+      "height": "2a7cc7f375bb820079a9d8c6959d4af3b51746b59ac75a7d93f73bfb6f6f268d",
+      "rock": "fd54075fab43be672e5ed24575664f1a4f891b88555067d1648674bfd0bd2e79",
+      "moisture": "ea8d93135b00288bc9e95e747d947e3f71f7f2d431158c6e181e99c4f3e38d5a",
+      "material": "1bcb8bc8001e3a915795fc82f08675f78a2524222a8f96df2259fc8d7a9faaf0",
+      "drainage": "968df0e60c9a915eca441a1c8045c74348c5ae3fafdbe71feedc071c7a84f7a1",
+      "terrain": "c588c02ef5a68bdbf5c9bce1e678d021e996245f33e7961c9d79aa88c4cd4648"
+     }
+    },
+    {
+     "level": 1,
+     "spacing_m": 0.5,
+     "shape": [
+      1024,
+      1024
+     ],
+     "chunks": 64,
+     "transform": "refine/2 of level 2",
+     "roots": {
+      "height": "9682b1d7ca9721553418310426394256da77d3d95f01fd68d5f23025385a3e8e",
+      "rock": "3de892a0f0051dd10061c8adf04bc0c9ddd7746d0c0829c4203c5a9d5eed55e8",
+      "moisture": "3333ee60e14c6d8fbae1c1067bc6a4c798d57d6464490d2fa8445168b5bfb708",
+      "material": "a8f47bcd9d78b95fd17c3de7190b8ec60823a8320580f4e2ff5f996552c372fa",
+      "drainage": "2fa047a044b5b25cc8c88c45e475980adb80c5318bc908772f2c533bea7802bf",
+      "terrain": "54dc320a4d043a224b997c6a52455fa9bb93e3f2ca19e51ff27e65a831c9231c"
+     }
+    },
+    {
+     "level": 2,
+     "spacing_m": 1,
+     "shape": [
+      512,
+      512
+     ],
+     "chunks": 16,
+     "transform": "the living relief (genesis passes, compaction and rain)",
+     "roots": {
+      "height": "93ad63dc5bf33910b3aa8acf255eeac5be749ea0383d4251bdba63b204b3870c",
+      "rock": "f69636e8d8119b828a4154f18391425c1ee07cfea10abd90a6c2f2d5c079dcec",
+      "moisture": "29389fece9fe26c9c7d25758193a0ffc917c0f8168792242b6ca3071e6603c8e",
+      "material": "6f4bf5ce827a20d47aeeaaaaa012e098ba2d918b70a54fa9b199b149a6463b09",
+      "drainage": "7ea1ce8041b5903beb6e2d82149803499f53776fb8d2dda18763173f0dd97890",
+      "terrain": "c5a84b1bf724e7e0aadf8134e3767f59f22d75a5cca9f19a88b2300bacc007e3"
+     }
+    },
+    {
+     "level": 3,
+     "spacing_m": 2,
+     "shape": [
+      256,
+      256
+     ],
+     "chunks": 4,
+     "transform": "decimate2 of level 2",
+     "roots": {
+      "height": "8e3281aa3ce6ed3769690dddd4f974a41942353b7cecf45e551cb4f59ac34f95",
+      "rock": "9251fcaf951170a1a4f6bd630530ff47f37c244d7d8fa505b90f05494cfdbf55",
+      "moisture": "38690d5fe0ce3a8eb08cbef06e0b35d0548af5739d640918bf8dfa9119a53050",
+      "material": "dcd93d65d6d6ed14c4a0c87dfb16d026d1830e35237d7117f68aed35503ee69e",
+      "drainage": "10766e93a70b62e5cfd84e69305f1514a0b7f4511c4984d1bb2044c6a20de338",
+      "terrain": "39358145b99024205c643e583edccf5c0eedb0aee0f7d53ed1df880376c2aa0a"
+     }
+    },
+    {
+     "level": 4,
+     "spacing_m": 4,
+     "shape": [
+      128,
+      128
+     ],
+     "chunks": 1,
+     "transform": "decimate2 of level 3",
+     "roots": {
+      "height": "efd92d4ad21aea1e2e0f22cf3cb766382d91f357e780d4fd385fd6cb98ba955e",
+      "rock": "e797646f25cd0b211bbb7ac42fbb06467b08da75b3e7cad732f9893732415ca7",
+      "moisture": "856d6086ec16aa4c39d1e70c8c41960b2cbb9a706e248c6d851bd3b67d0f99b8",
+      "material": "9c3201af7b941aeb32ce70653757d06fba7df3bbe95c752742483e06aa02c8d1",
+      "drainage": "d4b44100f371c0deae19964ba77ec6dc1a061097cb0cd0bbf12041aa2a3ad8ba",
+      "terrain": "19ab84366fe0d84e23331a4418433fb3ec7d364e4506af46cb48df9326d30a1c"
+     }
+    },
+    {
+     "level": 5,
+     "spacing_m": 8,
+     "shape": [
+      64,
+      64
+     ],
+     "chunks": 1,
+     "transform": "decimate2 of level 4",
+     "roots": {
+      "height": "b4fd79bdf647814344d992e1b3d9d0ca5dd5e8a709fc5909fa0b6844ac0bca3e",
+      "rock": "980cbf7fa522f4286337808a34ffeacafe6ba7181818485c185bd60f663872a6",
+      "moisture": "67d611f593090adb4f32ac9a329e441d7424184f4a452dd4888cc786af15331a",
+      "material": "803f0f99b9604502e5a810d3f9a31a4dd4d466202252418aac5fd3109d0516d6",
+      "drainage": "172e0df6f25118835fdc396f7335d154855f1e33e001c52e6ace23af4b73480c",
+      "terrain": "471d6e12797f324091921ad11c8465758b9f04da6d6457dabb623d229508c074"
+     }
+    },
+    {
+     "level": 6,
+     "spacing_m": 16,
+     "shape": [
+      32,
+      32
+     ],
+     "chunks": 1,
+     "transform": "decimate2 of level 5",
+     "roots": {
+      "height": "78f607eb72a69cdc4a1fc150bf36f08971abb9c408c551eaced326b21b3508a1",
+      "rock": "3b043db5a2b13b99c1bb5d783614423db71253db67bb6bbefa3d93a08ceafc4d",
+      "moisture": "2b82f563567dde28587f9f41aee303deff22b9d24ee7a0a6119e03f238dfffad",
+      "material": "ac85ce53a4f3c840834acfdce15ce5559f1711f31b5e7ddcb1be55daefb9dacb",
+      "drainage": "edf062b5a7f406bc69fe3728a0cbf41875c42763db8bba0d91450c0eb783d7c8",
+      "terrain": "9e5fb29e7f7dd1744544d5a01972ddf81f318249a5758d790d00aaa944bc112d"
+     }
+    },
+    {
+     "level": 7,
+     "spacing_m": 32,
+     "shape": [
+      16,
+      16
+     ],
+     "chunks": 1,
+     "transform": "decimate2 of level 6",
+     "roots": {
+      "height": "4e30b853f0c5edb289fc2b04106b069ea1f5185cdc79894a6f930bf4fa5744a8",
+      "rock": "04e581a9b11cad5ad31d58c49b359bc815910d3009e19c427163ed42830b88a2",
+      "moisture": "8b372a13151e92f332ae762d9bc2c890646a54fcc1df9e3a1024e76f4c9f0763",
+      "material": "dd2cd61eab6c9c550562e376debaa62a5812b19199d50a69fe75695983a92931",
+      "drainage": "98400d5f78b519a96d941741736bbd45813d6e9602fc3b130573b6dec5f75904",
+      "terrain": "48ab41caa876d8e11953950e3c07deb4b240093dd2808906fd6af911917957c9"
+     }
+    }
+   ],
+   "report": {
+    "law": "deer.valley.living/1",
+    "genesis_ms": 1300,
+    "E17": {
+     "depressions_first_pass": 40,
+     "filled_volume_m3": 6132.565,
+     "witnesses": [
+      {
+       "lowest": [
+        80,
+        31
+       ],
+       "lowest_mm": 8338,
+       "spill_mm": 10911,
+       "samples": 2342
+      },
+      {
+       "lowest": [
+        162,
+        1
+       ],
+       "lowest_mm": 4567,
+       "spill_mm": 6508,
+       "samples": 755
+      },
+      {
+       "lowest": [
+        213,
+        511
+       ],
+       "lowest_mm": 2469,
+       "spill_mm": 2519,
+       "samples": 20
+      },
+      {
+       "lowest": [
+        511,
+        64
+       ],
+       "lowest_mm": 29290,
+       "spill_mm": 29985,
+       "samples": 195
+      },
+      {
+       "lowest": [
+        300,
+        65
+       ],
+       "lowest_mm": -15596,
+       "spill_mm": -15561,
+       "samples": 8
+      },
+      {
+       "lowest": [
+        399,
+        93
+       ],
+       "lowest_mm": 14340,
+       "spill_mm": 15100,
+       "samples": 143
+      },
+      {
+       "lowest": [
+        511,
+        107
+       ],
+       "lowest_mm": 34143,
+       "spill_mm": 35182,
+       "samples": 335
+      },
+      {
+       "lowest": [
+        20,
+        124
+       ],
+       "lowest_mm": 38277,
+       "spill_mm": 38307,
+       "samples": 12
+      }
+     ],
+     "claim": "a closed depression is a cycle of drain claims that cannot all hold; filling it resolves the contradiction"
+    },
+    "E18": {
+     "sum_before_mm": 2609207187,
+     "sum_after_mm": 2609207187,
+     "conserved": true
+    },
+    "E8": {
+     "sweeps": 462,
+     "fixed_point": true
+    },
+    "passes": [
+     {
+      "pass": 1,
+      "depressions": 40,
+      "eroded_mm": 18370687,
+      "deposited_mm": 221860,
+      "delta_mm": 18148827,
+      "settle": {
+       "sweeps": 60,
+       "fixed_point": false
+      }
+     },
+     {
+      "pass": 2,
+      "depressions": 59,
+      "eroded_mm": 17616580,
+      "deposited_mm": 232359,
+      "delta_mm": 17384221,
+      "settle": {
+       "sweeps": 60,
+       "fixed_point": false
+      }
+     },
+     {
+      "pass": 3,
+      "depressions": 79,
+      "eroded_mm": 16651190,
+      "deposited_mm": 1509456,
+      "delta_mm": 15141734,
+      "settle": {
+       "sweeps": 60,
+       "fixed_point": false
+      }
+     },
+     {
+      "pass": 4,
+      "depressions": 97,
+      "eroded_mm": 16252457,
+      "deposited_mm": 1500715,
+      "delta_mm": 14751742,
+      "settle": {
+       "sweeps": 60,
+       "fixed_point": false
+      }
+     },
+     {
+      "pass": 5,
+      "depressions": 142,
+      "eroded_mm": 16027317,
+      "deposited_mm": 1493722,
+      "delta_mm": 14533595,
+      "settle": {
+       "sweeps": 462,
+       "fixed_point": true
+      }
+     }
+    ],
+    "E16": {
+     "water_bodies": 1
+    },
+    "E20": {
+     "rock_samples": 51579,
+     "rule": "slope >= 0.95, OR slope >= 0.7 AND eroded >= 0.4 m, OR bedrock AND slope >= 0.45"
+    },
+    "E14": {
+     "gamma": "7/8",
+     "max_value": 241.77734375,
+     "stream_samples": 2909
+    }
+   },
+   "epoch": 0
+  }
+ }
+}

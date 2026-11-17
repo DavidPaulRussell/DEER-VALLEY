@@ -1,0 +1,66 @@
+{
+ "zarr_format": 3,
+ "node_type": "array",
+ "shape": [
+  64,
+  64
+ ],
+ "data_type": "int32",
+ "chunk_grid": {
+  "name": "regular",
+  "configuration": {
+   "chunk_shape": [
+    64,
+    64
+   ]
+  }
+ },
+ "chunk_key_encoding": {
+  "name": "default",
+  "configuration": {
+   "separator": "/"
+  }
+ },
+ "fill_value": 0,
+ "codecs": [
+  {
+   "name": "sharding_indexed",
+   "configuration": {
+    "chunk_shape": [
+     64,
+     64
+    ],
+    "codecs": [
+     {
+      "name": "bytes",
+      "configuration": {
+       "endian": "little"
+      }
+     }
+    ],
+    "index_codecs": [
+     {
+      "name": "bytes",
+      "configuration": {
+       "endian": "little"
+      }
+     },
+     {
+      "name": "crc32c"
+     }
+    ],
+    "index_location": "end"
+   }
+  }
+ ],
+ "dimension_names": [
+  "y",
+  "x"
+ ],
+ "attributes": {
+  "russl": {
+   "unit": "millimetre",
+   "root": "b4fd79bdf647814344d992e1b3d9d0ca5dd5e8a709fc5909fa0b6844ac0bca3e"
+  }
+ }
+}

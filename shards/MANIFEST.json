@@ -1,0 +1,2698 @@
+{
+ "law": "plume.shards/1",
+ "bytes": 951183658,
+ "deflate_bytes": 694777152,
+ "groups": {
+  "animals": {
+   "files": 30,
+   "bytes": 113579951,
+   "deflate_bytes": 53691283
+  },
+  "materials": {
+   "files": 49,
+   "bytes": 514162335,
+   "deflate_bytes": 514157104
+  },
+  "zarr": {
+   "files": 218,
+   "bytes": 323441372,
+   "deflate_bytes": 126928765
+  }
+ },
+ "files": [
+  {
+   "path": "animals/deer.json",
+   "bytes": 14067,
+   "sha256": "7a828868cc42b3ce443e70f825b84ff7fb28ea82c6b1f610dfb1ac23c6b8e923",
+   "nominal_entries": 879,
+   "true_stored_bits": 112536,
+   "rank_bound": 1,
+   "deflate_bytes": 1536
+  },
+  {
+   "path": "animals/deer.lod0.dnrm.bin",
+   "bytes": 10370944,
+   "sha256": "f2d8952e2a24b4d8083796524198a9c17a24372b07e7859461a9bda6ac66d229",
+   "nominal_entries": 5185472,
+   "true_stored_bits": 82967552,
+   "rank_bound": 48,
+   "deflate_bytes": 3264545
+  },
+  {
+   "path": "animals/deer.lod0.dpos.bin",
+   "bytes": 15556416,
+   "sha256": "3fc99c77d6513ced2dbaaca59b566c563e559c48937ad262ff45aa8eff4870a2",
+   "nominal_entries": 3889104,
+   "true_stored_bits": 124451328,
+   "rank_bound": 48,
+   "deflate_bytes": 7563040
+  },
+  {
+   "path": "animals/deer.lod0.mesh.bin",
+   "bytes": 6154508,
+   "sha256": "009ca77c1b068d52a8dcd362a0b2cff3551d262a67fe62c89e3ef93310c70735",
+   "nominal_entries": 1538627,
+   "true_stored_bits": 49236064,
+   "rank_bound": 13,
+   "deflate_bytes": 2924002
+  },
+  {
+   "path": "animals/deer.lod1.dnrm.bin",
+   "bytes": 2594176,
+   "sha256": "028916cc771fac75b90fbc88270734fc0e487b15da561d8dfbcc6857be7112c8",
+   "nominal_entries": 1297088,
+   "true_stored_bits": 20753408,
+   "rank_bound": 48,
+   "deflate_bytes": 932558
+  },
+  {
+   "path": "animals/deer.lod1.dpos.bin",
+   "bytes": 3891264,
+   "sha256": "864f37e72435a1e66a18f4a89885e096b8f693630b44b654bee9dc661762eda3",
+   "nominal_entries": 972816,
+   "true_stored_bits": 31130112,
+   "rank_bound": 48,
+   "deflate_bytes": 2100712
+  },
+  {
+   "path": "animals/deer.lod1.mesh.bin",
+   "bytes": 1538348,
+   "sha256": "8b8dce7e3e792b8c37431932d087a36c26868571eefc11e4ca04212843e59450",
+   "nominal_entries": 384587,
+   "true_stored_bits": 12306784,
+   "rank_bound": 13,
+   "deflate_bytes": 736607
+  },
+  {
+   "path": "animals/deer.lod2.dnrm.bin",
+   "bytes": 563456,
+   "sha256": "62eebd8d71a9b3cb77e6679bccb5d812c4d756818786534ead4df66add16378a",
+   "nominal_entries": 281728,
+   "true_stored_bits": 4507648,
+   "rank_bound": 48,
+   "deflate_bytes": 319991
+  },
+  {
+   "path": "animals/deer.lod2.dpos.bin",
+   "bytes": 845184,
+   "sha256": "e2c5769b7f4343aa9f2a908f3e5e1918a3c1d249030d543299d89034c4fbcecf",
+   "nominal_entries": 211296,
+   "true_stored_bits": 6761472,
+   "rank_bound": 48,
+   "deflate_bytes": 709946
+  },
+  {
+   "path": "animals/deer.lod2.mesh.bin",
+   "bytes": 333256,
+   "sha256": "d3532f419d151bbffcdc2e0afd4d32f3ca74d9c783119ff67fe5bcb4d6ba205a",
+   "nominal_entries": 83314,
+   "true_stored_bits": 2666048,
+   "rank_bound": 13,
+   "deflate_bytes": 221204
+  },
+  {
+   "path": "animals/warden.json",
+   "bytes": 10782,
+   "sha256": "a23ea4fc5c8450978513ef788b834051008835525188d6f1aff35683463850d2",
+   "nominal_entries": 675,
+   "true_stored_bits": 86256,
+   "rank_bound": 1,
+   "deflate_bytes": 1215
+  },
+  {
+   "path": "animals/warden.lod0.dnrm.bin",
+   "bytes": 9061120,
+   "sha256": "7275a66f992034a98775bd66a5aed15666f0939c93d46233e3e95506605c76c3",
+   "nominal_entries": 4530560,
+   "true_stored_bits": 72488960,
+   "rank_bound": 48,
+   "deflate_bytes": 2994027
+  },
+  {
+   "path": "animals/warden.lod0.dpos.bin",
+   "bytes": 13591680,
+   "sha256": "74c8365440990d8550d0b2f10bdf32190d63853cfafafb74d5140ea07e4d90aa",
+   "nominal_entries": 3397920,
+   "true_stored_bits": 108733440,
+   "rank_bound": 48,
+   "deflate_bytes": 7381164
+  },
+  {
+   "path": "animals/warden.lod0.mesh.bin",
+   "bytes": 5380232,
+   "sha256": "ed32733e18803453089f4077f6e87f239c6dcef8c630f72200bc0752a4a18e89",
+   "nominal_entries": 1345058,
+   "true_stored_bits": 43041856,
+   "rank_bound": 13,
+   "deflate_bytes": 3254880
+  },
+  {
+   "path": "animals/warden.lod1.dnrm.bin",
+   "bytes": 2233984,
+   "sha256": "c1ac7ff8edd480b7ef4ab29b310d778c140691ef22fe681dee2452f256376fb7",
+   "nominal_entries": 1116992,
+   "true_stored_bits": 17871872,
+   "rank_bound": 48,
+   "deflate_bytes": 866588
+  },
+  {
+   "path": "animals/warden.lod1.dpos.bin",
+   "bytes": 3350976,
+   "sha256": "1323128a9a8fb6445a42839610a3f836d1ef2525f0feece87ad7a78a5ae018df",
+   "nominal_entries": 837744,
+   "true_stored_bits": 26807808,
+   "rank_bound": 48,
+   "deflate_bytes": 2041288
+  },
+  {
+   "path": "animals/warden.lod1.mesh.bin",
+   "bytes": 1326500,
+   "sha256": "669b41e8d51f4dd6ee58b5d20e6233e4d4d11418128fa81b80c0670d937db28d",
+   "nominal_entries": 331625,
+   "true_stored_bits": 10612000,
+   "rank_bound": 13,
+   "deflate_bytes": 831972
+  },
+  {
+   "path": "animals/warden.lod2.dnrm.bin",
+   "bytes": 465280,
+   "sha256": "b7cdfde26dec72e554a35f0951e68893396db7ed0b406b021e0ab1eefec7d878",
+   "nominal_entries": 232640,
+   "true_stored_bits": 3722240,
+   "rank_bound": 48,
+   "deflate_bytes": 217147
+  },
+  {
+   "path": "animals/warden.lod2.dpos.bin",
+   "bytes": 697920,
+   "sha256": "e44f76c0d3116d44158db24ea6aa8d3e1f7da279ac761fb4a6cc5429a183e457",
+   "nominal_entries": 174480,
+   "true_stored_bits": 5583360,
+   "rank_bound": 48,
+   "deflate_bytes": 484531
+  },
+  {
+   "path": "animals/warden.lod2.mesh.bin",
+   "bytes": 276332,
+   "sha256": "e2b46a5ab0b19b22092408ded45a7ed020b28f0f7060175f4b82bf0fd9387308",
+   "nominal_entries": 69083,
+   "true_stored_bits": 2210656,
+   "rank_bound": 13,
+   "deflate_bytes": 185363
+  },
+  {
+   "path": "animals/wolf.json",
+   "bytes": 13886,
+   "sha256": "c51663f570ced824f2d000ab9ae4eadc29649cb7e3102d86ec5f07daa5b9c38b",
+   "nominal_entries": 879,
+   "true_stored_bits": 111088,
+   "rank_bound": 1,
+   "deflate_bytes": 1533
+  },
+  {
+   "path": "animals/wolf.lod0.dnrm.bin",
+   "bytes": 8749568,
+   "sha256": "1fab6c5dee64b5fe58672594e5b0f6e66f8938217855af38c6f542574b18cf15",
+   "nominal_entries": 4374784,
+   "true_stored_bits": 69996544,
+   "rank_bound": 48,
+   "deflate_bytes": 2882542
+  },
+  {
+   "path": "animals/wolf.lod0.dpos.bin",
+   "bytes": 13124352,
+   "sha256": "e93c89ba170413be9aea161c7ffd8170b6e162ec7bee83f4f980c094bb642ecd",
+   "nominal_entries": 3281088,
+   "true_stored_bits": 104994816,
+   "rank_bound": 48,
+   "deflate_bytes": 6834443
+  },
+  {
+   "path": "animals/wolf.lod0.mesh.bin",
+   "bytes": 5191888,
+   "sha256": "dcf698c86ed4eca3dd2f809e11dd40691341561bddec28be991c0b7255da8809",
+   "nominal_entries": 1297972,
+   "true_stored_bits": 41535104,
+   "rank_bound": 13,
+   "deflate_bytes": 2546277
+  },
+  {
+   "path": "animals/wolf.lod1.dnrm.bin",
+   "bytes": 2189824,
+   "sha256": "bd967f141201bb4064a372c9aa9483fb27d481267053c43d0b61e61a0bf26bd2",
+   "nominal_entries": 1094912,
+   "true_stored_bits": 17518592,
+   "rank_bound": 48,
+   "deflate_bytes": 821524
+  },
+  {
+   "path": "animals/wolf.lod1.dpos.bin",
+   "bytes": 3284736,
+   "sha256": "7a7c3b81ecda56cf4d9798e4e2b717a6a2c6421a6312e6367ac5b5a0e074f9df",
+   "nominal_entries": 821184,
+   "true_stored_bits": 26277888,
+   "rank_bound": 48,
+   "deflate_bytes": 1863389
+  },
+  {
+   "path": "animals/wolf.lod1.mesh.bin",
+   "bytes": 1298144,
+   "sha256": "c3d8509d4b6007d05091d579ee6010c506237606892b7a990f864e6f38747fee",
+   "nominal_entries": 324536,
+   "true_stored_bits": 10385152,
+   "rank_bound": 13,
+   "deflate_bytes": 643761
+  },
+  {
+   "path": "animals/wolf.lod2.dnrm.bin",
+   "bytes": 475904,
+   "sha256": "1945cbfdb4c874a97405cf23c5b4ee6d7d1bb51d1c82cc1d46827dd24415d541",
+   "nominal_entries": 237952,
+   "true_stored_bits": 3807232,
+   "rank_bound": 48,
+   "deflate_bytes": 279454
+  },
+  {
+   "path": "animals/wolf.lod2.dpos.bin",
+   "bytes": 713856,
+   "sha256": "db4765207a76bf1192f93bdd82e234df7724c835e54d732c0399760fd49bd660",
+   "nominal_entries": 178464,
+   "true_stored_bits": 5710848,
+   "rank_bound": 48,
+   "deflate_bytes": 598392
+  },
+  {
+   "path": "animals/wolf.lod2.mesh.bin",
+   "bytes": 281368,
+   "sha256": "ef57a5a6d281948d943c1b02f00574eaddc8c5d4cbfc0998d816d7cbf53306e9",
+   "nominal_entries": 70342,
+   "true_stored_bits": 2250944,
+   "rank_bound": 13,
+   "deflate_bytes": 187652
+  },
+  {
+   "path": "materials/00_meadow_soil_ah.png",
+   "bytes": 12973907,
+   "sha256": "d71096da30e33890c9f48b1539fb06c19161f728c1e941c3309ae2a7d2c3bcf0",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 103791256,
+   "rank_bound": 2048,
+   "deflate_bytes": 12973907
+  },
+  {
+   "path": "materials/00_meadow_soil_nr.png",
+   "bytes": 13047762,
+   "sha256": "3b0d09d734096adcec95735770a10252f896159a59c5a0a69b01cebf78f4706e",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 104382096,
+   "rank_bound": 2048,
+   "deflate_bytes": 13047762
+  },
+  {
+   "path": "materials/01_dry_soil_ah.png",
+   "bytes": 13300975,
+   "sha256": "956f467b8dfd1bd68f461dbccc014fe4e6c9a30f983444c59976a847f546ec08",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 106407800,
+   "rank_bound": 2048,
+   "deflate_bytes": 13300975
+  },
+  {
+   "path": "materials/01_dry_soil_nr.png",
+   "bytes": 13445292,
+   "sha256": "4879faef654b87f8b5826d24a3628e0fb333853097ec04dd1428defc04025b6f",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 107562336,
+   "rank_bound": 2048,
+   "deflate_bytes": 13445292
+  },
+  {
+   "path": "materials/02_sand_ah.png",
+   "bytes": 13869811,
+   "sha256": "15db68bf53358ff6845b62f1b3b1f62e9ed4228c507b0135d30cfe1d4c572c9d",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 110958488,
+   "rank_bound": 2048,
+   "deflate_bytes": 13869811
+  },
+  {
+   "path": "materials/02_sand_nr.png",
+   "bytes": 12720526,
+   "sha256": "ca1e9ac39ddba99b496692d6895169bd9b49ccd8a2f95c4bc38d376ad6ddd731",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 101764208,
+   "rank_bound": 2048,
+   "deflate_bytes": 12720526
+  },
+  {
+   "path": "materials/03_mud_ah.png",
+   "bytes": 10395443,
+   "sha256": "1f573b91f83b5ceb6e7eeba9fcd8be87b375330a029d96236b6a8de8204ea43f",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 83163544,
+   "rank_bound": 2048,
+   "deflate_bytes": 10395443
+  },
+  {
+   "path": "materials/03_mud_nr.png",
+   "bytes": 14077641,
+   "sha256": "f599ea646e018ff4f06936e96aaf74a64a16eef77f51ba830f36bfd560f20e38",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 112621128,
+   "rank_bound": 2048,
+   "deflate_bytes": 14077641
+  },
+  {
+   "path": "materials/04_rock_ah.png",
+   "bytes": 13659484,
+   "sha256": "8dcdfa26980309f6a479f94a554a89ac3dd7675e94bf7a0efee2b03cafb972b1",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 109275872,
+   "rank_bound": 2048,
+   "deflate_bytes": 13659484
+  },
+  {
+   "path": "materials/04_rock_nr.png",
+   "bytes": 13051076,
+   "sha256": "4cb9d3bc6a41d619f2d8782321bb5a2027d80e8a15b7ad64e7d6626549e623ec",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 104408608,
+   "rank_bound": 2048,
+   "deflate_bytes": 13051076
+  },
+  {
+   "path": "materials/05_scree_ah.png",
+   "bytes": 4478444,
+   "sha256": "cfcc6ab63b9b9ee3a41d38f677fe481108387c736f3b0006347ecfc0cdecb3ab",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 35827552,
+   "rank_bound": 2048,
+   "deflate_bytes": 4478444
+  },
+  {
+   "path": "materials/05_scree_nr.png",
+   "bytes": 3133097,
+   "sha256": "0bbd60b6e29d5ef63b80be0070cced42606ea4429902ead622192f44b59d0530",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 25064776,
+   "rank_bound": 2048,
+   "deflate_bytes": 3133097
+  },
+  {
+   "path": "materials/06_gravel_ah.png",
+   "bytes": 10761354,
+   "sha256": "824b1b0006183e5111b751e6658f9fe35e830e600b13b0f6311518ec795e6df1",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 86090832,
+   "rank_bound": 2048,
+   "deflate_bytes": 10761354
+  },
+  {
+   "path": "materials/06_gravel_nr.png",
+   "bytes": 12560372,
+   "sha256": "e2b0b0547f354e56cbcf13d65f9f47f0e8b48d5d17be93cb2fe620a14bc87e46",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 100482976,
+   "rank_bound": 2048,
+   "deflate_bytes": 12560372
+  },
+  {
+   "path": "materials/07_stream_bed_ah.png",
+   "bytes": 9628256,
+   "sha256": "1c1be1d3268afc87cd26eec84f6f5626494371b2e8843121a835dad1b4a143e8",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 77026048,
+   "rank_bound": 2048,
+   "deflate_bytes": 9628256
+  },
+  {
+   "path": "materials/07_stream_bed_nr.png",
+   "bytes": 14420760,
+   "sha256": "203bc4605f7b8758a06b49ac5ab5fc2b5569459f5286a633bc65d4638287b614",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 115366080,
+   "rank_bound": 2048,
+   "deflate_bytes": 14420760
+  },
+  {
+   "path": "materials/08_moss_ah.png",
+   "bytes": 10234015,
+   "sha256": "cdbaa3d819e11fb3d1e6e7b59faa3e15ede7c94ed070cb9c9e8973201a324a8a",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 81872120,
+   "rank_bound": 2048,
+   "deflate_bytes": 10234015
+  },
+  {
+   "path": "materials/08_moss_nr.png",
+   "bytes": 12790566,
+   "sha256": "e8c3183491ba709d56b6ab7ecce85251b7af8a7a5fb4db075020e2ad4253b1f7",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 102324528,
+   "rank_bound": 2048,
+   "deflate_bytes": 12790566
+  },
+  {
+   "path": "materials/09_leaf_litter_ah.png",
+   "bytes": 10231893,
+   "sha256": "bb6a40aca4c40a4b8d89d03644ec034877b63c21fa32cae32078691fc0c5e90b",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 81855144,
+   "rank_bound": 2048,
+   "deflate_bytes": 10231893
+  },
+  {
+   "path": "materials/09_leaf_litter_nr.png",
+   "bytes": 12704390,
+   "sha256": "02548e6db82fb79ceda301183950494f8769d76979acd704ebbf9660df7720c3",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 101635120,
+   "rank_bound": 2048,
+   "deflate_bytes": 12704390
+  },
+  {
+   "path": "materials/10_snow_ah.png",
+   "bytes": 11774527,
+   "sha256": "9bb10b715141f85a83c4b8fc3fcdbe6cc8c6be021d009ace049f3bafa8e0c833",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 94196216,
+   "rank_bound": 2048,
+   "deflate_bytes": 11774527
+  },
+  {
+   "path": "materials/10_snow_nr.png",
+   "bytes": 13341813,
+   "sha256": "bfc066ae29f574fadc8be3a1546e904d79c220deff35ba5399ebd9432f9d5240",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 106734504,
+   "rank_bound": 2048,
+   "deflate_bytes": 13341813
+  },
+  {
+   "path": "materials/11_forest_duff_ah.png",
+   "bytes": 11842776,
+   "sha256": "3f324fd4e1a29299c65e36ebe29dee802e0ab157c2a3a7a805eb09fb6cc61cd1",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 94742208,
+   "rank_bound": 2048,
+   "deflate_bytes": 11842776
+  },
+  {
+   "path": "materials/11_forest_duff_nr.png",
+   "bytes": 13313715,
+   "sha256": "0df78cc58b082e0e5d1fb234c98c8e8619403f252e6cda32d64dd882717bc3e5",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 106509720,
+   "rank_bound": 2048,
+   "deflate_bytes": 13313715
+  },
+  {
+   "path": "materials/12_juniper_bark_ah.png",
+   "bytes": 10542996,
+   "sha256": "72f48d9f9e2b8a1eb81724c2e5195e9fba80795ddbb3f628d79f654889bbd443",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 84343968,
+   "rank_bound": 2048,
+   "deflate_bytes": 10542996
+  },
+  {
+   "path": "materials/12_juniper_bark_nr.png",
+   "bytes": 10459846,
+   "sha256": "db4b0059ed1c7c8020741c5ff990fad86bf54ca2bf8e2f7d88b8f918e2542867",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 83678768,
+   "rank_bound": 2048,
+   "deflate_bytes": 10459846
+  },
+  {
+   "path": "materials/13_willow_bark_ah.png",
+   "bytes": 10226286,
+   "sha256": "02ba240f472b35bcdad4e7e934fbd628ccec973a88a52e3e6a48ac4ea4acb2e0",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 81810288,
+   "rank_bound": 2048,
+   "deflate_bytes": 10226286
+  },
+  {
+   "path": "materials/13_willow_bark_nr.png",
+   "bytes": 11726538,
+   "sha256": "ed997e273ec68d4feea89b06c222d469bd7686ebd08f39b7b40ebf2cb3f1bc58",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 93812304,
+   "rank_bound": 2048,
+   "deflate_bytes": 11726538
+  },
+  {
+   "path": "materials/14_dead_wood_ah.png",
+   "bytes": 12330709,
+   "sha256": "b6cf49092f4c8b400b41e9154390cd8ea9ba162fc02d4a9611e7717b68b9fd5f",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 98645672,
+   "rank_bound": 2048,
+   "deflate_bytes": 12330709
+  },
+  {
+   "path": "materials/14_dead_wood_nr.png",
+   "bytes": 12171419,
+   "sha256": "c1ee47e2cfa0d9754a4768915b25f262f8c400b223f6a11f109991fea0069a45",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 97371352,
+   "rank_bound": 2048,
+   "deflate_bytes": 12171419
+  },
+  {
+   "path": "materials/15_leaf_blade_ah.png",
+   "bytes": 6885524,
+   "sha256": "3a62d12e2114e79e3232f901b30b3bbac900eca45b2487cffbb2d95a8f111aae",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 55084192,
+   "rank_bound": 2048,
+   "deflate_bytes": 6885524
+  },
+  {
+   "path": "materials/15_leaf_blade_nr.png",
+   "bytes": 3129820,
+   "sha256": "1cc5bac66edb7df59ef264f385103f71f974061a9bb1f00ce3543d3b5327a166",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 25038560,
+   "rank_bound": 2048,
+   "deflate_bytes": 3129820
+  },
+  {
+   "path": "materials/16_deer_fur_summer_ah.png",
+   "bytes": 6688759,
+   "sha256": "e67a1f548791c04dd69f175ae5eb9166039596d060294240f482684c83a571dc",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 53510072,
+   "rank_bound": 2048,
+   "deflate_bytes": 6688759
+  },
+  {
+   "path": "materials/16_deer_fur_summer_nr.png",
+   "bytes": 10871344,
+   "sha256": "376c8485516632d430ae101dc9c96d2160d54b35b4250f36f41f0ebcf4a32501",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 86970752,
+   "rank_bound": 2048,
+   "deflate_bytes": 10871344
+  },
+  {
+   "path": "materials/17_deer_fur_winter_ah.png",
+   "bytes": 8092043,
+   "sha256": "6e5194c2650d8c6f16b09d246ac833e9a3593221d423388b167d6294b0e8df9d",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 64736344,
+   "rank_bound": 2048,
+   "deflate_bytes": 8092043
+  },
+  {
+   "path": "materials/17_deer_fur_winter_nr.png",
+   "bytes": 10907445,
+   "sha256": "6f83102c6d05ca11704eb1b02eba1d19c088838aeb6f950eafc07db6ef5ddae4",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 87259560,
+   "rank_bound": 2048,
+   "deflate_bytes": 10907445
+  },
+  {
+   "path": "materials/18_wolf_fur_ah.png",
+   "bytes": 7740516,
+   "sha256": "c58f3fe63e680b182477bde82942862355c9a3dd2f8d9a579ebdd888a993c324",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 61924128,
+   "rank_bound": 2048,
+   "deflate_bytes": 7740516
+  },
+  {
+   "path": "materials/18_wolf_fur_nr.png",
+   "bytes": 10442829,
+   "sha256": "c46146357d3c3c529c429b83468dbae50dfa69ab740c6fd4ce19e44482391bf9",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 83542632,
+   "rank_bound": 2048,
+   "deflate_bytes": 10442829
+  },
+  {
+   "path": "materials/19_antler_ah.png",
+   "bytes": 12045488,
+   "sha256": "996b656e6d3f1276222a9691eaa38e3490db87a81f0db94e90a1dc414bc22c87",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 96363904,
+   "rank_bound": 2048,
+   "deflate_bytes": 12045488
+  },
+  {
+   "path": "materials/19_antler_nr.png",
+   "bytes": 10451602,
+   "sha256": "9580951ef42dd48d6490df2b56ab8507e0791fd69b7ebae970db9c144de3e6a3",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 83612816,
+   "rank_bound": 2048,
+   "deflate_bytes": 10451602
+  },
+  {
+   "path": "materials/20_nose_leather_ah.png",
+   "bytes": 8728503,
+   "sha256": "fe5c6632ce12cb8c06c06a4df8f4e2e721ddafc5c05efce873ec4e0ceda26eb7",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 69828024,
+   "rank_bound": 2048,
+   "deflate_bytes": 8728503
+  },
+  {
+   "path": "materials/20_nose_leather_nr.png",
+   "bytes": 11866604,
+   "sha256": "bea0f90f505c8b6db491cbf5265f336c0646d218543bef4a64fffb0b20ccf3b7",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 94932832,
+   "rank_bound": 2048,
+   "deflate_bytes": 11866604
+  },
+  {
+   "path": "materials/21_canvas_ah.png",
+   "bytes": 6917324,
+   "sha256": "8a1cc11276bf202eca3da1580efea5b3bbb803d75c628abe7ee887393382d7c9",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 55338592,
+   "rank_bound": 2048,
+   "deflate_bytes": 6917324
+  },
+  {
+   "path": "materials/21_canvas_nr.png",
+   "bytes": 10998269,
+   "sha256": "adaf8827e97ebfa3aab8dc3e6ebf6ac5b76816424e4727b795fb59c81a3dbc94",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 87986152,
+   "rank_bound": 2048,
+   "deflate_bytes": 10998269
+  },
+  {
+   "path": "materials/22_leather_ah.png",
+   "bytes": 10996589,
+   "sha256": "d0d82c1f064501c9b1e28ffad896aabc8d4d4d97c16153dff9e5b461b305cc1e",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 87972712,
+   "rank_bound": 2048,
+   "deflate_bytes": 10996589
+  },
+  {
+   "path": "materials/22_leather_nr.png",
+   "bytes": 12142077,
+   "sha256": "b96bf75900b47a92fa807d6584456c6a8921d2126f632b4f934e8d8284c334dd",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 97136616,
+   "rank_bound": 2048,
+   "deflate_bytes": 12142077
+  },
+  {
+   "path": "materials/23_iris_ah.png",
+   "bytes": 7073843,
+   "sha256": "531c12c90ad6d8c326ce2e325f71fc32ea1668f5f7e3519d91d338b59d2e2395",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 56590744,
+   "rank_bound": 2048,
+   "deflate_bytes": 7073843
+  },
+  {
+   "path": "materials/23_iris_nr.png",
+   "bytes": 8961721,
+   "sha256": "c3f607daec7b797dc5cfa37d0c03e0be1c7112fb3d27ab691c437befa906a497",
+   "nominal_entries": 16777216,
+   "true_stored_bits": 71693768,
+   "rank_bound": 2048,
+   "deflate_bytes": 8961721
+  },
+  {
+   "path": "materials/materials.json",
+   "bytes": 6346,
+   "sha256": "5445d4cde0bd9a37c8ab324092393a4e3c9fbb98eb000d82cc59d2c64397fcd6",
+   "nominal_entries": 266,
+   "true_stored_bits": 50768,
+   "rank_bound": 1,
+   "deflate_bytes": 1115
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/0/0/0/0",
+   "bytes": 20972548,
+   "sha256": "d77919273e88ceef4c3720031b31e57a4d084ac12a0aeea8be25da1a47ef5318",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 8767060
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/1/0/0/0",
+   "bytes": 20972548,
+   "sha256": "d13b5a48d7613b527b4733fa038beaf3c8f77fb030701fa3022da8e7cc46791d",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 9565882
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/2/0/0/0",
+   "bytes": 20972548,
+   "sha256": "118c94a69807732bb0915af1dbbaee393457b252e57824010dc6c62281f817cd",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 9294859
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/3/0/0/0",
+   "bytes": 20972548,
+   "sha256": "0a491dd7cd15c35103d1185b4d72871ef34946d4f4886853883622a0a0b3d917",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 10196411
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/4/0/0/0",
+   "bytes": 20972548,
+   "sha256": "24f3c845a33dcf07ee835d1a7b331b973e467cab3e5fa3c2c0c5da77593c1180",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 10360969
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/5/0/0/0",
+   "bytes": 20972548,
+   "sha256": "f39692985f60bd07978b546480bfcdcc1d4686f083c2220f3c8a915d601de01f",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 10236505
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/6/0/0/0",
+   "bytes": 20972548,
+   "sha256": "81ec11c55aa8763b2c79e48222550535a3d88e42c029a8656f607f58a8cb4e76",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 11363607
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/7/0/0/0",
+   "bytes": 20972548,
+   "sha256": "b350b7f31b81579d51ae5929578f95bff4ccd79fa12a200890e8a7d0b26346e8",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 10936252
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/c/8/0/0/0",
+   "bytes": 20972548,
+   "sha256": "7b333570fc915b5868c7319847fcbb61da190257a6dc1dce755ac5ac80b4ff5b",
+   "nominal_entries": 5242880,
+   "true_stored_bits": 167780384,
+   "rank_bound": 128,
+   "deflate_bytes": 10715827
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/0/zarr.json",
+   "bytes": 855,
+   "sha256": "73e95b1b3edbad4623f9ea459ee7f925efe0cb656b61806d8a33dcf8317382ff",
+   "nominal_entries": 30,
+   "true_stored_bits": 6840,
+   "rank_bound": 1,
+   "deflate_bytes": 319
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/byte20/zarr.json",
+   "bytes": 268053,
+   "sha256": "08d9610f085ad838698d7ffa8beef78f1746f14e8caee510389a84582720bde5",
+   "nominal_entries": 5799,
+   "true_stored_bits": 2144424,
+   "rank_bound": 1,
+   "deflate_bytes": 92752
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "0a3ef0d5e5ba8d4f2e1ef22c70c44fc49482b8c3332e931f86fa1915ec3d43db",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 751136
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/0/zarr.json",
+   "bytes": 948,
+   "sha256": "5cb1ec620e8e79e08ea5b4e27786b81a8d90eb771b61ebd997df9ceaae476460",
+   "nominal_entries": 24,
+   "true_stored_bits": 7584,
+   "rank_bound": 1,
+   "deflate_bytes": 387
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "c3744157478d5e31a06a30a4d77ff3c56e9ed2858fa22eb7a8012c887b514c2f",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 221172
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/1/zarr.json",
+   "bytes": 948,
+   "sha256": "0f7bbece220f9194b9a25fb17f1299f54f61b5db15f6cf0452d566bcda333253",
+   "nominal_entries": 24,
+   "true_stored_bits": 7584,
+   "rank_bound": 1,
+   "deflate_bytes": 387
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "e43f212d1fde0fb8c68284ec0592936ada2898e35b14b1653bac71adb324d27f",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 60656
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/2/zarr.json",
+   "bytes": 944,
+   "sha256": "dd220eb8eec8d9fc270fd6b85948c2ee3e042ad659fa1742ee2ce6d1a22e7e0a",
+   "nominal_entries": 24,
+   "true_stored_bits": 7552,
+   "rank_bound": 1,
+   "deflate_bytes": 388
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "5233fd9aa6af0ae3e2b0ad03e505260f64ffc8acfd7aa498a9fef9d2a7dd64ad",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 20474
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/3/zarr.json",
+   "bytes": 944,
+   "sha256": "d6a2bddde398086e89247275b0503b25d027e4df354a781d08baa8643aa4f99b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7552,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "47175b7c74bf08b06829a353de3838a879ab5b0167fc61db31dff58fc94ac85c",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 6253
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/4/zarr.json",
+   "bytes": 944,
+   "sha256": "8e2f00c3ce5e9c7d28a3e903a68fdd9a1b79b8417728dac78ac0bb5281bc2e2e",
+   "nominal_entries": 24,
+   "true_stored_bits": 7552,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "b8f038edc37834c74502d9c637039b0b17f89c0f83f25b8208ac64a4d6ed2777",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 1774
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/5/zarr.json",
+   "bytes": 938,
+   "sha256": "c9b381f7fd6a94f36bd18795e373026385bea4438e3ec601a82aedf5d4a1e541",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "c38547c6b481a6c82e127ea1dedb20309cb4ed19e3fa8eae280cea8bbda8fbfe",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 498
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/6/zarr.json",
+   "bytes": 938,
+   "sha256": "6ca6628572fbe1f42a96eb6a820825bda2b9cd8aa326314d405d1e713bf66879",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 385
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/7/c/0/0",
+   "bytes": 276,
+   "sha256": "bde509acc264e6e21808cf18f36c114431b857c4c9a8995a5a1c8a330dc0c7e4",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 166
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/7/zarr.json",
+   "bytes": 938,
+   "sha256": "f34bbe29b44f2d9cb54c0a54faa419f9a7b34536fbd89bad16f02cb7d6c2ea07",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/drainage/zarr.json",
+   "bytes": 2162,
+   "sha256": "e0d2b147b544daf3b9041a92a252380a7ab8e47eb464a418fd48d26b79ac9381",
+   "nominal_entries": 48,
+   "true_stored_bits": 17296,
+   "rank_bound": 1,
+   "deflate_bytes": 440
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/0/c/0/0",
+   "bytes": 16781316,
+   "sha256": "9e783a0c557bb7a9b6117f344aec50896f1e71c8eecc35d8963a25958ac680c4",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 134250528,
+   "rank_bound": 2048,
+   "deflate_bytes": 8537650
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/0/zarr.json",
+   "bytes": 943,
+   "sha256": "26ff326e292455c92403f56d8bc6deaddd48cb41550a51b4cea7985ee5092636",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/1/c/0/0",
+   "bytes": 4195332,
+   "sha256": "59749cbc883806a79b63d3e1658979c76ea9edc9798d7871be5c416fe3ea6f01",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 33562656,
+   "rank_bound": 1024,
+   "deflate_bytes": 2359160
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/1/zarr.json",
+   "bytes": 943,
+   "sha256": "971a87da2ca188e1e670a8881d7cc184b30a8203e59db6d40080b7506b30dcaa",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/2/c/0/0",
+   "bytes": 1048836,
+   "sha256": "476251f56e739d0174eed2c073d8fd47296a4f31a21fd552b7f7b36e2ea8dc94",
+   "nominal_entries": 262144,
+   "true_stored_bits": 8390688,
+   "rank_bound": 512,
+   "deflate_bytes": 628207
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/2/zarr.json",
+   "bytes": 939,
+   "sha256": "93d43fbd9ebda8f234976ed29e6dd37212b29890cc57480c738cc4b21926dad2",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/3/c/0/0",
+   "bytes": 262212,
+   "sha256": "ebe38078d52b1f4d03994cbb88cfae017ce00c64ff11c363f86c12ac7d9ef215",
+   "nominal_entries": 65536,
+   "true_stored_bits": 2097696,
+   "rank_bound": 256,
+   "deflate_bytes": 163854
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/3/zarr.json",
+   "bytes": 939,
+   "sha256": "2594eb4c767b634a93acb24fce15b9db2bb8331c815a0372552e05bad43ff9b9",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/4/c/0/0",
+   "bytes": 65556,
+   "sha256": "02aeb09eda04bd23e86d3376cbd19ae86a36d840eed887fb760dedeed101be06",
+   "nominal_entries": 16384,
+   "true_stored_bits": 524448,
+   "rank_bound": 128,
+   "deflate_bytes": 41883
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/4/zarr.json",
+   "bytes": 939,
+   "sha256": "6399662d7046fd1750a4f39c5d8e93c5fd68881d0b44462e6938f2e74f56ecad",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/5/c/0/0",
+   "bytes": 16404,
+   "sha256": "3bd69d8f39339fc0ae968308756e9397a584fa0f162909eb0877810d18383094",
+   "nominal_entries": 4096,
+   "true_stored_bits": 131232,
+   "rank_bound": 64,
+   "deflate_bytes": 10757
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/5/zarr.json",
+   "bytes": 933,
+   "sha256": "b6861c865c6c5dae3f8c0517c0f99bc4466e37c04ab9d5dba5f85c091706eaaf",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/6/c/0/0",
+   "bytes": 4116,
+   "sha256": "6dfbb681670d8c7e50ea334e97e9a6f51c8f098fc4fdbc21dfae0f791f595561",
+   "nominal_entries": 1024,
+   "true_stored_bits": 32928,
+   "rank_bound": 32,
+   "deflate_bytes": 2775
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/6/zarr.json",
+   "bytes": 933,
+   "sha256": "5540d4c9dfd669474435fa657cf9f622ceaee308dca7d4d68e8a0f88a02b594b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/7/c/0/0",
+   "bytes": 1044,
+   "sha256": "eda7e917ad0fa8ffd8c259b4596960889ae315b2743642e748f1f2eb66f8a5ad",
+   "nominal_entries": 256,
+   "true_stored_bits": 8352,
+   "rank_bound": 16,
+   "deflate_bytes": 769
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/7/zarr.json",
+   "bytes": 933,
+   "sha256": "1669f89800c84e3e3c546a879d08a78b08b83e6f50aeeba95f2d9d634c4d4c5e",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/height/zarr.json",
+   "bytes": 2160,
+   "sha256": "74872e1290e7948e5d773109bf58a8bc6a151af2e75f431c903c26d1fedce6a7",
+   "nominal_entries": 48,
+   "true_stored_bits": 17280,
+   "rank_bound": 1,
+   "deflate_bytes": 439
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "b72034c19ebcbfa888ddcd5d53e30120fa2dbccbd8dff551b42084d39b38decd",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 56608
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/0/zarr.json",
+   "bytes": 938,
+   "sha256": "4809f4743825193da6926c1f82be156e6dac02e81bec9aff93be2cc48a7b75ff",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "fb0854ee9c4fd1983ea1d263dea761d120e33e025fced11f7edcbcc5dbc9b64f",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 37971
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/1/zarr.json",
+   "bytes": 938,
+   "sha256": "89658f1c7b165d4ff506945d8651b993cfa61d3c3cbb0d55938f3309a61f9b4b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "e1d3eaa2a93db31cfcb66d325b2ff43241fb5751c59f773dc117373d25487100",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 27573
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/2/zarr.json",
+   "bytes": 934,
+   "sha256": "061343abb908d4b075dce5db4a8e9764cc0b4c836f8a2e9b356e22e090f538ba",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "0a09d9967d2f498b3e13d7074fe7ecf57f90d282d30cdfb292900ec31c0c636f",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 9337
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/3/zarr.json",
+   "bytes": 934,
+   "sha256": "ea87fb9dc3559709971e09cd50b20fe2984c712711e6f87690d7f1df9067cd8a",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "f782befa10e6e54be47bf4ca46078d627a614853dfbf613a799d231e22937e7f",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 3049
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/4/zarr.json",
+   "bytes": 934,
+   "sha256": "f81057d443efc7a6c1fb5f2963df22975d8d01ed9753b5df528b6af5de9b65ae",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 376
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "c529848f322abb45638a9be9fa878b71a7c0f548db92ac96b7b4969bacb10d98",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 1002
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/5/zarr.json",
+   "bytes": 928,
+   "sha256": "062d1d44cc497eef1c6b6d671c9c9a1f14492bc213182cb8e1a84a44ec564ee6",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 374
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "5da7e2802a3d40591088095bf18cf6a8e41b2c6dfb8fe82526b78d1e6ddc460e",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 321
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/6/zarr.json",
+   "bytes": 928,
+   "sha256": "4f1940995868273d84d7ef230d9961c8515565c027f818f815a92c65bd839064",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 372
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/7/c/0/0",
+   "bytes": 276,
+   "sha256": "288eff35277da99c6821bbd5daf4cb03c662b4e1b7544ce9103867cc90570241",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 108
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/7/zarr.json",
+   "bytes": 928,
+   "sha256": "12a862ed6e49e863eef022eef8521d46927eaa3cd568b123f20b4d6ecbd531ef",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 375
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/material/zarr.json",
+   "bytes": 2162,
+   "sha256": "3e702955612aba85d6c9bee3e093d64ca96b47bfb9b3325bba360cefb924e72f",
+   "nominal_entries": 48,
+   "true_stored_bits": 17296,
+   "rank_bound": 1,
+   "deflate_bytes": 440
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "c44b3a80371827403d867840382e5d3f4aac19984150d76199da72c28cd66ab3",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 1217147
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/0/zarr.json",
+   "bytes": 938,
+   "sha256": "82caabf8c57f748d18d4dbe65efdede841246902c57d3e9b25d90759d4e8af7c",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "12dfbb92178e86795431c8bcf0801a4671afed627e78d3f71885ebad11ee19d0",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 406228
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/1/zarr.json",
+   "bytes": 938,
+   "sha256": "6954f0268ffe708f3ed60866cda8d7f2c71297163fd4e2cd1875e00698ba40ac",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "b7e396e9d959275710bfe2909884341cfb3461d5e1269fa341628c9a6c37ba81",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 116005
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/2/zarr.json",
+   "bytes": 934,
+   "sha256": "7d5bacc7912abea084f775f4977cfdf7ef100523dcd7882bde5d54e8231eccf8",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "c7a28f348abdafd6ddb876bf7449cd9b8059174fd88e0030d7e46991d4c5c6cf",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 30107
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/3/zarr.json",
+   "bytes": 934,
+   "sha256": "dbe80edfdc084b7dba71241948dea17d347388d8f7ac99db13680c02ef811c09",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "dbb56414aceee92064b1dae663079bc3fa7fcc9640ab2a25dec165b7be099c14",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 8146
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/4/zarr.json",
+   "bytes": 934,
+   "sha256": "27848a9bce4c5c3d03b6159a2752e4fc729dc6c2e7147e11743da2608840cc39",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "3b3a7e01c4897ea56438bb5e7c26cca6b91c051dc9bcb1a50da55eb81185a30d",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 2226
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/5/zarr.json",
+   "bytes": 928,
+   "sha256": "22c6f082ab1078badb07dd68ae3abc1fc1a89293770d6f89e3d10f40c3da979d",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "f940e4b323f7c229b0c5c35fe82608a39dededeb6dccfccb19026516b405ffe7",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 635
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/6/zarr.json",
+   "bytes": 928,
+   "sha256": "ffdf3a6234a2b2b5a4cdceb677c44c656e366d2f77c2f0e3ec2acfb65cbe3f1e",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/7/c/0/0",
+   "bytes": 276,
+   "sha256": "938c2154acb091a2b63752dd7c7c3c647823ebdcfd7546eb28c67698aa611afc",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 210
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/7/zarr.json",
+   "bytes": 928,
+   "sha256": "879fbe17a4b9ea351d030a1025e7799156bc6bfb32fef8bd7d931e7b6b680acb",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/moisture/zarr.json",
+   "bytes": 2162,
+   "sha256": "c2c1f5f1be0efd0468f093e1285c1e0210eb14b4cee6bce70b93b7913819ec97",
+   "nominal_entries": 48,
+   "true_stored_bits": 17296,
+   "rank_bound": 1,
+   "deflate_bytes": 440
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "58877e2aeee84c4eaf474c0a5f96abfe35ce3080311cba3ed023ff90fb5cfb05",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 1700343
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/0/zarr.json",
+   "bytes": 938,
+   "sha256": "9b5f71603b6b63a047564dcc744a8c547fbcbc12564ea77d770884987bbc635b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "47de411a8d1c2964a55baba151b828f8904e4b9e3fcbcc99cc3e13e962378a88",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 558520
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/1/zarr.json",
+   "bytes": 938,
+   "sha256": "91cd7f532c96d1595d541cefa07817e10ed8626a8856eb336dfacdba32facd86",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "9a878a75279b1945c9240ceac6dea53faa3daf9a8042f8a0449e7a4b9eec5865",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 146785
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/2/zarr.json",
+   "bytes": 934,
+   "sha256": "252d80ebd0518ec9990d12f5fb08ed30e6a04ae10c438c2c26ff5a8aa072e8b0",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "9e636c0e0928c418759d2accac007ea39de370179251ed57b7b0c90fe8183e57",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 38877
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/3/zarr.json",
+   "bytes": 934,
+   "sha256": "cf58f306d1928f9885c83730afd18fafcb7368402eb32b9922ae4505d3b02075",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "a3ffca23da80a0f9a15e1766e023d4608a3eeda4937d6374338ee1a0c071a3cf",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 10298
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/4/zarr.json",
+   "bytes": 934,
+   "sha256": "c37ed440ddf0c0e6014dca162e2536351a30d19ba696d6f8aff9622b6a511edf",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "e392206ca49f1d85f451f68ca397ebb3d4d778f12fa0f5e5d9d94a6dc35ebf32",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 2816
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/5/zarr.json",
+   "bytes": 928,
+   "sha256": "fb68a745d10987c3ad87fe17c18a1143c214cac6fc597dd17946de573d750069",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "ce17e2561164a4b054f34848d5f33044f9177cf01657a94600539f54517bb841",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 770
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/6/zarr.json",
+   "bytes": 928,
+   "sha256": "d26e7c3b364e99642a8ba2a1fb933d7d97d341f11913c414482dcef632ede860",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/7/c/0/0",
+   "bytes": 276,
+   "sha256": "bcb1e4217f258f5bb871163415f50f428c90c5d5aab3b265573acd7bddcedae9",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 226
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/7/zarr.json",
+   "bytes": 928,
+   "sha256": "3dc7a7d509a4be3e36179f4f5c6dcefb470304fdb0cd66c1ddb922e5f429af7c",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/rock/zarr.json",
+   "bytes": 2158,
+   "sha256": "4f42aec64d92a8dcaf5d8cb6c24b6c6c7fbe546801bc59974c58c04d8e288b89",
+   "nominal_entries": 48,
+   "true_stored_bits": 17264,
+   "rank_bound": 1,
+   "deflate_bytes": 438
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/0/c/0/0",
+   "bytes": 16781316,
+   "sha256": "ad89ff1f9a6721bd14d94e6b1ec9c280b24776faf51d3cd97b1814324851f3d2",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 134250528,
+   "rank_bound": 2048,
+   "deflate_bytes": 121851
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/0/zarr.json",
+   "bytes": 943,
+   "sha256": "2ce679aa4babc85bb9ab58b9af186d0caa18d6b67ab5a41be6f4cca78a9c2cf6",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/1/c/0/0",
+   "bytes": 4195332,
+   "sha256": "83db65ec640b665edad307fbf1380d5437190d28c6810e8565b708dd57f84008",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 33562656,
+   "rank_bound": 1024,
+   "deflate_bytes": 64414
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/1/zarr.json",
+   "bytes": 943,
+   "sha256": "475b8c20629d9da535204bc6ba176d255873ce8ffa29df594f377d47f0dd60a0",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/2/c/0/0",
+   "bytes": 1048836,
+   "sha256": "40be7565d5eed0b8f60d41a6db5a633a019b847a5328612cf16c5eed03a7a60e",
+   "nominal_entries": 262144,
+   "true_stored_bits": 8390688,
+   "rank_bound": 512,
+   "deflate_bytes": 46021
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/2/zarr.json",
+   "bytes": 939,
+   "sha256": "fc86daa9bf5f076426761fe54da22a975c4cf17dd8530427f9f0cc8c1cbb27c8",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/3/c/0/0",
+   "bytes": 262212,
+   "sha256": "76b86f6705d75cad8140e5315687224a2cca22503f0903bc260ea51ef9b94b7a",
+   "nominal_entries": 65536,
+   "true_stored_bits": 2097696,
+   "rank_bound": 256,
+   "deflate_bytes": 38560
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/3/zarr.json",
+   "bytes": 939,
+   "sha256": "39673ff1d6d0502d29c51ae615872755eb42f46bd6239e67e64e5f8172a76b05",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/4/c/0/0",
+   "bytes": 65556,
+   "sha256": "1b8e484f43505dff8ab72adc5c2cb03497a77a1405d6dbfedbb0520675c037f0",
+   "nominal_entries": 16384,
+   "true_stored_bits": 524448,
+   "rank_bound": 128,
+   "deflate_bytes": 31401
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/4/zarr.json",
+   "bytes": 939,
+   "sha256": "3f7c202ec42e52286973c73504289ffae1d99da06db98b79259286df3f0685dc",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/5/c/0/0",
+   "bytes": 16404,
+   "sha256": "1bfd6c7e54c9f162a882ac724cf2f0a315b41dc873b217e0732207fd6b674517",
+   "nominal_entries": 4096,
+   "true_stored_bits": 131232,
+   "rank_bound": 64,
+   "deflate_bytes": 8836
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/5/zarr.json",
+   "bytes": 933,
+   "sha256": "946146dcb1d01c19e78132fb7fb3f27a627d5d2411994fa5b9abec974eb6821b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/6/c/0/0",
+   "bytes": 4116,
+   "sha256": "db7dfed85022eb59b30db84380d79e41c6bce0b40645076e51255bbdc7518c1e",
+   "nominal_entries": 1024,
+   "true_stored_bits": 32928,
+   "rank_bound": 32,
+   "deflate_bytes": 2481
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/6/zarr.json",
+   "bytes": 933,
+   "sha256": "139ccb761bb5cd9bde5827e52df190d1e6bab8f1a58fce849b059d0f236d0e1d",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/7/c/0/0",
+   "bytes": 1044,
+   "sha256": "a78f5dff99fa261026debda8cbd3b077ba2fd783851c8b838dbd4d8b69499b48",
+   "nominal_entries": 256,
+   "true_stored_bits": 8352,
+   "rank_bound": 16,
+   "deflate_bytes": 714
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/7/zarr.json",
+   "bytes": 933,
+   "sha256": "abfae61b9460aaea9629c1ac97d1e86ffc5bba557518c809323d66a5224fea0e",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/terrain/zarr.json",
+   "bytes": 2165,
+   "sha256": "c399499f8ba98f2d93da595ef80eb3fd0099bd98f831a1bf75e184201941f25a",
+   "nominal_entries": 48,
+   "true_stored_bits": 17320,
+   "rank_bound": 1,
+   "deflate_bytes": 445
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0000/zarr.json",
+   "bytes": 9975,
+   "sha256": "419d66addeadbb0647c54f704216c98e8003e597f35c2d501b40db8dbf8d63df",
+   "nominal_entries": 243,
+   "true_stored_bits": 79800,
+   "rank_bound": 1,
+   "deflate_bytes": 3468
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "92c4ede94c5864ef8b2bbf6c3989c41b42418d3a5bd4187f65eed439fd01050e",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 755154
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/0/zarr.json",
+   "bytes": 948,
+   "sha256": "16db0d181dbffbd0f84aa23b767c0f8b5f4eaf10622568aaefd282f5d50bbf3e",
+   "nominal_entries": 24,
+   "true_stored_bits": 7584,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "ad2d3f238bb2781a82d4356ff8743ab22de3d7f21cf7a698eb8af422473f886f",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 223176
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/1/zarr.json",
+   "bytes": 948,
+   "sha256": "04aeff39402c01629b4651140c54b57a9bae6dbccfef3dab6541abf8f0fa7f9c",
+   "nominal_entries": 24,
+   "true_stored_bits": 7584,
+   "rank_bound": 1,
+   "deflate_bytes": 388
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "af6f008b1add43e2bd99310c4054fa3839d8c2d56fdc339bc2463ff7431da930",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 61372
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/2/zarr.json",
+   "bytes": 944,
+   "sha256": "ff72aacfc53d7856ade18ad17e99571216543175e37485fd6de7385c5cc0c365",
+   "nominal_entries": 24,
+   "true_stored_bits": 7552,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "83e8b5dc70d92e8c3339cc4b72ba6b6d7f39f71cd9d8f6f274b8f0b890801cd2",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 20631
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/3/zarr.json",
+   "bytes": 944,
+   "sha256": "ff4d40eb786d0fd171e3e94fa54f08f3b5c51d4a1cf20622d10cabdb37f74857",
+   "nominal_entries": 24,
+   "true_stored_bits": 7552,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "89cdd4720b8b16bcffb5ebd1d274ae7e326f38dd0e6476ab5abe8e21cfecbb3e",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 6241
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/4/zarr.json",
+   "bytes": 944,
+   "sha256": "33db4d58115513a331be9cfc8ae93b46694efe0723050cb79a9e21d6cdae9245",
+   "nominal_entries": 24,
+   "true_stored_bits": 7552,
+   "rank_bound": 1,
+   "deflate_bytes": 383
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "3fe85b68036f13137d07787a35c72a760156acdabfa8884968923f0c8c573407",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 1751
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/5/zarr.json",
+   "bytes": 938,
+   "sha256": "e3ca4943b1c5e23dbaa542ee4c7c96a05c4632457ed8c1486da67751b4d8902b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 385
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "2db191e3c02e8db98bbc88441b39334e54e7495585a447462c5fde3515ae297c",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 495
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/6/zarr.json",
+   "bytes": 938,
+   "sha256": "4effc92ab72115b54e0f660065f329f82259f0711e6888927580d6de99684ef1",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/7/c/0/0",
+   "bytes": 276,
+   "sha256": "b15f1c95d91a0bb5bf837729da486e76a96e574c2939278058befeab3c9f2b54",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 161
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/7/zarr.json",
+   "bytes": 938,
+   "sha256": "3df2db6c030a3ddfa5c5d29f8edb08927db9b2f4d4ff97432510663fd0d5008d",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/drainage/zarr.json",
+   "bytes": 2164,
+   "sha256": "e9bfb4f9724da86d6bfbd77cf21f9c074c8c48eb0d83ea7d1423589b08c24190",
+   "nominal_entries": 48,
+   "true_stored_bits": 17312,
+   "rank_bound": 1,
+   "deflate_bytes": 442
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/0/c/0/0",
+   "bytes": 16781316,
+   "sha256": "789af9d518b42e84f95c08befe6ffe9d633380c803b0bce62e49bbeef86acee7",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 134250528,
+   "rank_bound": 2048,
+   "deflate_bytes": 8616574
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/0/zarr.json",
+   "bytes": 943,
+   "sha256": "caa5d5c1befffc8b5cb6fed5ec19926698d61b908334dc51784517fc62bdf0d1",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 385
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/1/c/0/0",
+   "bytes": 4195332,
+   "sha256": "5ba61591fb6df8c9157cdc26870951608eb6bc666466640901d052079ed6f97c",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 33562656,
+   "rank_bound": 1024,
+   "deflate_bytes": 2376208
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/1/zarr.json",
+   "bytes": 943,
+   "sha256": "f06170d9d9b379ba334b36c74b1e07d1b53dfa768ac0ac39bec361d928dc744b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 386
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/2/c/0/0",
+   "bytes": 1048836,
+   "sha256": "a4a2a74bdd8a5f796d5b9a3850eb93d24a0b749dc0cc6e118029bede7475456a",
+   "nominal_entries": 262144,
+   "true_stored_bits": 8390688,
+   "rank_bound": 512,
+   "deflate_bytes": 637944
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/2/zarr.json",
+   "bytes": 939,
+   "sha256": "aaff165b9c64dff0b3e72306a2bdf5349977db990b242cd34f76d9238f000599",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 383
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/3/c/0/0",
+   "bytes": 262212,
+   "sha256": "771f1618a98049d24b976a183c16f6529c82ab92272cdf3e0f83db5bc012fa9a",
+   "nominal_entries": 65536,
+   "true_stored_bits": 2097696,
+   "rank_bound": 256,
+   "deflate_bytes": 166216
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/3/zarr.json",
+   "bytes": 939,
+   "sha256": "4a70367801d4d5b38613a90ba53a506bc0dd75eece4af83f114672ee1d6f0df0",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 385
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/4/c/0/0",
+   "bytes": 65556,
+   "sha256": "bdda4a0f4251ff071fd50b10cc454683a672b55840cc47ec4598536ffcf0f0be",
+   "nominal_entries": 16384,
+   "true_stored_bits": 524448,
+   "rank_bound": 128,
+   "deflate_bytes": 42581
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/4/zarr.json",
+   "bytes": 939,
+   "sha256": "17b79d92baaa23a8003c2d13fc56940bcf6195a643c2f344b3c8f6703d18da7b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/5/c/0/0",
+   "bytes": 16404,
+   "sha256": "1e7a48d7901050747b6839ca427c6549a2a3a9ecb6e8b9ca9c6556f9dacba953",
+   "nominal_entries": 4096,
+   "true_stored_bits": 131232,
+   "rank_bound": 64,
+   "deflate_bytes": 10935
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/5/zarr.json",
+   "bytes": 933,
+   "sha256": "19ee4aa71d2645104ac55eaece376f71f919e678c83d4be6178f266b84065723",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/6/c/0/0",
+   "bytes": 4116,
+   "sha256": "736f8db8420e56568de17fb0dca2d18cd0a4d1b5d6f113a1b56de7ced1eac724",
+   "nominal_entries": 1024,
+   "true_stored_bits": 32928,
+   "rank_bound": 32,
+   "deflate_bytes": 2827
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/6/zarr.json",
+   "bytes": 933,
+   "sha256": "4349e86fed50277fe2bbe9737902098c62817fa062a8eb47aed98f310884974b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/7/c/0/0",
+   "bytes": 1044,
+   "sha256": "35900f4fa4bdb781f463de7ca28eee2348f99bf6817f9813a212152a2643b3c5",
+   "nominal_entries": 256,
+   "true_stored_bits": 8352,
+   "rank_bound": 16,
+   "deflate_bytes": 778
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/7/zarr.json",
+   "bytes": 933,
+   "sha256": "ee6f49afab03288cba894b4d77d5a8db98a1ccfd538cab4e409f751cc3b17576",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/height/zarr.json",
+   "bytes": 2162,
+   "sha256": "3c8de470aca399253f8e8a2ef47a509276373a0aa2399241e126c4bfbb94511d",
+   "nominal_entries": 48,
+   "true_stored_bits": 17296,
+   "rank_bound": 1,
+   "deflate_bytes": 442
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "9a91960bd7ea546418e7a49e83c3e551c5a522d40ec23ced94f759a1c20dae74",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 65156
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/0/zarr.json",
+   "bytes": 938,
+   "sha256": "c62980318d638e3a47ba299bdacb389289e85519d66b245c0a785895d8ad6301",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "b5e605b1d81e5d131068254471a35e53fd67668e1cde828a38725bd4db068fa8",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 44644
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/1/zarr.json",
+   "bytes": 938,
+   "sha256": "4a5c475499bc3532c8d051737c7cd08b6f97e0227bd9cbad0726dfdb716a2ac7",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "bb23b34cafa00757782f4bf85b4af3547b562610686e3145dd3448ceb6eccdc9",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 32271
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/2/zarr.json",
+   "bytes": 934,
+   "sha256": "ac42d504e6ff25d3cf7c4a39465b7bd239d070b7bc9b1a9ac6d3ab03203971f8",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "26bf308ca009459b8ff837b0dc5327485f96e5b75dca312b5dbe382944427cdf",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 10739
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/3/zarr.json",
+   "bytes": 934,
+   "sha256": "60110d899b866d647c7314709fc18fc1f986de918271fb878d4ce53c8e6e4ae5",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 376
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "6f201300213465c7072952ffd66f426c88abfa60265af9b22fe368296d367aae",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 3395
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/4/zarr.json",
+   "bytes": 934,
+   "sha256": "0c15f6061914134a2d43e902532639f13ec5112f809ed574f3dfd6335b575268",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "6f1269c9674278c988eef9bb8bc9b85e99dbb271775732388a1ce8d54a585a11",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 1089
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/5/zarr.json",
+   "bytes": 928,
+   "sha256": "d2cb0949deda396f91441fa3ddfd34d8128b80cd79a0d0526e6430c80094b47a",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 375
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "f28a078fddea53a3b593b73825b05ebdffd3f5ecedc340eb3f428ad47638fd57",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 352
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/6/zarr.json",
+   "bytes": 928,
+   "sha256": "26de328b36675323ed8a2b0d8d52490cae92b6c475aa39f70f26b88c98c504b6",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 375
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/7/c/0/0",
+   "bytes": 276,
+   "sha256": "10a95b4f14f2518f605a91ba1f6044b2d2acd421b53d646a520aba853ac1c80b",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 120
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/7/zarr.json",
+   "bytes": 928,
+   "sha256": "be2d39fe023ac44e235b31470be760ec97494784327161ff620fcb2724db1cb6",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 375
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/material/zarr.json",
+   "bytes": 2164,
+   "sha256": "2feec8229504886a1ecd210764e20a8e673925a9a0f682732bbfe6e87e88bd7e",
+   "nominal_entries": 48,
+   "true_stored_bits": 17312,
+   "rank_bound": 1,
+   "deflate_bytes": 442
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "710d77529646241f452025deb7a8b36c3c2bc5f995b967316d42c5a0f882a073",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 1245361
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/0/zarr.json",
+   "bytes": 938,
+   "sha256": "37b65fbcb964bb192a27857aba081f63a858dc52fd8859e88381949d2f297c43",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "f1c52c5dd499cf310f9a25e548a03938672c15c60dd534267f0763652070c4a6",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 410523
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/1/zarr.json",
+   "bytes": 938,
+   "sha256": "c19ac51e1d05c081f17eeabe50b425678844cfc36ec677638540167e3be50df2",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "6d91a5acece42ba9d708f086adfc0eeef5a4858dd64f7245008ef945dfae4e00",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 115938
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/2/zarr.json",
+   "bytes": 934,
+   "sha256": "c516e01ea8c080e4e1bff5d7e0865d888e15158b30164733be9c4f8a81e35394",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "7b0033f925da8dc946d12d3fda975cb5d029fc0544746e544047929ea487932a",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 29746
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/3/zarr.json",
+   "bytes": 934,
+   "sha256": "707965a32940d572ecfc6af2af462c27400f19421398bffa1c4500326e77c083",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "acdc353df5a6c9da411806ba989f798912d3279d4bb00e40c85b912c17596bd6",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 7957
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/4/zarr.json",
+   "bytes": 934,
+   "sha256": "9c94dadb71e01e4e9f5b1a5d0640d86bb02c37236db25b913b1e516a2844d48c",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "59bba3b427efe5f56c0657c904abf90b2f337b0db7599d2c11873d7e6bf18793",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 2159
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/5/zarr.json",
+   "bytes": 928,
+   "sha256": "a1124312d5c8f1f02cda8e576055c8b6880920db30b67ce787184b350463c230",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "6ad376f2b0bbc7759cfc77bb5ab4006fa61fdd670bd026d1089bc94e58b2b713",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 611
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/6/zarr.json",
+   "bytes": 928,
+   "sha256": "c4ac5a5ec3d42707caf2ab37967e37f9f82cd23ea1c86929281f60c3dbd71c0b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 378
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/7/c/0/0",
+   "bytes": 276,
+   "sha256": "8d6095df76d026dd4d3d1e2194c51bbb3e9f5a8a1fb86784049a6c07323981b2",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 206
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/7/zarr.json",
+   "bytes": 928,
+   "sha256": "200de20173fb554a0f68467891efe82bc88556c979a02d0bbe22f7f71f18464b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/moisture/zarr.json",
+   "bytes": 2164,
+   "sha256": "bac7c16f8af1b17d2b82da0073367309966175ac7eed15a0064c490977619e12",
+   "nominal_entries": 48,
+   "true_stored_bits": 17312,
+   "rank_bound": 1,
+   "deflate_bytes": 442
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/0/c/0/0",
+   "bytes": 4198404,
+   "sha256": "6ebce1705665f45cfad2e3c8aa2446678bde57c7fac67a401f7016e1166cb7a3",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 33587232,
+   "rank_bound": 2048,
+   "deflate_bytes": 1849154
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/0/zarr.json",
+   "bytes": 938,
+   "sha256": "3bd55f476da95b8befb72f271ff488461b3ebcbcf90cadfb0cad81e1d45cab71",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/1/c/0/0",
+   "bytes": 1049604,
+   "sha256": "e79cb21c529729b4506519570f147cfbc1fca72e20af4416901d76455863c48a",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 8396832,
+   "rank_bound": 1024,
+   "deflate_bytes": 589007
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/1/zarr.json",
+   "bytes": 938,
+   "sha256": "39a924fcb66bbcaab48d784303aa6aa46c0d4fa8441612b6d732fcd5c813224d",
+   "nominal_entries": 24,
+   "true_stored_bits": 7504,
+   "rank_bound": 1,
+   "deflate_bytes": 383
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/2/c/0/0",
+   "bytes": 262404,
+   "sha256": "1a79ec9642dd8dc39d335486fe0cb5c8f868a6711a21995b64352227dfd4bd20",
+   "nominal_entries": 262144,
+   "true_stored_bits": 2099232,
+   "rank_bound": 512,
+   "deflate_bytes": 151744
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/2/zarr.json",
+   "bytes": 934,
+   "sha256": "2dfc856137dec4beca5183a85effb14780690e49ca115a5087d2c2526a48706b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/3/c/0/0",
+   "bytes": 65604,
+   "sha256": "ce54dae9c8a00dbc95f643921b73cc1d6b1a26755d1196386a42f82d7028bc11",
+   "nominal_entries": 65536,
+   "true_stored_bits": 524832,
+   "rank_bound": 256,
+   "deflate_bytes": 39959
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/3/zarr.json",
+   "bytes": 934,
+   "sha256": "f01afc7e7c4cf77000c0be447e1f88d7c364a8fe625c0d4ec73ee61f915d1ea5",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 380
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/4/c/0/0",
+   "bytes": 16404,
+   "sha256": "a7db1e5593d549401f3c6a231741c43d1d6d26b2e2a0bac35af179d6855c9f88",
+   "nominal_entries": 16384,
+   "true_stored_bits": 131232,
+   "rank_bound": 128,
+   "deflate_bytes": 10579
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/4/zarr.json",
+   "bytes": 934,
+   "sha256": "3d4e64de68984acd93396f481559144427a5aec281dca91c830bf7cc52583844",
+   "nominal_entries": 24,
+   "true_stored_bits": 7472,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/5/c/0/0",
+   "bytes": 4116,
+   "sha256": "58ff17bc75a4a7f9a458495574bc1788836e679b6dba0d111adb02c64e6641a8",
+   "nominal_entries": 4096,
+   "true_stored_bits": 32928,
+   "rank_bound": 64,
+   "deflate_bytes": 2851
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/5/zarr.json",
+   "bytes": 928,
+   "sha256": "4efbb63d00b1f90b8f7698aeb45161253c799c5229ca78fb9a0871d15d5f60f1",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/6/c/0/0",
+   "bytes": 1044,
+   "sha256": "b4cf1e8ce28d2f07dbb0e402977dd10c2e4dfecd3e6834aa6d955a8e1f86cb66",
+   "nominal_entries": 1024,
+   "true_stored_bits": 8352,
+   "rank_bound": 32,
+   "deflate_bytes": 788
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/6/zarr.json",
+   "bytes": 928,
+   "sha256": "e50754a1cbb7d42ecbd6315d7c5a4eb757c326bcbea87142dc1dc827d9d92b86",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/7/c/0/0",
+   "bytes": 276,
+   "sha256": "155f3775e931c6303a94299cd065471c63762f34d9610bea4cf5663d20a5eca5",
+   "nominal_entries": 256,
+   "true_stored_bits": 2208,
+   "rank_bound": 16,
+   "deflate_bytes": 224
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/7/zarr.json",
+   "bytes": 928,
+   "sha256": "5a73b566cf0211ff9e4983ea796f0e98390b7133d3a722352465905d543d8d4c",
+   "nominal_entries": 24,
+   "true_stored_bits": 7424,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/rock/zarr.json",
+   "bytes": 2160,
+   "sha256": "779ca7edeebb308155fc2db73a5232b9d0b8bbfbebef2198b229f65b4583f9f7",
+   "nominal_entries": 48,
+   "true_stored_bits": 17280,
+   "rank_bound": 1,
+   "deflate_bytes": 440
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/0/c/0/0",
+   "bytes": 16781316,
+   "sha256": "ad89ff1f9a6721bd14d94e6b1ec9c280b24776faf51d3cd97b1814324851f3d2",
+   "nominal_entries": 4194304,
+   "true_stored_bits": 134250528,
+   "rank_bound": 2048,
+   "deflate_bytes": 121851
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/0/zarr.json",
+   "bytes": 943,
+   "sha256": "2ce679aa4babc85bb9ab58b9af186d0caa18d6b67ab5a41be6f4cca78a9c2cf6",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/1/c/0/0",
+   "bytes": 4195332,
+   "sha256": "83db65ec640b665edad307fbf1380d5437190d28c6810e8565b708dd57f84008",
+   "nominal_entries": 1048576,
+   "true_stored_bits": 33562656,
+   "rank_bound": 1024,
+   "deflate_bytes": 64414
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/1/zarr.json",
+   "bytes": 943,
+   "sha256": "475b8c20629d9da535204bc6ba176d255873ce8ffa29df594f377d47f0dd60a0",
+   "nominal_entries": 24,
+   "true_stored_bits": 7544,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/2/c/0/0",
+   "bytes": 1048836,
+   "sha256": "40be7565d5eed0b8f60d41a6db5a633a019b847a5328612cf16c5eed03a7a60e",
+   "nominal_entries": 262144,
+   "true_stored_bits": 8390688,
+   "rank_bound": 512,
+   "deflate_bytes": 46021
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/2/zarr.json",
+   "bytes": 939,
+   "sha256": "fc86daa9bf5f076426761fe54da22a975c4cf17dd8530427f9f0cc8c1cbb27c8",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 384
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/3/c/0/0",
+   "bytes": 262212,
+   "sha256": "76b86f6705d75cad8140e5315687224a2cca22503f0903bc260ea51ef9b94b7a",
+   "nominal_entries": 65536,
+   "true_stored_bits": 2097696,
+   "rank_bound": 256,
+   "deflate_bytes": 38560
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/3/zarr.json",
+   "bytes": 939,
+   "sha256": "39673ff1d6d0502d29c51ae615872755eb42f46bd6239e67e64e5f8172a76b05",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/4/c/0/0",
+   "bytes": 65556,
+   "sha256": "1b8e484f43505dff8ab72adc5c2cb03497a77a1405d6dbfedbb0520675c037f0",
+   "nominal_entries": 16384,
+   "true_stored_bits": 524448,
+   "rank_bound": 128,
+   "deflate_bytes": 31401
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/4/zarr.json",
+   "bytes": 939,
+   "sha256": "3f7c202ec42e52286973c73504289ffae1d99da06db98b79259286df3f0685dc",
+   "nominal_entries": 24,
+   "true_stored_bits": 7512,
+   "rank_bound": 1,
+   "deflate_bytes": 379
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/5/c/0/0",
+   "bytes": 16404,
+   "sha256": "1bfd6c7e54c9f162a882ac724cf2f0a315b41dc873b217e0732207fd6b674517",
+   "nominal_entries": 4096,
+   "true_stored_bits": 131232,
+   "rank_bound": 64,
+   "deflate_bytes": 8836
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/5/zarr.json",
+   "bytes": 933,
+   "sha256": "946146dcb1d01c19e78132fb7fb3f27a627d5d2411994fa5b9abec974eb6821b",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/6/c/0/0",
+   "bytes": 4116,
+   "sha256": "db7dfed85022eb59b30db84380d79e41c6bce0b40645076e51255bbdc7518c1e",
+   "nominal_entries": 1024,
+   "true_stored_bits": 32928,
+   "rank_bound": 32,
+   "deflate_bytes": 2481
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/6/zarr.json",
+   "bytes": 933,
+   "sha256": "139ccb761bb5cd9bde5827e52df190d1e6bab8f1a58fce849b059d0f236d0e1d",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 381
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/7/c/0/0",
+   "bytes": 1044,
+   "sha256": "a78f5dff99fa261026debda8cbd3b077ba2fd783851c8b838dbd4d8b69499b48",
+   "nominal_entries": 256,
+   "true_stored_bits": 8352,
+   "rank_bound": 16,
+   "deflate_bytes": 714
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/7/zarr.json",
+   "bytes": 933,
+   "sha256": "abfae61b9460aaea9629c1ac97d1e86ffc5bba557518c809323d66a5224fea0e",
+   "nominal_entries": 24,
+   "true_stored_bits": 7464,
+   "rank_bound": 1,
+   "deflate_bytes": 382
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/terrain/zarr.json",
+   "bytes": 2167,
+   "sha256": "1ac95e0426795e9a4d9c3c846304d1b91b435c7a3584aca551ba0206e41236b5",
+   "nominal_entries": 48,
+   "true_stored_bits": 17336,
+   "rank_bound": 1,
+   "deflate_bytes": 447
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/map/epoch-0576/zarr.json",
+   "bytes": 9985,
+   "sha256": "48efb3948ef8a588020f1f0058b63d26abd18b6ccccbc6ae340ab7cc6c9d8981",
+   "nominal_entries": 243,
+   "true_stored_bits": 79880,
+   "rank_bound": 1,
+   "deflate_bytes": 3475
+  },
+  {
+   "path": "zarr/deer-valley-reference.zarr/zarr.json",
+   "bytes": 1646,
+   "sha256": "ea7734b450b56a90586f6a2dfe94a61f6e6ce63c5df6e991790ca554aa88faf1",
+   "nominal_entries": 44,
+   "true_stored_bits": 13168,
+   "rank_bound": 1,
+   "deflate_bytes": 828
+  }
+ ],
+ "metrics": "nominal_entries, true_stored_bits, rank_bound, deflate_bytes (see tools/bake/manifest.py)"
+}

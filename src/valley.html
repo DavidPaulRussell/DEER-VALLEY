@@ -1,0 +1,562 @@
+<title>Deer Valley · Plume XPU Console</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+Condensed:wght@400;500;600&display=swap">
+<style>
+%%CSS%%
+/* Deer Valley: the third-person view, the valley map, and the panels that prove what they show. */
+.wrap { max-width: 1680px; }
+.world { display: grid; grid-template-columns: minmax(0, 1.75fr) minmax(320px, 1fr); gap: 14px; align-items: start; }
+@media (max-width: 1100px) { .world { grid-template-columns: minmax(0, 1fr); } }
+.view3d { position: relative; aspect-ratio: 16 / 9; background: #0b0d12; border-radius: 10px; overflow: hidden; }
+.view3d canvas { width: 100%; height: 100%; display: block; touch-action: none; cursor: grab; }
+.view3d canvas:active { cursor: grabbing; }
+.perfhud { position: absolute; left: 10px; bottom: 30px; color: #cfd6e2; background: #0b0d1299; border-radius: 6px; padding: 3px 8px; font: 11px/1.4 var(--f-mono, ui-monospace, monospace); pointer-events: none; max-width: calc(100% - 20px); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hud { position: absolute; left: 12px; top: 12px; max-width: min(360px, 60%); background: #0b0d12b8; color: #e8ecf3; border-radius: 9px; padding: 9px 12px; font: 12.5px/1.45 var(--f-ui); backdrop-filter: blur(6px); }
+.hud b { font: 600 15px var(--f-ui); letter-spacing: .02em; }
+.hud .row { gap: 6px; }
+.hud .mini { height: 6px; border-radius: 3px; background: #ffffff22; overflow: hidden; flex: 1; min-width: 60px; }
+.hud .mini i { display: block; height: 100%; background: #f0a23b; }
+.hud .lv { font: 600 10.5px var(--f-ui); letter-spacing: .06em; padding: 1px 7px; border-radius: 99px; border: 1px solid #ffffff55; }
+.tools3d { position: absolute; right: 10px; top: 10px; display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; max-width: 60%; }
+.tools3d .btn, .tools3d select { background: #0b0d12b8; color: #e8ecf3; border-color: #ffffff30; backdrop-filter: blur(6px); }
+.caption { position: absolute; left: 12px; bottom: 10px; right: 12px; color: #e8ecf3; font: 12px var(--f-mono); text-shadow: 0 1px 2px #000; display: flex; justify-content: space-between; gap: 10px; pointer-events: none; }
+.nogl { position: absolute; inset: 0; display: grid; place-items: center; color: #c9cfdb; text-align: center; padding: 20px; font-size: 14px; }
+.map { position: relative; background: var(--scope); border-radius: 8px; overflow: hidden; aspect-ratio: 1; }
+.map canvas { width: 100%; height: 100%; display: block; image-rendering: pixelated; cursor: crosshair; }
+.stat { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: 8px; }
+.stat div { background: var(--sunk); border: 1px solid var(--line); border-radius: 7px; padding: 6px 9px; }
+.stat b { display: block; font: 600 17px var(--f-mono); }
+.stat span { font-size: 11.5px; color: var(--muted); }
+canvas.chart { width: 100%; height: 150px; display: block; background: var(--sunk); border: 1px solid var(--line); border-radius: 6px; }
+.boot { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 4px 12px; font-size: 12.5px; }
+.boot div { display: flex; gap: 6px; align-items: baseline; }
+.chip { font: 600 10px var(--f-ui); letter-spacing: .06em; text-transform: uppercase; padding: 1px 6px; border-radius: 99px; border: 1px solid var(--line); color: var(--muted); white-space: nowrap; }
+.chip.on { color: var(--good); border-color: color-mix(in srgb, var(--good) 50%, transparent); }
+.chip.ver { color: var(--on-accent); background: var(--good); border-color: var(--good); }
+.events { max-height: 260px; overflow: auto; font: 12px/1.5 var(--f-mono); margin: 0; padding: 0; list-style: none; }
+.events li { padding: 2px 0; border-bottom: 1px dashed var(--line); }
+.events li.me { color: var(--accent); font-weight: 600; }
+.events .k { color: var(--muted); }
+.genes { display: grid; grid-template-columns: max-content minmax(0, 1fr) 2.2em; gap: 3px 8px; font-size: 12px; align-items: center; }
+.gbar { height: 7px; border-radius: 4px; background: var(--sunk); border: 1px solid var(--line); overflow: hidden; }
+.gbar i { display: block; height: 100%; }
+.percept { display: grid; grid-template-columns: repeat(5, 1fr); gap: 2px; max-width: 220px; }
+.percept i { aspect-ratio: 1; border-radius: 3px; display: grid; place-items: center; font: 600 9px var(--f-mono); color: #fff; }
+pre.save { margin: 0; max-height: 200px; overflow: auto; background: var(--sunk); border: 1px solid var(--line); border-radius: 6px; padding: 8px 10px; font: 11.5px/1.5 var(--f-mono); white-space: pre; }
+.prog { height: 6px; border-radius: 3px; background: var(--sunk); overflow: hidden; border: 1px solid var(--line); }
+.prog i { display: block; height: 100%; width: 0; background: var(--accent); transition: width .2s; }
+</style>
+
+<div class="wrap">
+  <header class="bar">
+    <div class="brand"><h1>Deer Valley <span class="pill" id="ver" style="vertical-align:middle;letter-spacing:.04em"></span></h1>
+      <div class="sub">Eight plant species on the XPU · thousands of deer, wolves and wardens · the Simmy rails trust law · every epoch digest-chained and sealed</div></div>
+    <nav class="pages" aria-label="Console pages"><a href="index.html">Console</a><a href="simmy.html">Simmy replay</a><a href="valley.html" aria-current="page">Deer Valley</a><a href="verify.html">Verify R files</a></nav>
+    <div class="engines" id="engines"><span class="pill">starting engines</span></div>
+  </header>
+
+  <section class="panel" aria-label="World controls">
+    <div class="row" style="justify-content: space-between">
+      <div class="row">
+        <button class="btn primary" id="b-play" disabled>Play</button>
+        <button class="btn" id="b-step" disabled>Step</button>
+        <label class="inl" for="speed">pace <select id="speed"><option value="2000" selected>live · 1 epoch / 2 s</option><option value="1000">1 epoch / s</option><option value="250">4 epochs / s</option><option value="0">as fast as it runs</option></select></label>
+        <label class="inl" for="sel-engine">XPU <select id="sel-engine"></select></label>
+        <label class="inl" for="seal">seal R files <select id="seal"><option value="1" selected>every epoch</option><option value="4">every 4 epochs</option><option value="24">every season</option><option value="0">off</option></select></label>
+      </div>
+      <div class="row">
+        <label class="inl" for="seed">seed <input id="seed" type="number" value="20261117" style="width:7.5em"></label>
+        <label class="inl" for="deer">deer <select id="deer"><option>1024</option><option selected>4096</option><option>8192</option><option>16384</option></select></label>
+        <label class="inl" for="boot">boot <select id="boot"><option value="simmy" selected>on the Simmy replay</option><option value="instant">instant</option></select></label>
+        <button class="btn" id="b-new" disabled>New world</button>
+      </div>
+    </div>
+    <div class="stat" id="stats"></div>
+    <div id="msg" class="msg"></div>
+  </section>
+
+  <div class="world">
+    <section class="panel" aria-label="Third-person view" style="padding:10px">
+      <div class="view3d" id="view3d">
+        <canvas id="cv3d" tabindex="0" aria-label="Third-person 3D view of the valley; drag to orbit, scroll to zoom, click a deer to follow it"></canvas>
+        <div class="hud" id="hud" hidden></div>
+        <div class="tools3d">
+          <select id="notable" aria-label="Follow a notable deer"><option value="">follow…</option><option value="founder">a founder</option><option value="oldest">the oldest</option><option value="trusted">the most trusted</option><option value="poacher">a poacher</option><option value="licensed">a licence holder</option><option value="fawn">a fawn</option><option value="random">anyone</option></select>
+          <button class="btn" id="b-kin" title="Follow the nearest deer of the same lineage">kin</button>
+          <button class="btn" id="b-overview" title="Circle high over the valley">overview</button>
+          <select id="quality" aria-label="Render quality"><option value="auto" selected>auto</option><option value="low">low</option><option value="medium">medium</option><option value="high">high</option><option value="ultra">ultra</option></select>
+          <select id="tod" aria-label="Time of day"><option value="">day cycles</option><option value="0.3">morning</option><option value="0.45">noon</option><option value="0.68">golden hour</option><option value="0.76">dusk</option><option value="0.95">night</option></select>
+          <select id="lens" aria-label="Lens (focal length)"><option value="0">14 mm</option><option value="0.085" selected>25 mm</option><option value="0.2">50 mm</option><option value="0.35">105 mm</option><option value="0.5">200 mm</option><option value="0.65">400 mm</option><option value="0.85">1000 mm</option></select>
+          <button class="btn" id="b-senses" aria-pressed="false" title="Show the cells the deer weighs and the cone of its last bite">senses</button>
+          <button class="btn" id="b-full" title="Full screen">⤢</button>
+        </div>
+        <div class="caption"><span id="cap-l"></span><span id="cap-r"></span></div>
+        <div class="perfhud" id="perfhud" aria-live="off" title="GPU milliseconds per pass against the 60 fps budget; Shift+wheel or [ ] change the lens"></div>
+        <div class="nogl" id="nogl" hidden></div>
+      </div>
+    </section>
+    <section class="panel" aria-label="Valley map">
+      <div class="row" style="justify-content: space-between">
+        <div class="seg" id="layers" role="group" aria-label="Map layer"><button data-l="meadow" aria-pressed="true">meadow</button><button data-l="terrain">terrain</button><button data-l="trust">trust</button><button data-l="trails">scent</button><button data-l="memory">memory</button><button data-l="byte20">byte20</button></div>
+      </div>
+      <div class="map"><canvas id="cvmap" width="512" height="512" aria-label="Map of the valley"></canvas></div>
+      <div class="row">
+        <span class="label">click</span>
+        <div class="seg" id="tools" role="group" aria-label="Map tool"><button data-t="follow" aria-pressed="true">follow</button><button data-t="rain">rain</button><button data-t="fire">fire</button><button data-t="wolves">wolves</button><button data-t="warden">warden</button><button data-t="reserve">reserve</button></div>
+        <button class="btn" id="b-release" title="Lift the E20 latch on deer.unlicensed">release deer.unlicensed</button>
+      </div>
+      <p class="note" id="tool-note">Click a deer to follow it. Interventions open when SIM_58 (Human-in-the-Loop) is ready; each is recorded in the save file.</p>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel" aria-label="The deer you follow">
+      <div class="label" id="who">The deer you follow</div>
+      <div id="deer-card" class="note">Click a deer in the 3D view or on the map.</div>
+    </section>
+    <section class="panel" aria-label="Boot">
+      <div class="row" style="justify-content: space-between"><span class="label">Nested VM boot · each mechanism waits for its Simmy subsystem</span><span class="note mono" id="boot-note"></span></div>
+      <div class="prog"><i id="boot-prog"></i></div>
+      <div class="boot" id="boot-list"></div>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel" aria-label="Ecology">
+      <div class="label">Populations · deer, wolves ×10, wardens ×100</div>
+      <canvas class="chart" id="ch-pop" width="760" height="150"></canvas>
+      <div class="label">Plants per species (XPU lanes)</div>
+      <canvas class="chart" id="ch-plants" width="760" height="150"></canvas>
+    </section>
+    <section class="panel" aria-label="Trust and genes">
+      <div class="label">Trust levels · suspended, restricted, nominal, expanded</div>
+      <canvas class="chart" id="ch-trust" width="760" height="150"></canvas>
+      <div class="label">Mean genes · lawful, bold, herd, speed (0–15)</div>
+      <canvas class="chart" id="ch-genes" width="760" height="150"></canvas>
+    </section>
+  </div>
+
+  <div class="grid2">
+    <section class="panel" aria-label="Proof">
+      <div class="label">Proof · digests, R files, checks</div>
+      <div class="kv" id="proof"></div>
+      <div class="row">
+        <button class="btn" id="b-holo" disabled>Check hologram</button>
+        <button class="btn" id="b-cmp" disabled>Compare engines</button>
+        <button class="btn" id="b-verify" disabled>Verify last R</button>
+        <button class="btn" id="b-saveR" disabled>Download last R</button>
+      </div>
+      <div class="msg" id="proof-msg"></div>
+      <div class="label">RUSSL-Zarr map store</div>
+      <div class="kv" id="mapkv"></div>
+      <div class="row">
+        <button class="btn" id="b-zarr" disabled>Export map store (.zarr.zip)</button>
+        <button class="btn" id="b-mapR" disabled>Seal map as R file</button>
+      </div>
+      <div class="prog"><i id="zarr-prog"></i></div>
+      <div class="label">byte20 pixel · 160 bits a block · point at the map</div>
+      <div class="kv mono" id="b20kv"></div>
+      <div class="row"><button class="btn" id="b-b20" disabled>Download byte20 frame (.b20)</button><span class="note mono" id="b20-chain"></span></div>
+    </section>
+    <section class="panel" aria-label="Git-able world">
+      <div class="row" style="justify-content: space-between"><span class="label">Git-able world · plain text, append-only</span><span class="note mono" id="save-size"></span></div>
+      <pre class="save" id="save-tail"></pre>
+      <div class="row">
+        <button class="btn" id="b-save" disabled>Download world</button>
+        <button class="btn" id="b-host-save" hidden>Save to worlds/</button>
+        <label class="btn file">Load and verify… <input type="file" id="in-load" accept=".plumeworld,.txt"></label>
+        <select id="host-worlds" hidden aria-label="Worlds saved in worlds/"></select>
+        <select id="rewind" aria-label="Rewind to a checkpoint"><option value="">rewind to…</option></select>
+      </div>
+      <div class="prog"><i id="load-prog"></i></div>
+      <p class="note">The save file holds the seed, the settings, your interventions and one digest per epoch. Loading it replays the valley from genesis and checks every digest, so a world in git can be verified and every R file regenerated.</p>
+    </section>
+  </div>
+
+  <section class="panel" aria-label="Events">
+    <div class="row" style="justify-content: space-between"><span class="label">Valley log</span><label class="inl"><input type="checkbox" id="only-me"> only the deer I follow</label></div>
+    <ul class="events" id="events"></ul>
+  </section>
+</div>
+
+<script type="module">
+%%MODULES%%
+const CONSOLE_VERSION = "%%VERSION%%";
+const VALLEY_TEMPLATES = %%VALLEY_TEMPLATES%%;
+const CELLS_TEXT = %%SIMMY_CELLS%%, WORKLOAD_TEXT = %%SIMMY_WORKLOAD%%;
+const XPU_1T = "%%XPU_B64%%", XPU_MT = "%%XPU_MT_B64%%";
+const $ = (id) => document.getElementById(id);
+const esc = (x) => String(x).replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]);
+const b64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
+const short = (h, n = 12) => (h ? String(h).replace("russ:sha256:", "").slice(0, n) + "…" : "—");
+$("ver").textContent = "v" + CONSOLE_VERSION;
+const S = { engines: [], engine: null, boot: null, valley: null, map: null, view: null, playing: false, busy: false, timer: null, tool: "follow", layer: "meadow",
+  follow: null, lastR: null, rCount: 0, chain: [], checkpoints: [], hist: [], host: null, token: document.querySelector('meta[name="plume-token"]')?.content ?? null, checks: [] };
+const msg = (t, cls = "") => { $("msg").className = "msg " + cls; $("msg").textContent = t; };
+
+/* ---------- engines (as on the console page) ---------- */
+function spawn(src) {
+  const url = URL.createObjectURL(new Blob([src], { type: "text/javascript" })); const w = new Worker(url); URL.revokeObjectURL(url);
+  const hs = new Set(); w.onmessage = (e) => hs.forEach((h) => h(e.data));
+  w.onerror = (e) => { e.preventDefault?.(); hs.forEach((h) => h({ type: "error", message: e.message || "worker error" })); };
+  return { post: (m) => w.postMessage(m), onMessage: (f) => hs.add(f), offMessage: (f) => hs.delete(f), terminate: () => w.terminate() };
+}
+async function startEngines() {
+  const list = [];
+  try { list.push(await createWasm1TWorker(b64(XPU_1T), spawn)); } catch { list.push(await createWasm1T(b64(XPU_1T))); }
+  const hw = navigator.hardwareConcurrency || 4;
+  if (globalThis.crossOriginIsolated && typeof SharedArrayBuffer !== "undefined") {
+    try { list.push(await createWasmMT(b64(XPU_MT), Math.max(2, Math.min(hw, 16)), spawn)); } catch (e) { list.push({ name: "wasm-mt", unavailable: "threads failed: " + e.message }); }
+  } else list.push({ name: "wasm-mt", unavailable: "needs a cross-origin isolated page (start it with Photon)" });
+  if (navigator.gpu) { try { list.push(await createWebGPU(navigator.gpu)); } catch (e) { list.push({ name: "webgpu", unavailable: e.message }); } }
+  else list.push({ name: "webgpu", unavailable: "WebGPU is not available in this browser" });
+  S.engines = list; S.engine = list.find((e) => e.name === "wasm-mt" && !e.unavailable) || list[0];
+  const pills = $("engines"); pills.textContent = "";
+  for (const e of list) { const p = document.createElement("span"); p.className = "pill " + (e.unavailable ? "off" : "ok"); p.textContent = e.unavailable ? `${e.name}: off` : e.label; p.title = e.unavailable || "ready"; pills.append(p); }
+  const sel = $("sel-engine"); sel.textContent = "";
+  for (const e of list.filter((x) => !x.unavailable)) { const o = document.createElement("option"); o.value = e.name; o.textContent = e.label; sel.append(o); }
+  sel.value = S.engine.name;
+}
+$("sel-engine").addEventListener("change", (e) => { S.engine = S.engines.find((x) => x.name === e.target.value); });
+
+/* ---------- the Photon host (optional): worlds/ and maps/ folders ---------- */
+async function detectHost() {
+  if (!document.querySelector('meta[name="plume-host"]')) return;   // only the Photon host injects this; a plain file:// or static server has no API
+  try { const r = await fetch("api/host", { cache: "no-store" }); if (!r.ok) return; S.host = await r.json(); } catch { return; }
+  $("b-host-save").hidden = false; $("host-worlds").hidden = false; refreshHostWorlds();
+}
+async function hostPost(path, body, type) {
+  const r = await fetch(path, { method: "POST", headers: { "Content-Type": type, "X-Plume-Token": S.token ?? "" }, body });
+  const j = await r.json().catch(() => ({})); if (!r.ok) throw new Error(j.detail || j.error || r.statusText); return j;
+}
+async function refreshHostWorlds() {
+  try { const j = await (await fetch("api/worlds", { cache: "no-store" })).json(); const sel = $("host-worlds");
+    sel.innerHTML = `<option value="">worlds/ (${j.worlds.length})…</option>` + j.worlds.map((w) => `<option value="${esc(w.name)}">${esc(w.name)} · ${(w.bytes / 1024).toFixed(1)} KB</option>`).join(""); } catch {}
+}
+
+/* ---------- boot on the verified Simmy replay ---------- */
+async function bootSimmy() {
+  if (sha256Hex(WORKLOAD_TEXT) !== SIMMY_WORKLOAD_SHA256) throw new Error("the embedded Simmy workload is not the v3.0.0 file");
+  msg("replaying Simmy v3.0.0 (92 mesh ticks) to boot the valley…");
+  await new Promise((r) => setTimeout(r, 30));
+  const t0 = performance.now(), boot = simmyBoot(JSON.parse(CELLS_TEXT), JSON.parse(WORKLOAD_TEXT));
+  if (boot.sha256 !== SIMMY_REPLAY_SHA256) throw new Error("the Simmy replay did not reproduce its release digest");
+  msg(`Simmy replay verified in ${(performance.now() - t0).toFixed(0)} ms (SHA-256 ${short(boot.sha256, 16)}); the valley boots on it.`, "ok");
+  return boot;
+}
+function newWorld(cfg) {
+  stop();
+  S.valley = new Valley(cfg, S.boot); S.map = new MapStore(S.valley.cfg.seed, S.valley); S.b20 = new Byte20(S.valley, S.map); S.b20Cell = null;
+  S.follow = null; S.lastR = null; S.rCount = 0; S.chain = []; S.checkpoints = []; S.hist = []; S.checks = [];
+  if (S.view) { S.view.attach(S.valley, S.map); S.view.follow(null); }
+  drawBoot(); drawMap(); drawStats(); drawSave(); drawProof(); drawDeer(); drawEvents(); drawCharts(); drawMapKv(); drawB20();
+  $("rewind").innerHTML = '<option value="">rewind to…</option>';
+}
+function config() { return { seed: Number($("seed").value) | 0, deer: Number($("deer").value), boot: $("boot").value }; }
+
+/* ---------- the epoch loop ---------- */
+async function epoch() {
+  if (S.busy) return; S.busy = true;
+  const t0 = performance.now();
+  try {
+    const v = S.valley, r = await v.step(S.engine);
+    S.map.weather(v);                                   // the living map: trails compact, rain carves
+    S.b20.compute(v, S.map);                            // the byte20 frame and its chain
+    if (S.view) S.view.epochChanged(Math.max(400, Number($("speed").value) || 400));
+    const every = Number($("seal").value);
+    if (r.gates.provenance && every && (r.epoch % every === 0 || !S.lastR)) await seal(r);
+    if (r.gates.snapshots && r.epoch % 24 === 0) { S.checkpoints.push({ ...v.snapshot(), map: S.map.snapshot(), b20: S.b20.snapshot() }); if (S.checkpoints.length > 16) S.checkpoints.splice(1, 1); const o = document.createElement("option"); o.value = String(r.epoch); o.textContent = `epoch ${r.epoch} · ${r.season}`; $("rewind").append(o); }
+    if (r.gates.reproducibility && r.epoch % 48 === 0) crossEngine(true);
+    S.hist.push({ e: r.epoch, deer: r.counts.deer, wolves: r.counts.wolves, wardens: r.counts.wardens, species: r.stats.species, levels: r.stats.levels, traits: r.stats.traits });
+    if (S.hist.length > 4000) S.hist.splice(0, S.hist.length - 4000);
+    drawStats(r); drawMap(); drawBoot(); drawDeer(); drawEvents(); drawProof(); drawSave(); drawB20(); if (r.epoch % 2 === 0 || Number($("speed").value) >= 1000) drawCharts();
+  } catch (e) { stop(); msg("The valley stopped: " + e.message, "err"); console.error(e); }
+  S.busy = false;
+  if (S.playing) { const wait = Math.max(0, Number($("speed").value) - (performance.now() - t0)); S.timer = setTimeout(epoch, wait); }
+}
+function play() { if (S.playing) return stop(); S.playing = true; $("b-play").textContent = "Pause"; epoch(); }
+function stop() { S.playing = false; clearTimeout(S.timer); $("b-play").textContent = "Play"; }
+$("b-play").addEventListener("click", play);
+$("b-step").addEventListener("click", () => { stop(); epoch(); });
+$("b-new").addEventListener("click", () => { try { newWorld(config()); msg("A new valley: seed " + S.valley.cfg.seed, "ok"); } catch (e) { msg(e.message, "err"); } });
+
+/* ---------- R files ---------- */
+async function seal(r) {
+  const v = S.valley, prev = S.lastR?.tuple_id ?? null;
+  const prov = { stage: "deer.valley.epoch", console: CONSOLE_VERSION, epoch: r.epoch, season: r.season, rule: r.rule, generations: r.gens,
+    law: "deer.valley.meadow", lcuf_program_sha256: v.lawSha, lcufa_compiler: LCUFA_COMPILER_VERSION, input_tuple_id: prev,
+    frame_in_sha256: r.frameInSha, law_out_sha256: r.lawOutSha, world_digest: r.digest, seed: v.cfg.seed, config: v.cfg,
+    simmy_replay_sha256: v.boot.sha256, census: r.counts };
+  const R = await buildRuss(VALLEY_TEMPLATES, 0, v.xout, prov);
+  S.lastR = { ...R, epoch: r.epoch }; S.rCount++; S.chain.push({ epoch: r.epoch, tuple_id: R.tuple_id }); if (S.chain.length > 2000) S.chain.shift();
+}
+$("b-verify").addEventListener("click", async () => {
+  if (!S.lastR) return; const t0 = performance.now();
+  try { const back = await readRuss(S.lastR.bytes); $("proof-msg").className = "msg " + (back.problems.length ? "err" : "ok");
+    $("proof-msg").textContent = back.problems.length ? "problems: " + back.problems.join("; ") : `R for epoch ${S.lastR.epoch} verifies: tuple ${short(back.tuple_id, 20)}, IR re-lowered, 20 pyramid layers, chained to ${short(back.provenance.pipeline.input_tuple_id, 16)} (${(performance.now() - t0).toFixed(0)} ms)`; }
+  catch (e) { $("proof-msg").className = "msg err"; $("proof-msg").textContent = "refused: " + e.message; }
+});
+const download = (name, data, type) => { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([data], { type })); a.download = name; document.body.append(a); a.click(); setTimeout(() => { URL.revokeObjectURL(a.href); a.remove(); }, 1500); };
+$("b-saveR").addEventListener("click", () => S.lastR && download(`deer-valley-e${S.lastR.epoch}.russ`, S.lastR.bytes, "application/vnd.russ.tuple-executable"));
+
+/* ---------- checks: hologram and engines ---------- */
+async function hologram() {
+  const v = S.valley; if (!v.frameIn || !v.lastMeadow) return $("proof-msg").textContent = "run an epoch with the meadow law first";
+  const j = 1 + (v.epoch % 20), m = (1 << j) - 1, reduced = v.frameIn.map((x) => x & m);
+  const out = (await S.engine.run(v.meadow, reduced, v.lastGens, v.lastRule)).out;
+  let bad = 0; for (let i = 0; i < out.length; i++) if ((out[i] & m) !== (v.xout[i] & m)) bad++;
+  S.checks.unshift(`hologram j=${j}: ${bad ? bad + " words differ" : "holds"} (epoch ${v.epoch})`); S.checks.length = Math.min(S.checks.length, 4);
+  $("proof-msg").className = "msg " + (bad ? "err" : "ok"); $("proof-msg").textContent = `Hologram at layer ${j}: Law(frame mod 2^${j}) mod 2^${j} ${bad ? "differs in " + bad + " words" : "= Law(frame) mod 2^" + j + " on all 131,072 words"}.`; drawProof();
+}
+async function crossEngine(quiet = false) {
+  const v = S.valley; if (!v.frameIn || !v.lastMeadow) return;
+  const others = S.engines.filter((e) => !e.unavailable && e !== S.engine); if (!others.length) { if (!quiet) $("proof-msg").textContent = "only one engine is available here"; return; }
+  const res = [];
+  for (const e of others) { const out = (await e.run(v.meadow, v.frameIn, v.lastGens, v.lastRule)).out; let same = out.length === v.xout.length; for (let i = 0; same && i < out.length; i++) same = out[i] === v.xout[i]; res.push(`${e.label}: ${same ? "identical" : "DIFFERS"}`); }
+  S.checks.unshift(`engines at epoch ${v.epoch}: ${S.engine.label} vs ${res.join(", ")}`); S.checks.length = Math.min(S.checks.length, 4);
+  if (!quiet) { $("proof-msg").className = "msg ok"; $("proof-msg").textContent = S.checks[0]; } drawProof();
+}
+$("b-holo").addEventListener("click", hologram); $("b-cmp").addEventListener("click", () => crossEngine(false));
+
+/* ---------- the map ---------- */
+const mapCv = $("cvmap"), mapG = mapCv.getContext("2d"), cellImg = new ImageData(128, 128), off = Object.assign(document.createElement("canvas"), { width: 128, height: 128 }), offG = off.getContext("2d");
+function drawMap() {
+  const v = S.valley; if (!v) return;
+  const F = v.frame, px = cellImg.data, L = S.layer, D = v.deer;
+  let hmin = 1e9, hmax = -1e9; if (L === "terrain") for (const h of v.height) { hmin = Math.min(hmin, h); hmax = Math.max(hmax, h); }
+  for (let c = 0; c < 16384; c++) {
+    let r = 0, g = 0, b = 0, n = 0;
+    if (L === "meadow" || L === "trust") { for (let s = 0; s < 8; s++) if (F[c * 8 + s] & 1) { r += SPECIES[s].color[0]; g += SPECIES[s].color[1]; b += SPECIES[s].color[2]; n++; } if (n) { const k = (0.5 + 0.07 * n) / n; r *= k; g *= k; b *= k; } else { r = 52; g = 44; b = 36; } if (L === "trust") { r *= 0.45; g *= 0.45; b *= 0.45; } }
+    else if (L === "terrain") { const x = c & 127, y = c >> 7, t = (v.height[c] - hmin) / (hmax - hmin), dx = v.height[cellOf(x + 1, y)] - v.height[cellOf(x - 1, y)], dy = v.height[cellOf(x, y + 1)] - v.height[cellOf(x, y - 1)], sh = Math.max(0.3, Math.min(1.3, 0.85 - (dx + dy) / 120)); r = (70 + 140 * t) * sh; g = (90 + 120 * t) * sh; b = (60 + 90 * t) * sh; }
+    else if (L === "trails") { const t = Math.min(1, v.trail[c] / 2000); r = 20 + 235 * t; g = 20 + 120 * t * t; b = 30; }
+    else if (L === "byte20") { const w = S.b20.frame, tr = (w[c * 5 + 2] >>> 24) & 255, sp = popcnt32(w[c * 5 + 1] & 0xffffff), lat = (w[c * 5 + 4] >>> 30) & 1, st = (w[c * 5 + 4] >>> 28) & 3;
+      r = 24 + tr * 0.8 + st * 40; g = 30 + sp * 9; b = 40 + ((w[c * 5 + 3] >>> 12) & 255) * 0.35; if (lat) { r = 255; g = 60; b = 200; } }
+    else { let s = 0; for (let k = 0; k < 8; k++) s += (F[c * 8 + k] >>> 1) & 15; const t = Math.min(1, s / 40); r = 30 + 60 * t; g = 40 + 200 * t; b = 60 + 120 * t; }
+    if (v.water[c]) { r = 38; g = 70; b = 118; }
+    if (v.reserveOf[c] !== 255 && ((c & 127) + (c >> 7)) % 5 === 0) { r = Math.min(255, r + 60); g = Math.min(255, g + 50); b = Math.min(255, b + 80); }
+    px[c * 4] = r; px[c * 4 + 1] = g; px[c * 4 + 2] = b; px[c * 4 + 3] = 255;
+  }
+  offG.putImageData(cellImg, 0, 0); mapG.imageSmoothingEnabled = false; mapG.drawImage(off, 0, 0, 512, 512);
+  const dot = (x, y, col, s = 3) => { mapG.fillStyle = col; mapG.fillRect(x * 4 + 2 - s / 2, y * 4 + 2 - s / 2, s, s); };
+  const lvlCol = ["#ff7a2f", "#e6c34a", "#efe6d2", "#ffffff"];
+  for (let i = 0; i < D.n; i++) dot(D.x[i], D.y[i], L === "trust" ? lvlCol[D.level[i]] : "#efe6d2cc", L === "trust" ? 3 : 2);
+  for (let i = 0; i < v.wolves.n; i++) dot(v.wolves.x[i], v.wolves.y[i], "#e23b2e", 4);
+  for (let i = 0; i < v.wardens.n; i++) dot(v.wardens.x[i], v.wardens.y[i], "#ffd21f", 5);
+  mapG.strokeStyle = "#b9a7ff"; mapG.lineWidth = 1.5; for (const r of v.reserves) mapG.strokeRect(r.x * 4 + 0.5, r.y * 4 + 0.5, r.w * 4, r.h * 4);
+  const i = S.follow != null ? D.find(S.follow) : -1;
+  if (i >= 0) {
+    mapG.strokeStyle = "#f0a23b"; mapG.lineWidth = 2; mapG.strokeRect((D.x[i] - 2) * 4, (D.y[i] - 2) * 4, 20, 20);
+    mapG.beginPath(); mapG.arc(D.x[i] * 4 + 2, D.y[i] * 4 + 2, 9, 0, Math.PI * 2); mapG.stroke();
+  }
+  if (S.drag) { mapG.strokeStyle = "#b9a7ff"; mapG.setLineDash([4, 3]); mapG.strokeRect(Math.min(S.drag[0], S.drag[2]) * 4, Math.min(S.drag[1], S.drag[3]) * 4, (Math.abs(S.drag[2] - S.drag[0]) + 1) * 4, (Math.abs(S.drag[3] - S.drag[1]) + 1) * 4); mapG.setLineDash([]); }
+}
+const cellAt = (e) => { const r = mapCv.getBoundingClientRect(); return [Math.max(0, Math.min(127, Math.floor((e.clientX - r.left) / r.width * 128))), Math.max(0, Math.min(127, Math.floor((e.clientY - r.top) / r.height * 128)))]; };
+mapCv.addEventListener("pointerdown", (e) => { const [x, y] = cellAt(e); if (S.tool === "reserve") { S.drag = [x, y, x, y]; mapCv.setPointerCapture(e.pointerId); } });
+mapCv.addEventListener("pointermove", (e) => { const [x, y] = cellAt(e); if (S.drag) { S.drag[2] = x; S.drag[3] = y; drawMap(); } else { S.b20Cell = y * 128 + x; drawB20(); } });
+function drawB20() {
+  const b = S.b20; if (!b) return; $("b-b20").disabled = false; $("b20-chain").textContent = `epoch ${b.epoch} · chain ${short(b.chain, 16)}`;
+  const c = S.b20Cell ?? 0, w = b.pixel(c), d = decode(w), hex = w.map((x) => (x >>> 0).toString(16).padStart(8, "0")).join(" ");
+  const sp = d.W1.species.map((k, s) => (k ? `${SPECIES[s].name}${k === 1 ? " (cropped)" : ` ${k - 1}`}` : null)).filter(Boolean).join(", ") || "none";
+  $("b20kv").innerHTML = [["block", `(${c & 127}, ${c >> 7}) · ${hex}`], ["W0 geo", `Δz ${d.W0.z_delta_q16} ticks (${(d.W0.z_delta_q16 / 65.536).toFixed(2)} mm) · spread ${d.W0.gamma_m} m · ${d.W0.strata.join(", ") || "no horizon"}`],
+    ["W1 botany", `${sp} · vigour ${d.W1.vigour.toFixed(2)}`], ["W2 fauna", `${d.W2.deer} deer${d.W2.fawn ? " incl. a fawn" : ""}${d.W2.buck ? ", a buck" : ""} · ${d.W2.wolves} wolves${d.W2.hunting ? " hunting" : ""}${d.W2.warden ? " · warden" : ""} · GLA trace ${d.W2.gla_trace}`],
+    ["W3 look", `material ${MATERIALS[d.W3.material]} · aspect ${d.W3.aspect}/256 · act ${ACTS[d.W3.act]}${d.W3.moving ? " (moving)" : ""} · enclosure ${d.W3.enclosure}`],
+    ["W4 seal", `seal ${d.W4.seal16.toString(16)} · D² log12 ${d.W4.d2_log12} · strikes ${d.W4.strikes}${d.W4.latch ? " · LATCHED" : ""} · parity ${d.W4.parity}`]]
+    .map(([k, x]) => `<span>${k}</span><span>${esc(x)}</span>`).join("");
+}
+$("b-b20").addEventListener("click", () => download(`deer-valley-${S.valley.cfg.seed}-e${S.b20.epoch}.b20`, new Uint8Array(S.b20.planes().buffer), "application/octet-stream"));
+mapCv.addEventListener("pointerup", (e) => {
+  const v = S.valley; if (!v) return; const [x, y] = cellAt(e);
+  try {
+    if (S.tool === "follow") { let best = -1, bd = 1e9; for (let i = 0; i < v.deer.n; i++) { const d = cheb(x, y, v.deer.x[i], v.deer.y[i]); if (d < bd) { bd = d; best = i; } } if (best >= 0 && bd <= 4) followDeer(v.deer.id[best]); }
+    else if (S.tool === "reserve" && S.drag) { const [a, b, c, d] = S.drag; S.drag = null; v.intervene("reserve", { x: Math.min(a, c), y: Math.min(b, d), w: Math.abs(c - a) + 1, h: Math.abs(d - b) + 1 }); msg("Reserve recorded for the next epoch", "ok"); }
+    else if (S.tool === "rain") { v.intervene("rain", { x, y, r: 8 }); msg(`Rain at (${x}, ${y}) recorded for the next epoch`, "ok"); }
+    else if (S.tool === "fire") { v.intervene("fire", { x, y, r: 6 }); msg(`Fire at (${x}, ${y}) recorded for the next epoch`, "ok"); }
+    else if (S.tool === "wolves") { v.intervene("wolves", { x, y, count: 6 }); msg(`Six wolves at (${x}, ${y}) recorded for the next epoch`, "ok"); }
+    else if (S.tool === "warden") { v.intervene("warden", { x, y }); msg(`A warden at (${x}, ${y}) recorded for the next epoch`, "ok"); }
+  } catch (err) { S.drag = null; msg(err.message, "err"); }
+  drawMap(); drawSave();
+});
+$("b-release").addEventListener("click", () => { try { S.valley.intervene("release", {}); msg("deer.unlicensed will be released next epoch", "ok"); drawSave(); } catch (e) { msg(e.message, "err"); } });
+const seg = (id, attr, fn) => $(id).addEventListener("click", (e) => { const b = e.target.closest("button"); if (!b) return; $(id).querySelectorAll("button").forEach((x) => x.setAttribute("aria-pressed", String(x === b))); fn(b.dataset[attr]); });
+seg("layers", "l", (l) => { S.layer = l; drawMap(); });
+seg("tools", "t", (t) => { S.tool = t; $("tool-note").textContent = { follow: "Click a deer to follow it.", rain: "Click to bring rain (seeds every species in a radius of 8 cells).", fire: "Click to light a fire (burns the plants in a radius of 6 cells).", wolves: "Click to release six wolves.", warden: "Click to hire a warden (you pay, not the licence fund).", reserve: "Drag a rectangle to declare a reserve." }[t]; });
+
+/* ---------- following a deer ---------- */
+function followDeer(id) { S.follow = id; S.view?.follow(id); drawDeer(); drawMap(); drawEvents(); }
+$("notable").addEventListener("change", (e) => {
+  const v = S.valley, D = v.deer, kind = e.target.value; e.target.value = ""; if (!D.n) return;
+  let best = -1, key = -Infinity; const sc = (i) => scoreL(v.P, D.alpha[i], D.beta[i]);
+  for (let i = 0; i < D.n; i++) {
+    const k = kind === "founder" ? (D.serial[i] === 0 ? 1e6 - i : -1) : kind === "oldest" ? D.age[i] : kind === "trusted" ? sc(i) * 1000 + D.rel[i] / 100 : kind === "poacher" ? (D.act[i] === 4 || D.act[i] === 5 ? 100 : 0) + 15 - gene(D.traits[i], 0) : kind === "licensed" ? (D.licence[i] !== 255 ? 1 : -1) * (1 + (i % 97)) : kind === "fawn" ? -D.age[i] : (Math.imul(D.id[i], 2654435761) >>> 0) ^ (Date.now() & 0xffff);
+    if (k > key) { key = k; best = i; }
+  }
+  if (best >= 0 && key >= 0) followDeer(D.id[best]); else msg(`No ${kind} deer right now`, "");
+});
+$("b-kin").addEventListener("click", () => { const v = S.valley, D = v.deer, i = S.follow != null ? D.find(S.follow) : -1; if (i < 0) return; let best = -1, bd = 1e9; for (let j = 0; j < D.n; j++) if (j !== i && D.lineage[j] === D.lineage[i]) { const d = cheb(D.x[i], D.y[i], D.x[j], D.y[j]); if (d < bd) { bd = d; best = j; } } if (best >= 0) followDeer(D.id[best]); });
+$("b-overview").addEventListener("click", () => { S.follow = null; S.view?.follow(null); drawDeer(); });
+$("quality").addEventListener("change", (e) => S.view?.setQuality(e.target.value));
+$("tod").addEventListener("change", (e) => S.view?.setTimeOfDay(e.target.value === "" ? null : Number(e.target.value)));
+$("b-senses").addEventListener("click", (e) => { if (!S.view) return; S.view.senses = !S.view.senses; S.view.cone = S.view.senses; e.target.setAttribute("aria-pressed", String(S.view.senses)); });
+$("b-full").addEventListener("click", () => { const el = $("view3d"); document.fullscreenElement ? document.exitFullscreen() : el.requestFullscreen?.(); });
+
+/* ---------- panels ---------- */
+function drawStats(r = S.valley?.lastReport) {
+  const v = S.valley; if (!v) return;
+  const year = Math.floor((v.epoch - 1) / YEAR) + 1, s = r?.stats;
+  const cells = [["epoch", v.epoch], ["season", r ? `${r.season} · yr ${year}` : "—"], ["deer", v.deer.n.toLocaleString("en-US")], ["wolves", v.wolves.n], ["wardens", v.wardens.n],
+    ["births / deaths", r ? `${r.births} / ${r.deaths.wolf + r.deaths.starved + r.deaths.age}` : "—"], ["poaching seen / not", r ? `${r.poach.denied} / ${r.poach.stealth}` : "—"],
+    ["licences", s ? s.licensed : "—"], ["fund", v.fund], ["E1 contested cells", r ? r.e1.contested : "—"], ["epoch time", r ? `${r.ms.total.toFixed(0)} ms` : "—"], ["head", short(v.digest, 10)]];
+  $("stats").innerHTML = cells.map(([k, x]) => `<div><b>${esc(x)}</b><span>${k}</span></div>`).join("");
+  $("cap-l").textContent = r ? `epoch ${v.epoch} · ${r.season} · ${r.rule} × ${r.gens}` : "";
+  $("b-holo").disabled = $("b-cmp").disabled = !v.frameIn; $("b-verify").disabled = $("b-saveR").disabled = !S.lastR;
+}
+function drawBoot() {
+  const v = S.valley; if (!v) return; const e = v.epoch, b = S.boot;
+  $("boot-list").innerHTML = MECHANISMS.map(([k, sim, label]) => {
+    const rt = v.gateAt[k], vt = b.verified[sim], on = rt <= Math.max(1, e + 1) && v.epoch >= rt, ver = vt && e >= vt;
+    return `<div title="SIM-${String(sim).padStart(2, "0")} ${esc(b.titles[sim])}: ready at mesh tick ${b.ready[sim]}, verified at ${vt}"><span class="chip ${ver ? "ver" : on ? "on" : ""}">${ver ? "verified" : on ? "on" : "tick " + rt}</span><span>${esc(label)}</span></div>`;
+  }).join("");
+  const last = Math.max(...MECHANISMS.map(([k]) => v.gateAt[k])); $("boot-prog").style.width = `${Math.min(100, (e / last) * 100)}%`;
+  $("boot-note").textContent = v.cfg.boot === "instant" ? "instant boot" : e >= last ? `booted at epoch ${last}` : `epoch ${e} of ${last}`;
+}
+function drawDeer() {
+  const v = S.valley, i = v && S.follow != null ? v.deer.find(S.follow) : -1;
+  if (i < 0) { $("hud").hidden = true; $("who").textContent = "The deer you follow"; $("deer-card").innerHTML = S.follow != null ? `<p class="note">${esc(S.deadNote ?? "This deer is no longer in the valley.")}</p>` : `<p class="note">Click a deer in the 3D view or on the map, or pick one from “follow…”.</p>`; $("cap-r").textContent = ""; return; }
+  const d = v.deerInfo(i), t = d.trust, lvl = ["SUSPENDED", "RESTRICTED", "NOMINAL", "EXPANDED"].indexOf(t.level);
+  S.deadNote = `${d.name} left the valley. Its kin are still here: press “kin”.`;
+  $("who").textContent = `Following ${d.name}`;
+  $("hud").hidden = false;
+  $("hud").innerHTML = `<b>${esc(d.name)}</b> <span class="lv">${t.level}</span><br>${esc(d.act)}${d.reserve ? " · in Reserve " + esc(d.reserve) : ""}${d.licence ? " · licensed for " + esc(d.licence) : ""}
+    <div class="row" style="margin-top:4px"><span style="width:52px">trust</span><div class="mini"><i style="width:${t.score / 10}%"></i></div><span class="mono">${t.score}</span></div>
+    <div class="row"><span style="width:52px">energy</span><div class="mini"><i style="width:${d.energy / 10}%;background:#4cc4b2"></i></div><span class="mono">${d.energy}</span></div>
+    <span style="opacity:.75">${d.sex}, ${d.ageYears.toFixed(1)} yr, generation ${d.gen} of ${esc(d.lineage)}</span>`;
+  $("cap-r").textContent = `${d.name} · (${d.x}, ${d.y})`;
+  const per = v.perception(i), mx = Math.max(1, ...per.cells.map((c) => c.forage));
+  const geneRow = (name, x, col) => `<span>${name}</span><div class="gbar"><i style="width:${(x / 15) * 100}%;background:${col}"></i></div><span class="mono">${x}</span>`;
+  $("deer-card").innerHTML = `
+    <div class="kv"><span>lineage</span><span>${esc(d.lineage)} · generation ${d.gen}${d.parent ? " · parent #" + d.parent : " · founder"}</span>
+      <span>activity</span><span>${esc(d.act)}${d.ate ? " · last ate " + esc(d.ate) : ""}${d.injured ? " · injured (" + d.injured + " epochs to heal)" : ""}</span>
+      <span>trust</span><span>${t.level} · score ${t.score} · α ${t.alpha.toFixed(2)} β ${t.beta.toFixed(2)} · reliability ${(t.reliability * 100).toFixed(0)}%${t.margin !== null ? " · margin " + t.margin.toFixed(1) : ""} · ${t.lifecycle}</span>
+      <span>licence</span><span>${d.licence ? "Reserve " + esc(d.licence) : "none"}</span></div>
+    <div class="grid2" style="gap:10px"><div><div class="label">preferences (genes)</div><div class="genes">${d.prefs.map((p, k) => geneRow(SPECIES[k].name, p, `rgb(${SPECIES[k].color})`)).join("")}</div></div>
+    <div><div class="label">traits</div><div class="genes">${Object.entries(d.traits).map(([k, x]) => geneRow(k, x, "var(--accent)")).join("")}</div>
+    <div class="label" style="margin-top:8px">what it weighs (forage, 5 × 5 cells)</div><div class="percept">${per.cells.map((c) => `<i style="background:${c.water ? "#2c5c9a" : c.reserve !== 255 ? "#6a58c8" : `rgb(${Math.round(70 + 120 * (1 - c.forage / mx))},${Math.round(60 + 160 * (c.forage / mx))},60)`}" title="forage ${c.forage}">${c.dx === 0 && c.dy === 0 ? "●" : ""}</i>`).join("")}</div>
+    ${per.wolves.length ? `<p class="note">wolves within 6 cells: ${per.wolves.map((w) => v.name("wolf", w.w) + " at " + w.d).join(", ")}</p>` : ""}</div></div>`;
+}
+function drawEvents() {
+  const v = S.valley; if (!v) return; const only = $("only-me").checked;
+  const list = v.events.slice(-160).reverse().filter((e) => !only || (S.follow != null && e.ids.includes(S.follow))).slice(0, 80);
+  $("events").innerHTML = list.map((e) => `<li class="${S.follow != null && e.ids.includes(S.follow) ? "me" : ""}"><span class="k">[${e.epoch}]</span> ${esc(e.text)}</li>`).join("");
+}
+$("only-me").addEventListener("change", drawEvents);
+function drawProof() {
+  const v = S.valley; if (!v) return; const r = v.lastReport;
+  $("proof").innerHTML = [
+    ["world digest", `${short(v.digest, 24)} (epoch ${v.epoch})`], ["genesis", short(v.genesisDigest, 24)],
+    ["R files", S.rCount ? `${S.rCount} sealed · last ${short(S.lastR?.tuple_id, 20)} (epoch ${S.lastR?.epoch})` : "none yet (provenance opens at SIM-36)"],
+    ["energy ledger", r ? (r.ledger.checked ? (r.ledger.ok ? "balanced exactly" : "DOES NOT BALANCE") : "not audited yet (SIM-61)") : "—"],
+    ["E1 admission", r ? `${r.e1.admitted} moves admitted, ${r.e1.rejected} refused in ${r.e1.contested} contested cells${r.licence.contested ? `; licence slots contested in ${r.licence.contested} reserves` : ""}` : "—"],
+    ["authority", `${v.C.commits.toLocaleString("en-US")} commits, ${v.C.denials} denials, ${v.C.verdicts} verdicts, ${v.C.transitions} level changes, ${v.C.faults} faults`],
+    ["Simmy boot", `${short(v.boot.sha256, 16)} = v${SIMMY_PACKAGE_VERSION} release`],
+    ["checks", S.checks.length ? S.checks.join(" · ") : "none yet"],
+  ].map(([k, x]) => `<span>${k}</span><span title="${esc(x)}">${esc(x)}</span>`).join("");
+}
+function drawMapKv() {
+  const m = S.map; if (!m) return; const d = m.descriptor(false);
+  $("mapkv").innerHTML = [["profile", `${d.profile} · law ${d.law}`], ["field", `(1, 1, ${d.field.channels.length}, ${d.field.shape[3]}, ${d.field.shape[4]}) · ${d.field.channels.map((c) => c.name).join(", ")}`],
+    ["levels", d.levels.map((l) => `${l.spacing_m} m`).join(" · ")], ["chunks", `128 × 128; ${m.generated} generated so far, ${(m.bytes / 1048576).toFixed(1)} MB cached`]]
+    .map(([k, x]) => `<span>${k}</span><span>${esc(x)}</span>`).join("");
+  $("b-zarr").disabled = $("b-mapR").disabled = false;
+}
+$("b-zarr").addEventListener("click", async () => {
+  const b = $("b-zarr"); b.disabled = true; const t0 = performance.now();
+  try {
+    const { files, descriptor } = await zarrFiles(S.map, { levels: [1, 2, 3, 4, 5, 6, 7], onProgress: (f) => { $("zarr-prog").style.width = `${f * 100}%`; } });
+    const zip = zipStore(files), name = `deer-valley-${S.valley.cfg.seed}.zarr.zip`;
+    if (S.host) { const j = await hostPost(`api/maps/${encodeURIComponent(name)}`, zip, "application/zip"); msg(`Map store saved by Photon: ${j.path} (${(zip.length / 1048576).toFixed(1)} MB)`, "ok"); }
+    else download(name, zip, "application/zip");
+    $("proof-msg").className = "msg ok"; $("proof-msg").textContent = `Zarr v3 / OME-NGFF 0.5 store: ${files.length} files, ${(zip.length / 1048576).toFixed(1)} MB, levels 0.5–32 m, ${(performance.now() - t0).toFixed(0)} ms. Level 0 (0.25 m) is regenerated by the law on demand.`;
+    drawMapKv();
+  } catch (e) { msg("map export failed: " + e.message, "err"); }
+  b.disabled = false;
+});
+$("b-mapR").addEventListener("click", async () => {
+  const v = S.valley, m = S.map, desc = m.descriptor(false);
+  const R = await buildRuss(VALLEY_TEMPLATES, 1, baseFrame(m, v), { stage: "deer.valley.map", console: CONSOLE_VERSION, seed: v.cfg.seed, law: MAP_LAW, profile: MAP_PROFILE,
+    level4_root: { height: m.levelRoot(0, 4), rock: m.levelRoot(1, 4), moisture: m.levelRoot(2, 4), material: m.levelRoot(3, 4), drainage: m.levelRoot(4, 4), terrain: m.levelRoot(5, 4) },
+    generation: desc.generation, report: { E8: m.report.E8, E17: m.report.E17.depressions_first_pass, E18: m.report.E18.conserved }, levels: desc.levels });
+  download(`deer-valley-${v.cfg.seed}-map.russ`, R.bytes, "application/vnd.russ.tuple-executable");
+  $("proof-msg").className = "msg ok"; $("proof-msg").textContent = `Map R file sealed: ${short(R.tuple_id, 24)}`;
+});
+function drawSave() {
+  const v = S.valley; if (!v) return; const text = v.saveText(), lines = text.trimEnd().split("\n");
+  $("save-tail").textContent = (lines.length > 14 ? lines.slice(0, 6).concat(["…"], lines.slice(-7)) : lines).join("\n");
+  $("save-size").textContent = `${lines.length} lines · ${(text.length / 1024).toFixed(1)} KB`; $("b-save").disabled = false;
+}
+$("b-save").addEventListener("click", () => download(`deer-valley-${S.valley.cfg.seed}-e${S.valley.epoch}.plumeworld`, S.valley.saveText(), "text/plain"));
+$("b-host-save").addEventListener("click", async () => { try { const name = `deer-valley-${S.valley.cfg.seed}.plumeworld`; const j = await hostPost(`api/worlds/${encodeURIComponent(name)}`, JSON.stringify({ text: S.valley.saveText() }), "application/json"); msg(`Saved by Photon: ${j.path} — ready to git add`, "ok"); refreshHostWorlds(); } catch (e) { msg(e.message, "err"); } });
+async function loadText(text, label) {
+  stop(); $("load-prog").style.width = "0%";
+  try {
+    const parsed = Valley.parseSave(text), total = parsed.epochs.length; let k = 0;
+    msg(`replaying ${label}: ${total} epochs, checking every digest…`);
+    let map = null, b20 = null;
+    const v = await Valley.replay(text, S.boot, S.engine, { onGenesis: (g) => { map = new MapStore(g.cfg.seed, g); b20 = new Byte20(g, map); },
+      onEpoch: (r, vv) => { map.weather(vv); b20.compute(vv, map); if (++k % 4 === 0) $("load-prog").style.width = `${(k / total) * 100}%`; } });
+    S.valley = v; S.map = map; S.b20 = b20; S.lastR = null; S.rCount = 0; S.chain = []; S.checkpoints = []; S.hist = []; S.follow = null;
+    if (S.view) { S.view.attach(v, S.map); S.view.follow(null); }
+    $("load-prog").style.width = "100%"; $("seed").value = v.cfg.seed;
+    msg(`${label}: all ${total} epoch digests reproduced — the world is verified (head ${short(v.digest, 16)}).`, "ok");
+    drawBoot(); drawMap(); drawStats(); drawSave(); drawProof(); drawDeer(); drawEvents(); drawCharts(); drawMapKv(); drawB20();
+  } catch (e) { msg(`${label} does not verify: ${e.message}`, "err"); }
+}
+$("in-load").addEventListener("change", async (e) => { const f = e.target.files[0]; if (f) await loadText(await f.text(), f.name); e.target.value = ""; });
+$("host-worlds").addEventListener("change", async (e) => { const n = e.target.value; e.target.value = ""; if (!n) return; const t = await (await fetch(`api/worlds/${encodeURIComponent(n)}`, { cache: "no-store" })).text(); await loadText(t, n); });
+$("rewind").addEventListener("change", (e) => {
+  const ep = Number(e.target.value); e.target.value = ""; if (!ep) return;
+  const snap = S.checkpoints.find((s) => s.epoch === ep); if (!snap) return;
+  stop(); S.valley.restore(snap); S.map.restore(snap.map); S.b20.restore(snap.b20); S.view?.epochChanged(); S.hist = S.hist.filter((h) => h.e <= ep);
+  msg(`Rewound to epoch ${ep}. Running on from here starts a new branch of history; the old one remains in any save file you downloaded.`, "ok");
+  drawMap(); drawStats(); drawSave(); drawProof(); drawDeer(); drawEvents(); drawCharts(); drawB20();
+});
+
+/* ---------- charts ---------- */
+function chart(id, series, colors, { stack = false, max = null } = {}) {
+  const cv = $(id), g = cv.getContext("2d"), W = cv.width, H = cv.height, n = S.hist.length; g.clearRect(0, 0, W, H);
+  if (n < 2) return; const step = Math.max(1, Math.ceil(n / W)), pts = [];
+  for (let k = 0; k < n; k += step) pts.push(series(S.hist[k]));
+  const top = max ?? Math.max(1, ...pts.map((p) => (stack ? p.reduce((a, b) => a + b, 0) : Math.max(...p))));
+  const x = (k) => (k / (pts.length - 1)) * (W - 4) + 2, y = (v) => H - 4 - (v / top) * (H - 10);
+  if (stack) { const base = new Array(pts.length).fill(0); colors.forEach((c, s) => { g.beginPath(); pts.forEach((p, k) => g.lineTo(x(k), y(base[k] + p[s]))); for (let k = pts.length - 1; k >= 0; k--) g.lineTo(x(k), y(base[k])); g.closePath(); g.fillStyle = c; g.fill(); pts.forEach((p, k) => { base[k] += p[s]; }); }); }
+  else colors.forEach((c, s) => { g.beginPath(); pts.forEach((p, k) => (k ? g.lineTo(x(k), y(p[s])) : g.moveTo(x(k), y(p[s])))); g.strokeStyle = c; g.lineWidth = 1.6; g.stroke(); });
+  g.fillStyle = getComputedStyle(document.body).getPropertyValue("--muted"); g.font = "11px ui-monospace, monospace"; g.fillText(String(Math.round(top)), 4, 12);
+}
+function drawCharts() {
+  chart("ch-pop", (h) => [h.deer, h.wolves * 10, h.wardens * 100], ["#d9a35b", "#e23b2e", "#c9a400"]);
+  chart("ch-plants", (h) => h.species, SPECIES.map((s) => `rgb(${s.color})`), { stack: true });
+  chart("ch-trust", (h) => h.levels, ["#e2604a", "#e6c34a", "#9aa4b5", "#4cc4b2"], { stack: true });
+  chart("ch-genes", (h) => h.traits.slice(0, 4), ["#4c5fc2", "#e2604a", "#1f8577", "#b5600c"], { max: 15 });
+}
+
+/* ---------- start ---------- */
+(async () => {
+  try {
+    detectHost();
+    S.boot = await bootSimmy();
+    await startEngines();
+    try {
+      const q = new URLSearchParams(location.search).get("q"), quality = ["auto", "low", "medium", "high", "ultra"].includes(q) ? q : "auto"; $("quality").value = quality;
+      S.view = new Valley3D($("cv3d"), { quality, quiet: () => !S.busy, onPick: (id) => followDeer(id), onError: (e) => { $("nogl").hidden = false; $("nogl").textContent = "The 3D view stopped: " + e.message; console.error(e); },
+        onQuality: (name, ms, scale) => { const o = $("quality").querySelector('option[value="auto"]'); o.textContent = `auto · ${name}${scale < 1 ? " ×" + scale : ""}`; msg(`3D quality set to ${name}${scale < 1 ? ` at ${Math.round(scale * 100)}% resolution` : ""} to hold 60 fps (frames were taking ${ms.toFixed(1)} ms). Pick a level to override.`); } });
+      setInterval(() => { if (S.view && document.visibilityState === "visible") $("perfhud").textContent = S.view.hudText(); }, 500);
+      $("lens").addEventListener("change", (e) => S.view?.setZoom(Number(e.target.value)));
+    } catch (e) { $("nogl").hidden = false; $("nogl").textContent = "3D view unavailable: " + e.message; }
+    newWorld(config());
+    S.view?.start();
+    ["b-play", "b-step", "b-new"].forEach((id) => { $(id).disabled = false; });
+    msg(`Ready. Seed ${S.valley.cfg.seed}: ${S.valley.cfg.deer} deer will enter when SIM-05 is ready (epoch ${S.valley.gateAt.herds}). Press Play.`, "ok");
+    window.__valley = S;
+  } catch (e) { msg("Start-up failed: " + e.message, "err"); console.error(e); }
+})();
+</script>

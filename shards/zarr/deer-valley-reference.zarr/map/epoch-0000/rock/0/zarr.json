@@ -1,0 +1,66 @@
+{
+ "zarr_format": 3,
+ "node_type": "array",
+ "shape": [
+  2048,
+  2048
+ ],
+ "data_type": "uint8",
+ "chunk_grid": {
+  "name": "regular",
+  "configuration": {
+   "chunk_shape": [
+    2048,
+    2048
+   ]
+  }
+ },
+ "chunk_key_encoding": {
+  "name": "default",
+  "configuration": {
+   "separator": "/"
+  }
+ },
+ "fill_value": 0,
+ "codecs": [
+  {
+   "name": "sharding_indexed",
+   "configuration": {
+    "chunk_shape": [
+     128,
+     128
+    ],
+    "codecs": [
+     {
+      "name": "bytes",
+      "configuration": {
+       "endian": "little"
+      }
+     }
+    ],
+    "index_codecs": [
+     {
+      "name": "bytes",
+      "configuration": {
+       "endian": "little"
+      }
+     },
+     {
+      "name": "crc32c"
+     }
+    ],
+    "index_location": "end"
+   }
+  }
+ ],
+ "dimension_names": [
+  "y",
+  "x"
+ ],
+ "attributes": {
+  "russl": {
+   "unit": "1/255",
+   "root": "fd54075fab43be672e5ed24575664f1a4f891b88555067d1648674bfd0bd2e79"
+  }
+ }
+}

@@ -1,0 +1,70 @@
+{
+ "zarr_format": 3,
+ "node_type": "group",
+ "attributes": {
+  "russl": {
+   "schema": "RUSSL.ValleyReference/1",
+   "made_by": "tools/bake/reference.mjs",
+   "verify": "node tools/verify_reference.mjs [STORE] [--replay N|all]",
+   "profile": "RUSSL-OME-ZARR/2.0.0",
+   "map_law": "deer.valley.living/1",
+   "byte20_law": "deer.valley.byte20/1",
+   "config": {
+    "boot": "simmy",
+    "capacity": 2,
+    "deer": 4096,
+    "licence_area": 12,
+    "max_deer": 16384,
+    "max_wardens": 32,
+    "max_wolves": 1024,
+    "reserves": [
+     [
+      18,
+      12,
+      26,
+      22
+     ],
+     [
+      82,
+      46,
+      26,
+      24
+     ],
+     [
+      38,
+      88,
+      28,
+      24
+     ]
+    ],
+    "seed": 20261117,
+    "wolves": 48
+   },
+   "simmy_replay_sha256": "18c48c87f7c8f604dbdbc6be4676cc5cb1edddc261896528d419eafb76bf0f49",
+   "genesis": {
+    "valley": "8d5ff486c9da9763ebed760dc50026a13083b1cde908f1b69846a86dab78d9af",
+    "chain": "5462be5b8c65220345d35d81ed070896c2d52b9fc1f615bfd6fd8226f6ac410f"
+   },
+   "epochs": 576,
+   "years": 6,
+   "final": {
+    "epoch": 576,
+    "valley": "45a309853741d2c308ee55a0880340b06ce97d54f4ee35d9b8643808cafc5c28",
+    "chain": "eb65857b69c36f93533faea5d4245b5ea967f578fd67fb5ca3ef77b039b5c743"
+   },
+   "contents": {
+    "map/epoch-0000": "the living map at genesis",
+    "map/epoch-0576": "the living map after 576 epochs (6 years)",
+    "byte20": "the byte20 frame of every epoch 1..576"
+   },
+   "codecs": {
+    "allowed": [
+     "sharding_indexed",
+     "bytes",
+     "crc32c"
+    ],
+    "specification": "Zarr v3 core 3.1 and the sharding_indexed 1.0 codec; OME-NGFF 0.5"
+   }
+  }
+ }
+}
